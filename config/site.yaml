@@ -11,28 +11,32 @@
 # Site Basic Information
 # =============================================================================
 site:
-  title: 余弦の博客 # 网站名称
-  alternate: cosine # 网站英文名称 用于页脚、Logo、@ handle 等
-  subtitle: WA 的一声就哭了 # 网站副标题
-  name: cos # 作者名称 - 请修改为你的名字
-  description: 一个基于 Astro 的现代化博客主题 # 网站描述
-  avatar: /img/avatar.webp # 网站头像
-  showLogo: true # 是否显示 Logo
-  author: Author # 作者名称 - 请修改为你的名字
-  url: https://koharu.cosine.ren # 站点 URL 用于 RSS 和 SEO
-  defaultOgImage: /img/avatar.webp # 默认 Open Graph 图片
+  title: Ksable's 小屋 # 网站名称
+  alternate: "ksable" # 网站英文名称 用于页脚、Logo、@ handle 等
+  subtitle: "一个记录生活，分享技术的博客" # 网站副标题
+  name: kissablecho # 作者名称 - 请修改为你的名字
+  description: kissablecho 的个人博客 / 记录生活，分享技术 / 喜欢二次元和白丝。 # 网站描述
+  avatar: https://assets.ksable.top/me/gravatar.jpg # 网站头像
+  showLogo: false # 是否显示 Logo
+  author: kissablecho # 作者名称 - 请修改为你的名字
+  url: https://blog.ksable.top # 站点 URL 用于 RSS 和 SEO
+  defaultOgImage: https://assets.ksable.top/me/gravatar.jpg # 默认 Open Graph 图片
   startYear: 2024 # 建站年份
   timezone: Asia/Shanghai # 时区配置 (IANA 格式)，用于日期显示和处理
-  keywords: # SEO 关键词 (全局)
+  keywords: # SEO 关键词
     - 博客
-    - Astro
-    - 技术
-    - 前端
+    - Kissablecho
+    - Kissablecho's 小屋
+    - ksable
+    - ksable's 小屋
+    - 说说
+    - 日记
+    - 碎碎念
     # 请根据你的网站内容添加关键词
   # breadcrumbHome: 首页  # 面包屑导航中首页的显示名称（默认: '首页'）
-  # icp:                         # ICP 备案号（可自定义链接）
-  #   text: "粤ICP备xxxxxxxxxx号"
-  #   link: "https://beian.miit.gov.cn/"
+  icp:                         # ICP 备案号（可自定义链接）
+    text: "✮萌ICP备20242068号✮"
+    link: "https://icp.gov.moe/?keyword=20242068"
   # Enable slug transliteration (converts CJK characters to pinyin/romaji)
   # Note: enabling this will break existing CJK URLs. Run `pnpm save-slugs` first to save old slugs into frontmatter.link
   # enableSlugTransliteration: true
@@ -57,19 +61,99 @@ i18n:
     - code: ja
       label: 日本語
 
+
+# =============================================================================
+# Navigation Routes
+# 导航菜单配置 - 定义顶部导航栏的菜单项
+# =============================================================================
+# 字段说明：
+#   name: 菜单项显示名称
+#   path: 链接路径（有 children 时可省略，点击展开子菜单）
+#   icon: Iconify 图标标识，格式 "集合:图标名"
+#   children: (可选) 子菜单列表，结构与父级相同
+# -----------------------------------------------------------------------------
+# 图标参考：
+#   - Font Awesome 6: https://icon-sets.iconify.design/fa6-solid/
+#   - Remix Icon: https://icon-sets.iconify.design/ri/
+# -----------------------------------------------------------------------------
+navigation:
+  - name: 首页 # 菜单显示名称（nameKey 不存在时的回退文本）
+    nameKey: nav.home # i18n 翻译 key
+    path: / # 链接路径
+    icon: ri:home-heart-fill # 图标
+  - name: 留言板
+    nameKey: nav.lyb
+    path: /lyb
+    icon: ri:message-2-line
+  # - name: 书摘
+  #   path: /reading
+  # - name: 周刊
+  #   nameKey: nav.weekly
+  #   path: /weekly
+  #   icon: ri:newspaper-line
+  - name: 文章 # 有子菜单时，path 可省略
+    nameKey: nav.posts
+    icon: ri:quill-pen-ai-fill
+    children: # 子菜单列表
+      - name: 分类
+        nameKey: nav.categories
+        path: /categories
+        icon: ri:grid-fill
+      - name: 标签
+        nameKey: nav.tags
+        path: /tags
+        icon: fa6-solid:tags
+      - name: 归档
+        nameKey: nav.archives
+        path: /archives
+        icon: ri:archive-2-fill
+  - name: 友链
+    nameKey: nav.friends
+    path: /friends
+    icon: ri:links-line
+  - name: 关于
+    nameKey: nav.about
+    path: /about
+    icon: fa6-regular:circle-user
+  - name: 更多
+    nameKey: nav.more
+    icon: ri:more-2-line
+    children:
+      - name: Tools
+        nameKey: nav.useful-websites
+        path: /web-tools
+        icon: ri:tools-line
+      - name: T 指南
+        nameKey: nav.astro-koharu-guide
+        path: /astro-koharu-guide
+        icon: ri:file-text-line
+      - name: 歌单
+        nameKey: nav.music
+        path: /music
+        icon: ri:music-2-line
+      - name: 追番
+        nameKey: nav.bangumi
+        path: /bangumi
+        icon: ri:bilibili-fill
+
+
 # =============================================================================
 # Category Map
 # Maps Chinese category names to URL-friendly English slugs
 # Example: '随笔' category URL becomes /categories/life
 # =============================================================================
 categoryMap:
+  碎碎念: ssn
+  便笺: note
+  文章: post
+  读书笔记: reads
   # Primary categories
-  随笔: life
-  笔记: note
-  工具: tools
-  周刊: weekly
+  # 随笔: life
+  # 笔记: note
+  # 工具: tools
+  # 周刊: weekly
   # Secondary categories (for nested paths)
-  前端: front-end
+  # 前端: front-end
   # Add more as needed:
   # 书摘: reading
   # 后端: back-end
@@ -87,22 +171,30 @@ categoryMap:
 #   description: 分类描述文字，显示在卡片上
 # -----------------------------------------------------------------------------
 featuredCategories:
-  - link: life # 对应 categoryMap 中 随笔: life
-    label: 随笔
-    image: /img/cover/2.webp
+  - link: ssn # 对应 categoryMap 中 随笔: life
+    label: 碎碎念
+    image: /img/cover/Traum_-24682259/2.webp
     description: 生活记录、随想随笔
   - link: note # 对应 categoryMap 中 笔记: note
-    label: 笔记
-    image: /img/cover/4.webp
+    label: 便笺
+    image: /img/cover/Traum_-24682259/7.webp
     description: 技术笔记、学习笔记
-  - link: note/front-end # 嵌套分类：笔记/前端
-    label: 前端
-    image: /img/cover/1.webp
-    description: 前端技术相关
-  - link: tools # 对应 categoryMap 中 工具: tools
-    label: 工具
-    image: /img/cover/11.webp
-    description: 工具使用、效率提升
+  - link: post # 对应 categoryMap 中 文章: post
+    label: 文章
+    image: /img/cover/Traum_-24682259/5.webp
+    description: 技术文章、学习文章
+  - link: reads # 对应 categoryMap 中 读书笔记: reads
+    label: 读书笔记
+    image: /img/cover/Traum_-24682259/11.webp
+    description: 读书笔记
+  # - link: note/front-end # 嵌套分类：笔记/前端
+  #   label: 前端
+  #   image: /img/cover/1.webp
+  #   description: 前端技术相关
+  # - link: tools # 对应 categoryMap 中 工具: tools
+  #   label: 工具
+  #   image: /img/cover/11.webp
+  #   description: 工具使用、效率提升
 
 # =============================================================================
 # Featured Series
@@ -122,20 +214,20 @@ featuredCategories:
 #   links: 相关链接配置（可选）
 # -----------------------------------------------------------------------------
 featuredSeries:
-  - slug: weekly # URL 路径: /weekly
-    categoryName: 周刊 # 必须与 categoryMap 中的分类名匹配
-    label: 我的周刊 # 简短名称
-    fullName: 我的技术周刊 # 完整名称
-    description: | # 支持多行 Markdown
-      这是周刊/系列文章功能的示例配置。
-      你可以用它来发布定期更新的系列内容，如技术周刊、读书笔记系列等。
-      设置 enabled: false 可以关闭此功能。
-    cover: /img/weekly_header.webp # 系列页面头图
-    enabled: true # 启用此系列
-    icon: ri:newspaper-line # 导航图标
-    links: # 相关链接（可选）
-      github: https://github.com/your-username/your-repo # (可选) GitHub 仓库
-      rss: /rss.xml # (可选) RSS 订阅链接
+  # - slug: weekly # URL 路径: /weekly
+  #   categoryName: 周刊 # 必须与 categoryMap 中的分类名匹配
+  #   label: 我的周刊 # 简短名称
+  #   fullName: 我的技术周刊 # 完整名称
+  #   description: | # 支持多行 Markdown
+  #     这是周刊/系列文章功能的示例配置。
+  #     你可以用它来发布定期更新的系列内容，如技术周刊、读书笔记系列等。
+  #     设置 enabled: false 可以关闭此功能。
+  #   cover: /img/weekly_header.webp # 系列页面头图
+  #   enabled: true # 启用此系列
+  #   icon: ri:newspaper-line # 导航图标
+  #   links: # 相关链接（可选）
+  #     github: https://github.com/your-username/your-repo # (可选) GitHub 仓库
+  #     rss: /rss.xml # (可选) RSS 订阅链接
       # chrome: https://chromewebstore.google.com/detail/your-extension-id # (可选) 浏览器插件
       # docs: https://your-docs-url # (可选) 文档链接
   # 示例：添加第二个系列（取消注释启用）
@@ -162,11 +254,11 @@ featuredSeries:
 # -----------------------------------------------------------------------------
 social:
   github:
-    url: https://github.com/your-username # 替换为你的 GitHub 链接
+    url: https://github.com/God-2077 # 替换为你的 GitHub 链接
     icon: ri:github-fill # Remix Icon 的 GitHub 图标
     color: '#191717' # (可选) 图标颜色
   email:
-    url: mailto:your@email.com # 替换为你的邮箱，需加 mailto: 前缀
+    url: mailto:kissablecho@qq.com # 替换为你的邮箱，需加 mailto: 前缀
     icon: ri:mail-line
     color: '#55acd5'
   rss:
@@ -176,22 +268,26 @@ social:
   # -------------------------------------------------------------------------
   # 以下是更多可选的社交平台配置示例，取消注释并修改即可启用：
   # -------------------------------------------------------------------------
-  # twitter:
-  #   url: https://x.com/your-handle
-  #   icon: ri:twitter-fill
-  #   color: '#4b9ae4'
-  # bilibili:
-  #   url: https://space.bilibili.com/your-id
-  #   icon: ri:bilibili-fill
-  #   color: '#da708a'
+  twitter:
+    url: https://x.com/kissablecho
+    icon: ri:twitter-fill
+    color: '#4b9ae4'
+  bilibili:
+    url: https://space.bilibili.com/1194939177
+    icon: ri:bilibili-fill
+    color: '#da708a'
   # zhihu:
   #   url: https://www.zhihu.com/people/your-id
   #   icon: ri:zhihu-fill
   #   color: '#1e88e5'
-  # music:
-  #   url: https://music.163.com/#/user/home?id=your-id
-  #   icon: ri:netease-cloud-music-line
-  #   color: '#e60026'
+  music:
+    url: https://music.163.com/#/user/home?id=7898403141
+    icon: ri:netease-cloud-music-line
+    color: '#e60026'
+  telegram:
+    url: https://t.me/kissablecho
+    icon: ri:telegram-line
+    color: '#007bff'
 
 # =============================================================================
 # Friends Links
@@ -225,30 +321,117 @@ friends:
         image: https://your-blog.com/avatar.jpg # 头像链接
         color: "#ffc0cb" # 主题色（可选）
   data: # 友链列表
-    - site: 余弦の博客
-      url: https://blog.cosine.ren
-      owner: cos
-      desc: FE / ACG / 手工 / 深色模式强迫症 / INFP / 兴趣广泛养两只猫的老宅女 / remote
-      image: https://blog.cosine.ren/img/avatar.webp
-      color: '#ed788b'
-    - site: 示例博客 A
-      url: https://example-a.com
-      owner: Alice
-      desc: 一个热爱技术的开发者
-      image: https://api.dicebear.com/7.x/avataaars/svg?seed=Alice
-      color: '#BEDCFF'
-    - site: 示例博客 B
-      url: https://example-b.com
-      owner: Bob
-      desc: 分享生活与技术的小站
-      image: https://api.dicebear.com/7.x/avataaars/svg?seed=Bob
-      color: '#FBC1CC'
-    - site: 示例博客 C
-      url: https://example-c.com
-      owner: Carol
-      desc: 记录学习与成长的地方
-      image: https://api.dicebear.com/7.x/avataaars/svg?seed=Carol
-      color: '#ABDCFF'
+    -   contact: mail:ccrice@zohomail.cn,world@reply.ccrice.com
+        screenshot: null
+        keywords: null
+        url: https://www.ccrice.com
+        adddate: 2024-08-01 08:00:00
+        rss: https://world.ccrice.com/feed/
+        site: CC米饭
+        image: https://gravatar.loli.net/avatar/39bab898a41e6fa8d7357abd9c283bb7
+        desc: 是全新的世界！
+    -   contact: mail:937084609@qq.com;qq:937084609
+        screenshot: null
+        keywords: null
+        url: https://crowya.com
+        adddate: 2024-08-01 08:00:00
+        rss: https://crowya.com/feed
+        site: 鸦鸦的巢穴
+        image: https://img.crowya.com/wp-content/uploads/2023/05/crowya.jpg
+        desc: 在乌鸦统治的世界里，洁白的羽毛是有罪的。
+    -   contact: mail:hwb2012@qq.com;qq:654751191
+        screenshot: null
+        keywords: null
+        url: https://blognas.hwb0307.com
+        adddate: 2024-08-01 08:00:00
+        rss: https://blognas.hwb0307.com/feed/
+        site: Bensz
+        image: https://blognas.hwb0307.com/logo.jpg
+        desc: 百代繁华一朝都，谁非过客；千秋明月吹角寒，花是主人。
+    -   contact: mail:zerosli@qq.com,xk759689312@163.com,759689312@qq.com
+        screenshot: null
+        keywords: null
+        url: https://ihello.cc
+        adddate: 2024-08-01 08:00:00
+        rss: https://ihello.cc/feed
+        site: 小稚生活志
+        image: https://ihello.cc/wp-content/uploads/2025/10/logo.png
+        desc: 记录生活点滴
+    -   contact: mail:big_daidai@outlook.com
+        screenshot: null
+        keywords: null
+        url: https://loneapex.cn/
+        adddate: 2024-08-01 08:00:00
+        rss: https://loneapex.cn/feed
+        site: Mimosa的小站
+        image: https://loneapex.cn/wp-content/themes/argon/extra-js/favicon.jpg
+        desc: 含羞草居住的地方
+    -   adddate: 2024-08-20 10:26:00
+        contact: mail:1427291849@qq.com;qq:1427291849
+        url: https://xiangming.site
+        rss: https://xiangming.site/feed/
+        site: 湘铭`Blog
+        image: https://photo.xiangming.site/img/icologo.png
+        desc: 湘铭的秘密基地啊！
+    -   adddate: 2024-10-05 12:07:00
+        url: https://note.moxiify.cn/
+        contact: mail:3188468169@qq.com;qq:3188468169
+        rss: https://note.moxiify.cn/feed/
+        friendlinkpermalink: https://note.moxiify.cn/friends.html
+        site: 墨希MoXiify
+        image: https://q1.qlogo.cn/g?b=qq&nk=3188468169&s=640
+        desc: 做一条，逆流的鱼。
+    -   adddate: 2025-04-12 21:30:00
+        url: https://zhongxiaojie.cn/
+        rss: https://zhongxiaojie.cn/feed
+        contact: mail:root@obaby.org.cn
+        friendlinkpermalink: https://zhongxiaojie.cn/talk
+        site: obaby
+        image: https://cravatar.cn/avatar/3a78942c4ddcda86242f20abdacee082
+        desc: AI界的小学生，逆向分析工程师，非专业APP开发者
+    -   adddate: 2025-04-16 12:05:00
+        url: https://eggk.net/
+        contact: mail:owo@uou.li
+        friendlinkpermalink: https://aowu.dog/index.php/5.html
+        rss: https://eggk.net/feed/
+        site: 拂晓不辍
+        image: https://eggk.net/favicon.ico
+        desc: 总是在幻想自己是主角…
+    -   adddate: 2025-06-21 06:55:00
+        url: https://kumosya.top/
+        rss: https://kumosya.top/atom.xml
+        contact: mail:tweejjhi@outlook.com
+        friendlinkpermalink: https://kumosya.top/link/
+        site: 云藉
+        image: https://kumosya.top/image/avatar.webp
+        desc: 记录滴滴点点，穿梭片片汪洋
+    -   adddate: 2025-09-18 12:04:49
+        url: https://note.redcha.cn/
+        rss: https://note.redcha.cn/rss.xml
+        friendlinkpermalink: https://note.redcha.cn/links
+        contact: mail:kuang2713ben@163.com
+        site: 彬红茶日记
+        image: https://note.redcha.cn/upload/favicon-256x256.png
+        desc: 个人生活笔记📒
+    -   adddate: 2026-02-21 21:00:00
+        url: https://blog.hxrch.top
+        rss: https://blog.hxrch.top/rss.xml
+        friendlinkpermalink: https://blog.hxrch.top/friends/
+        contact: mail:hi@hxrch.top
+        site: Horean’s Blog
+        image: https://img.hxrch.top/bfav256.webp
+        desc: Spread the knowledge wisely & widely. 
+    -   site: 傲雪の
+        url: https://b.oxue.de
+        owner: Kentural
+        desc: 无聊的一天搭配神经的我～
+        image: https://avatars.githubusercontent.com/u/155360005
+        color: "#00cab9"
+        contact: mail:msbyshens@outlook.com
+        rss: https://b.oxue.de/rss.xml
+        adddate: 2026-02-24 01:34:00
+        friendlinkpermalink: https://b.oxue.de/friends/
+
 
 # =============================================================================
 # Announcements
@@ -297,7 +480,14 @@ announcements:
   #   type: info
   #   priority: 5
   #   color: '#6366F1'
-  #   publishDate: '2025-12-25'
+  #   publishDate: '2025-12-25'  - id: site-update-1
+  - title: 站点更新公告
+    content: 本站刚从 Hexo 迁移到 Astro，部分地方可能还不太正常。
+    type: info # 类型: info/success/warning/error
+    priority: 5 # 优先级，数值越大越靠前
+    color: '#6366F1' # (可选) 自定义颜色
+    publishDate: '2026-02-24' # 发布日期
+    endDate: '2026-03-24T23:59:59+08:00' # 结束显示时间
 
 
 # =============================================================================
@@ -305,9 +495,48 @@ announcements:
 # 默认封面列表 - 文章没有指定封面时将随机从列表中选择一张作为封面
 # 不设置则使用内置的 21 张默认封面 (/img/cover/1~21.webp)
 # =============================================================================
-# defaultCoverList:
-#   - /img/cover/1.webp
-#   - https://example.com/custom-cover.webp
+defaultCoverList:
+  # astro-koharu 原封面列表
+  # - /img/cover/astro-koharu/1.webp
+  # - /img/cover/astro-koharu/2.webp
+  # - /img/cover/astro-koharu/3.webp
+  # - /img/cover/astro-koharu/4.webp
+  # - /img/cover/astro-koharu/5.webp
+  # - /img/cover/astro-koharu/6.webp
+  # - /img/cover/astro-koharu/7.webp
+  # - /img/cover/astro-koharu/8.webp
+  # - /img/cover/astro-koharu/9.webp
+  # - /img/cover/astro-koharu/10.webp
+  # - /img/cover/astro-koharu/11.webp
+  # - /img/cover/astro-koharu/12.webp
+  # - /img/cover/astro-koharu/13.webp
+  # - /img/cover/astro-koharu/14.webp
+  # - /img/cover/astro-koharu/15.webp
+  # - /img/cover/astro-koharu/16.webp
+  # - /img/cover/astro-koharu/17.webp
+  # - /img/cover/astro-koharu/18.webp
+  # - /img/cover/astro-koharu/19.webp
+  # - /img/cover/astro-koharu/20.webp
+  # - /img/cover/astro-koharu/21.webp
+  
+  # Pixiv: Traum奇-24682259
+  - /img/cover/Traum_-24682259/1.webp
+  - /img/cover/Traum_-24682259/2.webp
+  - /img/cover/Traum_-24682259/3.webp
+  - /img/cover/Traum_-24682259/4.webp
+  - /img/cover/Traum_-24682259/5.webp
+  - /img/cover/Traum_-24682259/6.webp
+  - /img/cover/Traum_-24682259/7.webp
+  - /img/cover/Traum_-24682259/8.webp
+  - /img/cover/Traum_-24682259/9.webp
+  - /img/cover/Traum_-24682259/10.webp
+  - /img/cover/Traum_-24682259/11.webp
+  - /img/cover/Traum_-24682259/12.webp
+  - /img/cover/Traum_-24682259/13.webp
+  - /img/cover/Traum_-24682259/14.webp
+  - /img/cover/Traum_-24682259/15.webp
+  - /img/cover/Traum_-24682259/16.webp
+  - /img/cover/Traum_-24682259/17.webp
 
 
 # =============================================================================
@@ -353,60 +582,6 @@ content:
   enableCodeMeta: true          # 代码块增强 (title, mark, command)
   enableQuiz: true              # 练习题交互功能
   enableEncryptedBlock: true    # :::encrypted{password="..."} 加密内容块
-
-# =============================================================================
-# Navigation Routes
-# 导航菜单配置 - 定义顶部导航栏的菜单项
-# =============================================================================
-# 字段说明：
-#   name: 菜单项显示名称
-#   path: 链接路径（有 children 时可省略，点击展开子菜单）
-#   icon: Iconify 图标标识，格式 "集合:图标名"
-#   children: (可选) 子菜单列表，结构与父级相同
-# -----------------------------------------------------------------------------
-# 图标参考：
-#   - Font Awesome 6: https://icon-sets.iconify.design/fa6-solid/
-#   - Remix Icon: https://icon-sets.iconify.design/ri/
-# -----------------------------------------------------------------------------
-navigation:
-  - name: 首页 # 菜单显示名称（nameKey 不存在时的回退文本）
-    nameKey: nav.home # i18n 翻译 key
-    path: / # 链接路径
-    icon: ri:home-heart-fill # 图标
-  # - name: 书摘
-  #   path: /reading
-  - name: 周刊
-    nameKey: nav.weekly
-    path: /weekly
-    icon: ri:newspaper-line
-  - name: 文章 # 有子菜单时，path 可省略
-    nameKey: nav.posts
-    icon: ri:quill-pen-ai-fill
-    children: # 子菜单列表
-      - name: 分类
-        nameKey: nav.categories
-        path: /categories
-        icon: ri:grid-fill
-      - name: 标签
-        nameKey: nav.tags
-        path: /tags
-        icon: fa6-solid:tags
-      - name: 归档
-        nameKey: nav.archives
-        path: /archives
-        icon: ri:archive-2-fill
-  - name: 友链
-    nameKey: nav.friends
-    path: /friends
-    icon: ri:links-line
-  - name: 关于
-    nameKey: nav.about
-    path: /about
-    icon: fa6-regular:circle-user
-  - name: 歌单
-    nameKey: nav.music
-    path: /music
-    icon: ri:music-2-fill
 
 # =============================================================================
 # Christmas/Seasonal Features
@@ -492,7 +667,7 @@ navigation:
     # path: # 用于区分不同文章的自定义 js 路径，如果您的文章路径不是 location.pathname，需传此参数
     # lang: # 语言 (默认: 'zh-CN')
 comment:
-  provider: none  # 'remark42' | 'giscus' | 'waline' | 'twikoo' | 'none'
+  provider: twikoo  # 'remark42' | 'giscus' | 'waline' | 'twikoo' | 'none'
   # remark42:
   #   host: https://comment.example.com/
   #   siteId: your-site-id
@@ -545,7 +720,7 @@ comment:
   #   # locale:                        # 自定义语言显示 (可选)
   #   #   placeholder: '请留言...'      # 自定义输入框占位文本
   twikoo:
-    envId: https://your-twikoo.vercel.app  # Twikoo 环境 ID (腾讯云) 或 Vercel 环境地址 (必填)
+    envId: https://twikoo.ksable.top/  # Twikoo 环境 ID (腾讯云) 或 Vercel 环境地址 (必填)
     # region: ap-shanghai              # 环境地域，默认为 ap-shanghai
     # path: location.pathname          # 用于区分不同文章的自定义 js 路径
     # lang: zh-CN                     # 语言 (默认: 'zh-CN')
@@ -556,16 +731,16 @@ comment:
 # id: Umami 网站 ID
 # endpoint: Umami 服务器地址
 # enabled: 是否启用统计
-# statistics_display: 统计信息显示配置
-#   token: Umami 分享链接令牌（只读，可安全暴露到客户端）
-#   article_page_views: 在文章详情页显示访问量
-#   footer_site_stats: 在页脚 Site Stats 中显示全站访问量
 # -----------------------------------------------------------------------------
 analytics:
   umami:
     enabled: true
-    id: your-umami-id
-    endpoint: https://stats.example.com
+    id: 538757aa-8ad9-42ae-9ac4-301b4800ffd1
+    endpoint: https://u.ksable.top
+    # statistics_display: 统计信息显示配置
+    #   token: Umami 分享链接令牌（只读，可安全暴露到客户端）
+    #   article_page_views: 在文章详情页显示访问量
+    #   footer_site_stats: 在页脚 Site Stats 中显示全站访问量
     # statistics_display:
     #   token: your-umami-share-token
     #   article_page_views: true
@@ -584,11 +759,11 @@ analytics:
 # -----------------------------------------------------------------------------
 seo:
   robots:
-    # policy:                          # 爬虫策略（可选，取消注释并配置）
-    #   - userAgent: '*'
-    #     allow: '/'
-    #     disallow:
-    #       - '/api/'
+    policy:                          # 爬虫策略（可选，取消注释并配置）
+      - userAgent: '*'
+        allow: '/'
+        disallow:
+          - '/api/'
     # host: true                       # 可选：添加 Host 指令（Yandex）
 
 # =============================================================================
@@ -596,14 +771,16 @@ seo:
 # =============================================================================
 bgm:
   enabled: true  # (有 audio 时自动启用，显式 false 可禁用)
-  # metingApi: https://163.hyc.moe/  # Meting API 地址，默认为 https://163.hyc.moe/，推荐自部署
   audio:
-    - title: 最爱山山
+    - title: Kissablecho Favorite
       list:
-        - https://music.163.com/playlist?id=8676645748
-    - title: Love Vocaloid
-      list:
-        - https://music.163.com/playlist?id=8882890045
+       - https://music.163.com/playlist?id=7483326429
+    # - title: 最爱山山
+    #   list:
+    #     - https://music.163.com/playlist?id=8676645748
+    # - title: Love Vocaloid
+    #   list:
+    #     - https://music.163.com/playlist?id=8882890045
 
 christmas:
   enabled: false # 总开关
@@ -632,7 +809,7 @@ christmas:
 #   icon: 导航图标，Iconify 格式（可选，默认：ri:bilibili-fill）
 # -----------------------------------------------------------------------------
 bangumi:
-  userId: cosine
+  userId: 1230628
   # label: 追番
   # icon: ri:bilibili-fill
 
@@ -666,3 +843,60 @@ dev:
       name: Zed
       icon: simple-icons:zedindustries
       urlTemplate: 'zed://file/{path}'
+
+
+# =============================================================================
+# Service Worker
+# =============================================================================
+# enabled: 是否启用 Service Worker
+# -----------------------------------------------------------------------------
+serviceWorker:
+  enabled: false
+
+
+# =============================================================================
+# Footer
+# =============================================================================
+# 页脚配置
+# 字段说明：
+# social: 社交链接列表
+#   title: 链接标题
+#   img: 图标 URL（可选，与 icon 二选一）
+#   url: 链接目标 URL
+#   icon: Iconify 图标标识（可选，与 img 二选一）
+# -----------------------------------------------------------------------------
+footer:
+  social:
+    - title: UpYun
+      img: https://ik.imagekit.io/ziw9wtigz/img/upyun_logos/%E5%8F%88%E6%8B%8D%E4%BA%91_logo5-1.png
+      # img: https://assets.ksable.top/img/upyun_logos/%E5%8F%88%E6%8B%8D%E4%BA%91_logo5.png
+      url: https://www.upyun.com/?utm_source=lianmeng&utm_medium=referral
+      icon: 
+    - title: storeweb
+      img: https://upload.storeweb.cn/image/logo.png
+      url: https://storeweb.cn/s/2146
+    - title: travellings
+      url: https://www.travellings.cn/go.html
+      img: https://www.travellings.cn/assets/favicon.png
+    - title: foreverblog
+      url: https://foreverblog.cn/go.html
+      img: https://assets.ksable.top/img/foreverblog.png
+
+# =============================================================================
+# Inject
+# =============================================================================
+# 注入配置
+# 字段说明：
+# head: 头注入内容
+# body: 主体注入内容
+# -----------------------------------------------------------------------------
+inject:
+  head: ""
+  body: |
+    <script>
+      // 注销所有 service worker
+      (async function(){if(!navigator.serviceWorker)return;try{const e=await navigator.serviceWorker.getRegistrations();if(0===e.length)return;for(const t of e){const n=await t.unregister();n?null:console.log(`注销 Service Worker 失败 (作用域: ${t.scope})`)}const n=await caches.keys();for(const o of n)await caches.delete(o)}catch(o){console.error('注销 Service Worker 时出错:',o)}})();
+      (async function(){
+        var a = location.hostname;if (a === 'localhost' || a.startsWith('192.168.')) {localStorage.setItem('umami.disabled', '1');}
+      })();
+    </script>
