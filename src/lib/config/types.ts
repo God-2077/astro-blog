@@ -582,6 +582,19 @@ export interface I18nConfig {
 }
 
 // =============================================================================
+// Footer Configuration
+// =============================================================================
+
+export interface FooterConfig {
+  social?: {
+    title: string;
+    url?: string;
+    icon?: string;
+    img?: string;
+  }[];
+}
+
+// =============================================================================
 // Root Configuration Type
 // =============================================================================
 
@@ -610,4 +623,6 @@ export interface SiteYamlConfig {
   dev?: DevConfig;
   /** Internationalization configuration */
   i18n?: I18nConfig;
+  /** Footer configuration */
+  footer?: FooterConfig;
 }

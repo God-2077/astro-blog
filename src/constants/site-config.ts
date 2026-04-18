@@ -318,17 +318,20 @@ export const bgmConfig: { enabled: boolean; metingApi?: string; audio: BgmAudioG
 export const bangumiConfig: BangumiConfig | null = yamlConfig.bangumi ?? null;
 
 // Navigation routers with auto-injected bangumi entry
-export const routers: RouterItem[] = bangumiConfig
-  ? [
-      ...baseRouters,
-      {
-        name: bangumiConfig.label,
-        nameKey: bangumiConfig.label ? undefined : 'nav.bangumi',
-        path: '/bangumi',
-        icon: bangumiConfig.icon ?? 'ri:bilibili-fill',
-      },
-    ]
-  : baseRouters;
+// export const routers: RouterItem[] = bangumiConfig
+//   ? [
+//       ...baseRouters,
+//       {
+//         name: bangumiConfig.label,
+//         nameKey: bangumiConfig.label ? undefined : 'nav.bangumi',
+//         path: '/bangumi',
+//         icon: bangumiConfig.icon ?? 'ri:bilibili-fill',
+//       },
+//     ]
+//   : baseRouters;
+
+// 移除追番导航自动添加到导航栏，改为手动添加
+export const routers: RouterItem[] = baseRouters;
 
 // Map YAML dev tools config with defaults (dev only)
 export const devConfig: DevConfig = {
@@ -375,3 +378,8 @@ export const configuredSeriesSlugs = new Set(siteConfig.featuredSeries.map((seri
 export const enabledSeriesSlugs = new Set(
   siteConfig.featuredSeries.filter((series) => series.enabled !== false).map((series) => series.slug.toLowerCase()),
 );
+
+// =============================================================================
+// Footer
+// =============================================================================
+export const footerConfig = yamlConfig.footer || {};

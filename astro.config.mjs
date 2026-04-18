@@ -31,6 +31,7 @@ import { remarkShokaRuby } from './src/lib/markdown/remark-shoka-ruby.ts';
 import { remarkShokaSpoiler } from './src/lib/markdown/remark-shoka-spoiler.ts';
 import { shokaMetaTransformer } from './src/lib/markdown/shiki-meta-transformer.ts';
 import { normalizeUrl } from './src/lib/utils.ts';
+import serviceWorker from "astrojs-service-worker";
 
 // Load YAML config directly with Node.js (before Vite plugins are available)
 // This is only used in astro.config.mjs - other files use @rollup/plugin-yaml
@@ -61,6 +62,10 @@ const i18nYaml = yamlConfig.i18n;
 const i18nDefaultLocale = i18nYaml?.defaultLocale ?? 'zh';
 const i18nLocales = (i18nYaml?.locales ?? [{ code: 'zh' }]).map((l) => l.code);
 const hasMultipleLocales = i18nLocales.length > 1;
+
+// Get Service Worker config from YAML
+const serviceWorkerConfig = yamlConfig.serviceWorker;
+const serviceWorkerEnabled = serviceWorkerConfig?.enabled ?? false;
 
 /**
  * Vite plugin for conditional Three.js bundling
@@ -217,6 +222,7 @@ export default defineConfig({
     }),
     robotsTxt(robotsConfig || {}),
     ...(isAnalyze ? [Sonda()] : []),
+    ...(serviceWorkerEnabled ? [serviceWorker()] : []),
   ],
   devToolbar: {
     enabled: true,
