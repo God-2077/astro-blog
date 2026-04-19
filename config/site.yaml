@@ -389,14 +389,14 @@ friends:
         site: obaby
         image: https://cravatar.cn/avatar/3a78942c4ddcda86242f20abdacee082
         desc: AI界的小学生，逆向分析工程师，非专业APP开发者
-    -   adddate: 2025-04-16 12:05:00
-        url: https://eggk.net/
-        contact: mail:owo@uou.li
-        friendlinkpermalink: https://aowu.dog/index.php/5.html
-        rss: https://eggk.net/feed/
-        site: 拂晓不辍
-        image: https://eggk.net/favicon.ico
-        desc: 总是在幻想自己是主角…
+    # -   adddate: 2025-04-16 12:05:00
+        # url: https://eggk.net/
+        # contact: mail:owo@uou.li
+        # friendlinkpermalink: https://aowu.dog/index.php/5.html
+        # rss: https://eggk.net/feed/
+        # site: 拂晓不辍
+        # image: https://eggk.net/favicon.ico
+        # desc: 总是在幻想自己是主角…
     -   adddate: 2025-06-21 06:55:00
         url: https://kumosya.top/
         rss: https://kumosya.top/atom.xml
