@@ -1,0 +1,31 @@
+# .github/workflows/empty-commit-on-blog.yml
+name: Empty Commit on Blog Branch
+
+on:
+  push:
+    branches:
+      - blog
+
+jobs:
+  create-empty-commit:
+    # 检查仓库名称是否包含特定字符串
+    if: contains(github.repository, 'liveysl/astro-blog')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Configure Git
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          
+      - name: Create empty commit
+        run: |
+          git commit --allow-empty -m "chore: empty commit [skip ci]"
+          git push
