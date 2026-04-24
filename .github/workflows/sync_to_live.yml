@@ -36,7 +36,7 @@ jobs:
     - name: Add remote and push
       run: |
         # 添加目标仓库为远程
-        git remote add target git@github.com:liveysl/blog.git
+        git remote add target git@github.com:liveysl/astro-blog.git
         
         # 推送到目标仓库的blog分支
         git push target blog:blog --force
