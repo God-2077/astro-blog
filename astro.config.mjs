@@ -67,6 +67,9 @@ const hasMultipleLocales = i18nLocales.length > 1;
 const serviceWorkerConfig = yamlConfig.serviceWorker;
 const serviceWorkerEnabled = serviceWorkerConfig?.enabled ?? false;
 
+// CDN config from YAML
+const cdnConfig = yamlConfig.site?.assetsCdn;
+
 /**
  * Vite plugin for conditional Three.js bundling
  * When christmas snowfall is disabled, replaces SnowfallCanvas with a noop component
@@ -178,6 +181,7 @@ if (contentConfig.enableCodeMeta !== false) shikiTransformers.push(shokaMetaTran
 export default defineConfig({
   site: yamlConfig.site.url,
   compressHTML: true,
+  ...(cdnConfig && { build: { assetsPrefix: cdnConfig } }),
   markdown: {
     // Enable GitHub Flavored Markdown
     gfm: true,

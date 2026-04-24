@@ -29,6 +29,8 @@ export interface SiteBasicConfig {
   icp?: string | { text: string; link?: string };
   /** Enable slug transliteration (converts CJK characters to pinyin/romaji) @default false */
   enableSlugTransliteration?: boolean;
+  /** CDN for static assets */
+  assetsCdn?: string;
 }
 
 // =============================================================================

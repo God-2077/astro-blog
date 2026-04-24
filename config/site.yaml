@@ -40,6 +40,7 @@ site:
   # Enable slug transliteration (converts CJK characters to pinyin/romaji)
   # Note: enabling this will break existing CJK URLs. Run `pnpm save-slugs` first to save old slugs into frontmatter.link
   # enableSlugTransliteration: true
+  # assetsCdn: https://cdn.example.com
 
 # =============================================================================
 # Internationalization (i18n)

@@ -28,6 +28,8 @@ type SiteConfig = Omit<SiteBasicConfig, 'url'> & {
   featuredCategories?: FeaturedCategory[];
   /** Normalized array of featured series */
   featuredSeries: FeaturedSeriesItem[];
+  /** CDN for static assets */
+  assetsCdn?: string;
 };
 
 /**
@@ -198,6 +200,7 @@ export const siteConfig: SiteConfig = {
   featuredCategories: yamlConfig.featuredCategories,
   featuredSeries: normalizeFeaturedSeries(yamlConfig.featuredSeries),
   enableSlugTransliteration: yamlConfig.site.enableSlugTransliteration,
+  assetsCdn: yamlConfig.site.assetsCdn,
 };
 
 export const socialConfig: SocialConfig = yamlConfig.social ?? {};
