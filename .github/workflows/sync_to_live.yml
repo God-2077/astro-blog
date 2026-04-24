@@ -1,0 +1,42 @@
+name: Sync to Live Blog
+
+on:
+  push:
+    branches: [ blog ]
+  workflow_dispatch:  # 支持手动触发
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout source repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        ref: blog
+    
+    - name: Configure Git
+      run: |
+        git config --global user.name "GitHub Action"
+        git config --global user.email "action@github.com"
+    
+    - name: Set up SSH
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        
+        # 添加GitHub到known_hosts
+        ssh-keyscan github.com >> ~/.ssh/known_hosts
+        
+        # 测试SSH连接
+        ssh -T git@github.com || true
+    
+    - name: Add remote and push
+      run: |
+        # 添加目标仓库为远程
+        git remote add target git@github.com:liveysl/blog.git
+        
+        # 推送到目标仓库的blog分支
+        git push target blog:blog --force
