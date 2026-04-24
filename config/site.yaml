@@ -40,7 +40,7 @@ site:
   # Enable slug transliteration (converts CJK characters to pinyin/romaji)
   # Note: enabling this will break existing CJK URLs. Run `pnpm save-slugs` first to save old slugs into frontmatter.link
   # enableSlugTransliteration: true
-  # assetsCdn: https://cdn.example.com
+  assetsCdn: https://blog-v-cdn.ksable.top
 
 # =============================================================================
 # Internationalization (i18n)
@@ -892,7 +892,8 @@ footer:
 # body: 主体注入内容
 # -----------------------------------------------------------------------------
 inject:
-  head: ""
+  head: |
+    <link rel="preconnect" href="https://blog-v-cdn.ksable.top" crossorigin><link rel="dns-prefetch" href="https://blog-v-cdn.ksable.top">
   body: |
     <script>
       // 注销所有 service worker
