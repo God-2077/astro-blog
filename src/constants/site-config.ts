@@ -186,6 +186,7 @@ type SocialConfig = {
 export const siteConfig: SiteConfig = {
   title: yamlConfig.site.title,
   alternate: yamlConfig.site.alternate,
+  mobileLogoText: yamlConfig.site.mobileLogoText,
   subtitle: yamlConfig.site.subtitle,
   name: yamlConfig.site.name,
   description: yamlConfig.site.description,

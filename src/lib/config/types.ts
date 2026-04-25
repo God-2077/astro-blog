@@ -11,6 +11,7 @@
 export interface SiteBasicConfig {
   title: string;
   alternate?: string;
+  mobileLogoText?: string;
   subtitle?: string;
   name: string;
   description?: string;

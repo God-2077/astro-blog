@@ -16,7 +16,7 @@ interface Props {
 }
 
 const { isPostPage = false, tocNumbering = true } = Astro.props;
-const { alternate, title, showLogo } = siteConfig;
+const { alternate, title, showLogo, mobileLogoText } = siteConfig;
 const locale = getLocaleFromUrl(Astro.url.pathname);
 ---
 
@@ -44,7 +44,7 @@ const locale = getLocaleFromUrl(Astro.url.pathname);
         isPostPage={isPostPage}
         enableNumbering={tocNumbering}
         logoElement={showLogo ? 'svg' : 'text'}
-        logoText={alternate || title}
+        logoText={mobileLogoText || title}
         logoSrc={logoSrc}
       />
     </div>
