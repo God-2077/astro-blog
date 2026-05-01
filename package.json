@@ -31,7 +31,9 @@
     "docker:up": "docker compose --env-file ./.env -f docker/docker-compose.yml up -d --build",
     "docker:down": "docker compose -f docker/docker-compose.yml down",
     "docker:logs": "docker compose -f docker/docker-compose.yml logs -f",
-    "docker:rebuild": "bash docker/rebuild.sh"
+    "docker:rebuild": "bash docker/rebuild.sh",
+    "translation:install": "cd blog-translation && pnpm i",
+    "translation:start": "cd blog-translation && pnpm start"
   },
   "dependencies": {
     "@antv/infographic": "^0.2.4",
