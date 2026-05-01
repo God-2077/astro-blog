@@ -1,0 +1,4 @@
+[submodule "blog-translation"]
+	path = blog-translation
+	url = git@github.com:God-2077/fast_md_fanyi.git
+	branch = blog-version
