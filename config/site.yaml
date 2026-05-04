@@ -433,6 +433,16 @@ friends:
         rss: https://b.oxue.de/rss.xml
         adddate: 2026-02-24 01:34:00
         friendlinkpermalink: https://b.oxue.de/friends/
+    -   site: 他说
+        url: https://090909.top/
+        owner: 梁栋烨
+        desc: 梁栋烨的博客网站。
+        image: https://090909.top/assets/images/avatar.webp
+        color: "#42a0b8"
+        contact: mail:3813563706@qq.com
+        rss: https://090909.top/atom.xml
+        adddate: 2026-05-05 02:18:00
+        friendlinkpermalink: https://090909.top/friends/
 
 
 # =============================================================================
