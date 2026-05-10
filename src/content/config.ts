@@ -52,6 +52,13 @@ const blogCollection = defineCollection({
     password: z.string().optional(),
     /** Keywords for SEO */
     keywords: z.array(z.string()).optional(),
+    /**
+     * Control post visibility on listing pages.
+     * - 'home': hidden on home page
+     * - 'home_rss': hidden on home page and RSS
+     * - 'all': hidden on all aggregate listing pages
+     */
+    hideFrom: z.enum(['home', 'home_rss', 'rss', 'all']).optional(),
   }) satisfies z.ZodType<BlogSchema, z.ZodTypeDef, BlogSchemaInput>,
 });
 

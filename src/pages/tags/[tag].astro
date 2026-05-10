@@ -5,7 +5,14 @@ import { CONTENT_PADDING } from '@constants/layout';
 import { siteConfig } from '@constants/site-config';
 import Layout from '@layouts/Layout.astro';
 import TwoColumnLayout from '@layouts/TwoColumnLayout.astro';
-import { getPostLastCategory, getPostSlug, getSortedPosts, normalizeTag, translateCategoryName } from '@lib/content';
+import {
+  filterHiddenPosts,
+  getPostLastCategory,
+  getPostSlug,
+  getSortedPosts,
+  normalizeTag,
+  translateCategoryName,
+} from '@lib/content';
 import { displayDate } from '@lib/date';
 import { encodeSlug } from '@lib/route';
 import { defaultLocale, getLocaleFromUrl, localizedPath, t } from '@/i18n';
@@ -30,7 +37,8 @@ export async function getStaticPaths() {
 const { tag } = Astro.props;
 const locale = getLocaleFromUrl(Astro.url.pathname);
 const allPosts = await getSortedPosts(locale);
-const posts = allPosts.filter((post) => post.data.tags?.some((tg) => normalizeTag(tg) === tag));
+const visiblePosts = filterHiddenPosts(allPosts, 'anyList');
+const posts = visiblePosts.filter((post) => post.data.tags?.some((tg) => normalizeTag(tg) === tag));
 ---
 
 <Layout title={`${t(locale, 'tag.postsWithTag', { name: tag })} | ${siteConfig.title}`} description={t(locale, 'tag.postsWithTag', { name: tag })}>

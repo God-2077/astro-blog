@@ -28,6 +28,13 @@ export interface BlogSchema {
   password?: string;
   /** Keywords for SEO */
   keywords?: string[];
+  /**
+   * Control post visibility on listing pages.
+   * - 'home': hidden on home page
+   * - 'home_rss': hidden on home page and RSS
+   * - 'all': hidden on all aggregate pages (home, RSS, categories, tags, archives, series, related)
+   */
+  hideFrom?: 'home' | 'home_rss' | 'rss' | 'all';
 }
 
 /**

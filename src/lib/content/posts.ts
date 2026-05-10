@@ -2,6 +2,30 @@
  * Post-related utility functions
  */
 
+/**
+ * Listing context for hideFrom filtering.
+ * 'home' → index page only
+ * 'rss' → RSS feeds
+ * 'anyList' → all other aggregate listing pages (categories, tags, archives, series, related, /posts/)
+ */
+export type PostListContext = 'home' | 'rss' | 'anyList';
+
+/** Check if a post should be hidden from a given listing context */
+export function isHiddenFromList(post: BlogPost, context: PostListContext): boolean {
+  const ef = post.data.hideFrom;
+  if (!ef) return false;
+  if (ef === 'all') return true;
+  if (ef === 'home') return context === 'home';
+  if (ef === 'rss') return context === 'rss';
+  if (ef === 'home_rss') return context === 'home' || context === 'rss';
+  return false;
+}
+
+/** Filter posts array, removing those hidden from the given listing context */
+export function filterHiddenPosts(posts: BlogPost[], context: PostListContext): BlogPost[] {
+  return posts.filter((p) => !isHiddenFromList(p, context));
+}
+
 import { type CollectionEntry, getCollection } from 'astro:content';
 import summaries from '@assets/summaries.json';
 import { siteConfig } from '@constants/site-config';
@@ -164,7 +188,7 @@ export async function getPostCount(locale?: string) {
 export async function getPostsByCategory(categoryName: string, locale?: string): Promise<BlogPost[]> {
   return memoize('postsByCat', `${categoryName}:${locale ?? '__all__'}`, async () => {
     const posts = await getSortedPosts(locale);
-    return posts.filter((post) => {
+    const matched = posts.filter((post) => {
       const { categories } = post.data;
       if (!categories?.length) return false;
 
@@ -179,6 +203,7 @@ export async function getPostsByCategory(categoryName: string, locale?: string):
       }
       return false;
     });
+    return filterHiddenPosts(matched, 'anyList');
   });
 }
 
@@ -346,11 +371,13 @@ export function getFeaturedCategoryNames(): string[] {
 export async function getNonFeaturedPosts(locale?: string): Promise<BlogPost[]> {
   const categoryNames = getFeaturedCategoryNames();
   if (categoryNames.length === 0) {
-    return await getSortedPosts(locale);
+    const posts = await getSortedPosts(locale);
+    return filterHiddenPosts(posts, 'anyList');
   }
 
   const allPosts = await getSortedPosts(locale);
-  return allPosts.filter((post) => !categoryNames.some((catName) => isPostInCategory(post, catName)));
+  const filtered = allPosts.filter((post) => !categoryNames.some((catName) => isPostInCategory(post, catName)));
+  return filterHiddenPosts(filtered, 'anyList');
 }
 
 /**
@@ -416,6 +443,8 @@ export async function getHomePagePosts(locale?: string): Promise<{
 
   // 单次遍历所有文章
   for (const post of allPosts) {
+    if (isHiddenFromList(post, 'home')) continue;
+
     // 检查是否属于任何 featured 系列
     const isFeatured = categoryNames.some((catName) => isPostInCategory(post, catName));
 

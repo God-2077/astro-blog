@@ -4,14 +4,15 @@ import Cover from '@components/ui/cover/Cover.astro';
 import { CONTENT_PADDING } from '@constants/layout';
 import { siteConfig } from '@constants/site-config';
 import TwoColumnLayout from '@layouts/TwoColumnLayout.astro';
-import { getPostSlug, getSortedPosts } from '@lib/content';
+import { filterHiddenPosts, getPostSlug, getSortedPosts } from '@lib/content';
 import { displayDate } from '@lib/date';
 import { encodeSlug } from '@lib/route';
 import { getLocaleFromUrl, localizedPath, t } from '@/i18n';
 import Layout from '../layouts/Layout.astro';
 
 const locale = getLocaleFromUrl(Astro.url.pathname);
-const posts = await getSortedPosts(locale);
+const allPosts = await getSortedPosts(locale);
+const posts = filterHiddenPosts(allPosts, 'anyList');
 
 // 按年份对文章进行分组
 const postsByYear = posts.reduce(

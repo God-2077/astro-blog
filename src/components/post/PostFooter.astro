@@ -1,5 +1,5 @@
 ---
-import { getSortedPosts } from '@lib/content';
+import { filterHiddenPosts, getSortedPosts } from '@lib/content';
 import { getRelatedPosts, hasSimilarityData } from '@lib/content/similarities';
 import { toPostRefWithCategory } from '@lib/content/transforms';
 import type { BlogPost } from 'types/blog';
@@ -19,7 +19,8 @@ const locale = getLocaleFromUrl(Astro.url.pathname);
 const hasData = hasSimilarityData();
 
 // Get all posts
-const allPosts = await getSortedPosts(locale);
+const allPostsRaw = await getSortedPosts(locale);
+const allPosts = filterHiddenPosts(allPostsRaw, 'anyList');
 const totalPosts = allPosts.length;
 
 // Calculate how many posts to show on each side

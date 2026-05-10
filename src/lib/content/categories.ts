@@ -7,7 +7,7 @@ import { getContentCategoryName, getContentFeaturedCategoryField, getContentSeri
 import type { Locale } from '@/i18n/types';
 import { encodeSlug } from '../route';
 import { memoize } from './cache';
-import { getSortedPosts } from './posts';
+import { filterHiddenPosts, getSortedPosts } from './posts';
 import type { Category, CategoryListResult } from './types';
 
 /** Reverse map: slug → category name for O(1) lookup */
@@ -28,12 +28,13 @@ export { translateCategoryName } from './category-translate';
 export async function getCategoryList(locale?: string): Promise<CategoryListResult> {
   return memoize('categoryList', locale ?? '__all__', async () => {
     const allBlogPosts = await getSortedPosts(locale);
+    const visiblePosts = filterHiddenPosts(allBlogPosts, 'anyList');
     const countMap: { [key: string]: number } = {}; // TODO: 需要优化，应该以分类路径为键名而不是 name 如数据结构既是根分类也是笔记-后端-数据结构。
     const resCategories: Category[] = [];
 
     // 统计每个分类的直接文章数量
-    for (let i = 0; i < allBlogPosts.length; ++i) {
-      const post = allBlogPosts[i];
+    for (let i = 0; i < visiblePosts.length; ++i) {
+      const post = visiblePosts[i];
       const { catalog, categories } = post.data;
       if (!catalog || !categories?.length) {
         continue;

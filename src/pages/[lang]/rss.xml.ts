@@ -1,6 +1,6 @@
 import rss from '@astrojs/rss';
 import { siteConfig } from '@constants/site-config';
-import { getCategoryArr, getPostSlug, getSortedPosts } from '@lib/content';
+import { filterHiddenPosts, getCategoryArr, getPostSlug, getSortedPosts } from '@lib/content';
 import { encodeSlug } from '@lib/route';
 import { buildRssItemFields } from '@lib/rss-utils';
 import type { APIContext } from 'astro';
@@ -13,7 +13,8 @@ export function getStaticPaths() {
 
 export async function GET(context: APIContext) {
   const lang = context.params.lang as string;
-  const posts = await getSortedPosts(lang);
+  const allPosts = await getSortedPosts(lang);
+  const posts = filterHiddenPosts(allPosts, 'rss');
   const { site } = context;
 
   if (!site) {

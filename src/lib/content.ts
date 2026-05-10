@@ -25,10 +25,13 @@ export {
 // Locale Utilities
 // =============================================================================
 export { getPostLocale, getPostSlug } from './content/locale';
+export type { PostListContext } from './content/posts';
 // =============================================================================
 // Post Utilities
 // =============================================================================
 export {
+  // hideFrom filtering
+  filterHiddenPosts,
   // Core post functions
   getAdjacentSeriesPosts,
   // Featured series functions
@@ -53,6 +56,7 @@ export {
   getSeriesBySlug,
   getSeriesPosts,
   getSortedPosts,
+  isHiddenFromList,
 } from './content/posts';
 
 // =============================================================================
