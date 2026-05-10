@@ -125,10 +125,6 @@ navigation:
         nameKey: nav.useful-websites
         path: /web-tools
         icon: ri:tools-line
-      - name: T 指南
-        nameKey: nav.astro-koharu-guide
-        path: /astro-koharu-guide
-        icon: ri:file-text-line
       - name: 歌单
         nameKey: nav.music
         path: /music
