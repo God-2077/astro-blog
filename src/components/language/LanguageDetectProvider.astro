@@ -1,0 +1,25 @@
+---
+import LanguageDetectPopup from './LanguageDetectPopup';
+/**
+ * LanguageDetectProvider Component
+ *
+ * Initializes browser language detection and mounts the React popup component.
+ * Should be placed in Layout.astro alongside other global components.
+ */
+---
+
+<LanguageDetectPopup client:load />
+
+<script>
+  import { initLanguageDetect } from '@store/language-detect';
+
+  function init() {
+    initLanguageDetect();
+  }
+
+  if (document.readyState !== 'loading') {
+    init();
+  }
+
+  document.addEventListener('astro:page-load', init);
+</script>

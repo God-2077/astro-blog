@@ -16,6 +16,7 @@ import { ClientRouter } from 'astro:transitions';
 import AnnouncementProvider from '@components/announcement/AnnouncementProvider.astro';
 import GlobalBGMPlayer from '@components/bgm/GlobalBGMPlayer';
 import ChristmasEffects from '@components/christmas/ChristmasEffects.astro';
+import LanguageDetectProvider from '@components/language/LanguageDetectProvider.astro';
 import FloatingGroup from '@components/layout/FloatingGroup';
 import Header from '@components/layout/Header.astro';
 import MobileDrawer from '@components/layout/MobileDrawer.astro';
@@ -361,6 +362,7 @@ const keywords = keywordsOverride || siteConfig.keywords || [siteConfig.title];
       <ImageLightbox client:idle />
       <Toaster client:idle />
       <AnnouncementProvider />
+      <LanguageDetectProvider />
     </div>
   </body>
 </html>

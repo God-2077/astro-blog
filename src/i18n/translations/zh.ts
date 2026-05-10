@@ -197,6 +197,12 @@ export const uiStrings = {
   'floating.bgm': '背景音乐',
   'floating.toggleToolbar': '展开/收起工具栏',
 
+  // ── Language Detect ─────────────────────────────────────────
+  'languageDetect.title': '语言切换',
+  'languageDetect.message': '检测到您的浏览器语言是{lang}，是否切换到{lang}版？',
+  'languageDetect.switch': '切换到{lang}',
+  'languageDetect.dismiss': '不再提醒',
+
   // ── Announcement ────────────────────────────────────────────
   'announcement.title': '公告',
   'announcement.new': '新',

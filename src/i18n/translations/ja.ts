@@ -198,6 +198,12 @@ export const uiStrings: UIStrings = {
   'floating.bgm': 'BGM',
   'floating.toggleToolbar': 'ツールバーを切り替え',
 
+  // ── 言語検出 ─────────────────────────────────────────────
+  'languageDetect.title': '言語切替',
+  'languageDetect.message': 'お使いのブラウザ言語は{lang}です。{lang}版に切り替えますか？',
+  'languageDetect.switch': '{lang}に切り替える',
+  'languageDetect.dismiss': '今後表示しない',
+
   // ── お知らせ ────────────────────────────────────────────
   'announcement.title': 'お知らせ',
   'announcement.new': '新着',

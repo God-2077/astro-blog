@@ -198,6 +198,12 @@ export const uiStrings: UIStrings = {
   'floating.bgm': 'Background music',
   'floating.toggleToolbar': 'Toggle toolbar',
 
+  // ── Language Detect ─────────────────────────────────────────
+  'languageDetect.title': 'Language Switch',
+  'languageDetect.message': 'Your browser language is {lang}. Switch to {lang}?',
+  'languageDetect.switch': 'Switch to {lang}',
+  'languageDetect.dismiss': "Don't show again",
+
   // ── Announcement ────────────────────────────────────────────
   'announcement.title': 'Announcements',
   'announcement.new': 'New',
