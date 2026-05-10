@@ -19,4 +19,5 @@ export const defaultContentConfig: ContentConfig = yamlConfig.content ?? {
   enableCodePenEmbed: true,
   previewCacheTime: 30, // 30 days
   lazyLoadEmbeds: true,
+  donate: undefined,
 };

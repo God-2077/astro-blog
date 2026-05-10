@@ -5,7 +5,7 @@
 - `pnpm dev` — dev server (localhost:4321)
 - `pnpm build` — production build
 - `pnpm check` — Astro type-check
-- `pnpm lint:fix` — Biome auto-fix (run before completing tasks)
+- `pnpm lint:fix` — Biome auto-fix（严禁运行！会污染整个项目的格式化）
 - `pnpm knip` — find dead code/deps
 
 **All commands use `pnpm`, not npm/yarn.**

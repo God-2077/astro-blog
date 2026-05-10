@@ -318,6 +318,10 @@ export const uiStrings: UIStrings = {
   // ── Copy Link ───────────────────────────────────────────────
   'cover.copyLink': 'Copy link',
 
+  // ── Donate ───────────────────────────────────────────────────
+  'donate.button': 'Donate',
+  'donate.close': 'Close',
+
   // ── Comment ────────────────────────────────────────────────
   'comment.prompt': 'If you enjoyed this, leave a comment~',
 

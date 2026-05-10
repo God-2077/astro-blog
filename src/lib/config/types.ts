@@ -172,6 +172,8 @@ export interface ContentConfig {
   enableCodeMeta?: boolean;
   enableQuiz?: boolean;
   enableEncryptedBlock?: boolean;
+  /** 赞赏图片链接，设置后文章下方显示赞赏按钮 */
+  donate?: string;
 }
 
 // =============================================================================

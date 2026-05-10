@@ -1,0 +1,102 @@
+---
+/**
+ * Donate Button Component
+ *
+ * Displays a pink donation button below posts when a donate image URL is configured.
+ * Clicking the button shows a popup with the donation QR code / image.
+ */
+import { defaultContentConfig } from '@constants/content-config';
+import { getLocaleFromUrl, t } from '@/i18n';
+
+const donateUrl = defaultContentConfig.donate;
+if (!donateUrl) return;
+
+const locale = getLocaleFromUrl(Astro.url.pathname);
+---
+
+<div class="donate-wrapper relative flex flex-col items-center pt-6 pb-4">
+  <button
+    id="donate-toggle"
+    class="donate-btn inline-flex items-center gap-1.5 rounded-xl px-5 py-2 text-sm font-medium text-white transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95"
+    style="background: linear-gradient(135deg, #f9a8d4, #ec4899); box-shadow: 0 2px 8px rgba(236, 72, 153, 0.35);"
+    aria-label={t(locale, 'donate.button')}
+  >
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+    </svg>
+    {t(locale, 'donate.button')}
+  </button>
+
+  <div
+    id="donate-popup"
+    class="donate-popup invisible absolute bottom-full left-1/2 z-50 mb-3 -translate-x-1/2 opacity-0 transition-all duration-300 ease-out"
+  >
+    <div class="rounded-xl bg-white p-4 shadow-2xl ring-1 ring-black/5 dark:bg-gray-800 dark:ring-white/10">
+      <div class="mb-2 flex items-center justify-between">
+        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{t(locale, 'donate.button')}</span>
+        <button
+          id="donate-close"
+          class="ml-4 rounded-full p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-700 dark:hover:text-gray-300"
+          aria-label={t(locale, 'donate.close')}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <img
+        src={donateUrl}
+        alt={t(locale, 'donate.button')}
+        class="h-auto w-56 rounded-lg object-contain"
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+    <!-- Arrow -->
+    <div class="absolute left-1/2 top-full -translate-x-1/2 border-8 border-transparent border-t-white dark:border-t-gray-800"></div>
+  </div>
+</div>
+
+<script>
+  const btn = document.getElementById('donate-toggle');
+  const popup = document.getElementById('donate-popup');
+  const close = document.getElementById('donate-close');
+
+  if (btn && popup) {
+    const show = () => {
+      popup.classList.remove('invisible', 'opacity-0');
+      popup.classList.add('visible', 'opacity-100');
+    };
+    const hide = () => {
+      popup.classList.add('invisible', 'opacity-0');
+      popup.classList.remove('visible', 'opacity-100');
+    };
+
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (popup.classList.contains('opacity-100')) {
+        hide();
+      } else {
+        show();
+      }
+    });
+
+    close?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      hide();
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!popup.contains(e.target as Node) && e.target !== btn) {
+        hide();
+      }
+    });
+  }
+</script>
+
+<style>
+  .donate-btn:hover {
+    box-shadow: 0 4px 16px rgba(236, 72, 153, 0.5) !important;
+  }
+</style>
