@@ -1,4 +1,5 @@
 ---
+import { siteConfig } from '@constants/site-config';
 import Search from 'astro-pagefind/components/Search';
 /**
  * SearchPortal Component
@@ -21,6 +22,7 @@ const locale = getLocaleFromUrl(Astro.url.pathname);
     id="search-for-dialog"
     className="pagefind-ui"
     uiOptions={{
+      baseUrl: siteConfig.site,
       showImages: false,
       resetStyles: false,
       translations: {
