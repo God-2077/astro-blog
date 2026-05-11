@@ -59,11 +59,15 @@ const locale = getLocaleFromUrl(Astro.url.pathname);
 </div>
 
 <script>
-  const btn = document.getElementById('donate-toggle');
-  const popup = document.getElementById('donate-popup');
-  const close = document.getElementById('donate-close');
+  let globalClickHandler: ((e: Event) => void) | null = null;
 
-  if (btn && popup) {
+  function initDonate() {
+    const btn = document.getElementById('donate-toggle');
+    const popup = document.getElementById('donate-popup');
+    const close = document.getElementById('donate-close');
+
+    if (!btn || !popup) return;
+
     const show = () => {
       popup.classList.remove('invisible', 'opacity-0');
       popup.classList.add('visible', 'opacity-100');
@@ -87,12 +91,19 @@ const locale = getLocaleFromUrl(Astro.url.pathname);
       hide();
     });
 
-    document.addEventListener('click', (e) => {
+    if (globalClickHandler) {
+      document.removeEventListener('click', globalClickHandler);
+    }
+    globalClickHandler = (e) => {
       if (!popup.contains(e.target as Node) && e.target !== btn) {
         hide();
       }
-    });
+    };
+    document.addEventListener('click', globalClickHandler);
   }
+
+  initDonate();
+  document.addEventListener('astro:after-swap', initDonate);
 </script>
 
 <style>
