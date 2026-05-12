@@ -324,7 +324,7 @@ export const uiStrings = {
   'cover.copyLink': '复制链接',
 
   // ── Donate ───────────────────────────────────────────────────
-  'donate.button': '赞赏',
+  'donate.button': '投喂',
   'donate.close': '关闭',
 
   // ── Comment ────────────────────────────────────────────────
