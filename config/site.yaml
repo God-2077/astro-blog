@@ -594,6 +594,7 @@ content:
   enableQuiz: true              # 练习题交互功能
   enableEncryptedBlock: true    # :::encrypted{password="..."} 加密内容块
   donate: "https://ik.imagekit.io/ziw9wtigz/me/WeChat-Appreciation-code-3.png?updatedAt=1778394979458"  # 赞赏图片链接，设置后文章下方显示赞赏按钮
+  mdxSupport: true # 启用 MDX 支持
 
 # =============================================================================
 # Christmas/Seasonal Features

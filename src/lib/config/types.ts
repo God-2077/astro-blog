@@ -174,6 +174,8 @@ export interface ContentConfig {
   enableEncryptedBlock?: boolean;
   /** 赞赏图片链接，设置后文章下方显示赞赏按钮 */
   donate?: string;
+  /** 启用 MDX 支持 */
+  mdxSupport?: boolean;
 }
 
 // =============================================================================

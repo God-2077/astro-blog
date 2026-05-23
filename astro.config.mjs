@@ -32,6 +32,7 @@ import { remarkShokaSpoiler } from './src/lib/markdown/remark-shoka-spoiler.ts';
 import { shokaMetaTransformer } from './src/lib/markdown/shiki-meta-transformer.ts';
 import { normalizeUrl } from './src/lib/utils.ts';
 import serviceWorker from "astrojs-service-worker";
+import mdx from '@astrojs/mdx';
 
 // Load YAML config directly with Node.js (before Vite plugins are available)
 // This is only used in astro.config.mjs - other files use @rollup/plugin-yaml
@@ -69,6 +70,9 @@ const serviceWorkerEnabled = serviceWorkerConfig?.enabled ?? false;
 
 // CDN config from YAML
 const cdnConfig = yamlConfig.site?.assetsCdn;
+
+// MDX 支持配置
+const mdxSupport = yamlConfig.content?.mdxSupport ?? false;
 
 /**
  * Vite plugin for conditional Three.js bundling
@@ -200,6 +204,7 @@ export default defineConfig({
     },
   },
   integrations: [
+    ...(mdxSupport ? [mdx()] : []),
     react(),
     sitemap(),
     icon({
