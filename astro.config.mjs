@@ -4,7 +4,7 @@ import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import yaml from '@rollup/plugin-yaml';
 import tailwindcss from '@tailwindcss/vite';
-import umami from '@yeskunall/astro-umami';
+// import umami from '@yeskunall/astro-umami';
 import { defineConfig } from 'astro/config';
 import icon from 'astro-icon';
 import mermaid from 'astro-mermaid';
@@ -44,16 +44,16 @@ function loadConfigForAstro() {
 
 const yamlConfig = loadConfigForAstro();
 
-// Bundle analysis mode: ANALYZE=true pnpm build
-// Use loadEnv to read .env file (astro.config.mjs runs before Vite loads .env)
-const { ANALYZE } = loadEnv(process.env.NODE_ENV || 'production', process.cwd(), '');
-const isAnalyze = ANALYZE === 'true';
-// Get Umami analytics config from YAML
-const umamiConfig = yamlConfig.analytics?.umami;
-const umamiEnabled = umamiConfig?.enabled ?? false;
-const umamiId = umamiConfig?.id;
-// Normalize endpoint URL to remove trailing slashes
-const umamiEndpoint = normalizeUrl(umamiConfig?.endpoint);
+// // Bundle analysis mode: ANALYZE=true pnpm build
+// // Use loadEnv to read .env file (astro.config.mjs runs before Vite loads .env)
+// const { ANALYZE } = loadEnv(process.env.NODE_ENV || 'production', process.cwd(), '');
+// const isAnalyze = ANALYZE === 'true';
+// // Get Umami analytics config from YAML
+// const umamiConfig = yamlConfig.analytics?.umami;
+// const umamiEnabled = umamiConfig?.enabled ?? false;
+// const umamiId = umamiConfig?.id;
+// // Normalize endpoint URL to remove trailing slashes
+// const umamiEndpoint = normalizeUrl(umamiConfig?.endpoint);
 
 // Get robots.txt config from YAML
 const robotsConfig = yamlConfig.seo?.robots;
@@ -216,15 +216,15 @@ export default defineConfig({
       },
     }),
     // Umami analytics - configured via config/site.yaml
-    ...(umamiEnabled && umamiId
-      ? [
-          umami({
-            id: umamiId,
-            endpointUrl: umamiEndpoint,
-            hostUrl: umamiEndpoint,
-          }),
-        ]
-      : []),
+    // ...(umamiEnabled && umamiId
+    //   ? [
+    //       umami({
+    //         id: umamiId,
+    //         endpointUrl: umamiEndpoint,
+    //         hostUrl: umamiEndpoint,
+    //       }),
+    //     ]
+    //   : []),
     pagefind(),
     mermaid({
       autoTheme: true,
