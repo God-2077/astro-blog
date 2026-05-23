@@ -44,16 +44,10 @@ function loadConfigForAstro() {
 
 const yamlConfig = loadConfigForAstro();
 
-// // Bundle analysis mode: ANALYZE=true pnpm build
-// // Use loadEnv to read .env file (astro.config.mjs runs before Vite loads .env)
-// const { ANALYZE } = loadEnv(process.env.NODE_ENV || 'production', process.cwd(), '');
-// const isAnalyze = ANALYZE === 'true';
-// // Get Umami analytics config from YAML
-// const umamiConfig = yamlConfig.analytics?.umami;
-// const umamiEnabled = umamiConfig?.enabled ?? false;
-// const umamiId = umamiConfig?.id;
-// // Normalize endpoint URL to remove trailing slashes
-// const umamiEndpoint = normalizeUrl(umamiConfig?.endpoint);
+// Bundle analysis mode: ANALYZE=true pnpm build
+// Use loadEnv to read .env file (astro.config.mjs runs before Vite loads .env)
+const { ANALYZE } = loadEnv(process.env.NODE_ENV || 'production', process.cwd(), '');
+const isAnalyze = ANALYZE === 'true';
 
 // Get robots.txt config from YAML
 const robotsConfig = yamlConfig.seo?.robots;
