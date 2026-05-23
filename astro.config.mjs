@@ -204,8 +204,8 @@ export default defineConfig({
     },
   },
   integrations: [
-    ...(mdxSupport ? [mdx()] : []),
     react(),
+    ...(mdxSupport ? [mdx()] : []),
     sitemap(),
     icon({
       include: {
