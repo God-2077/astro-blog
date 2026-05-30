@@ -41,7 +41,7 @@ const fieldExtractors: { [K in keyof PostFieldMap]: (post: BlogPost, locale: str
   // 直接字段
   slug: (p) => getPostSlug(p),
   link: (p) => p.data?.link,
-  title: (p) => p.data.title,
+  title: (p) => (p.data.password ? `🔒 ${p.data.title}` : p.data.title),
   date: (p) => p.data.date,
   cover: (p) => p.data?.cover,
   tags: (p) => p.data?.tags,

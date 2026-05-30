@@ -50,7 +50,7 @@ const posts = await getPostsByCategory(rootCategory?.name ?? '', locale);
             <p class="shoka-decoration-circle group text-primary hover:text-blue relative px-6 py-2 text-base/9">
               <span class="text-muted-foreground mr-2 text-xs">{displayDate.shortDate(post.data.date)}</span>
               <a href={localizedPath(`/post/${encodeSlug(getPostSlug(post))}`, locale)} class="dashed-border">
-                {post?.data?.title}
+                {post.data.password ? `🔒 ${post.data.title}` : post.data.title}
               </a>
             </p>
           ))}

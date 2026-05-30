@@ -72,7 +72,7 @@ const posts = visiblePosts.filter((post) => post.data.tags?.some((tg) => normali
                     {translateCategoryName(name, locale)}
                   </a>
                   <a href={localizedPath(`/post/${encodeSlug(getPostSlug(post))}`, locale)} class="dashed-border md:absolute md:top-7 md:left-7">
-                    {post?.data?.title}
+                    {post.data.password ? `🔒 ${post.data.title}` : post.data.title}
                   </a>
                 </p>
               );
