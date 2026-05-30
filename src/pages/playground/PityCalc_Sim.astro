@@ -428,6 +428,36 @@
             .sim-chart-container, .sim-chart-container.wide { aspect-ratio: 4/3; min-height: 220px; }
         }
     </style>
+
+    <script>
+    // 禁用 Umami 分析在本地开发环境
+    if (location.hostname === 'localhost' || location.hostname === '127.0.0.1' || (location.hostname.startsWith('192.168.') && location.hostname.split('.').length === 4)) {
+      localStorage.setItem('umami.disabled', 1);
+    }
+    </script>
+    <script defer src="https://u.ksable.top/script.js" data-website-id="538757aa-8ad9-42ae-9ac4-301b4800ffd1"></script>
+    <script defer src="https://cloud.umami.is/script.js" data-website-id="3bdae064-f867-4ef5-9270-21eb47f95669" data-performance="true"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        let uniqueId = localStorage.getItem('visitorId');
+        if (!uniqueId) {
+          uniqueId = crypto.randomUUID();
+          localStorage.setItem('visitorId', uniqueId);
+        }
+        // @ts-ignore
+        umami.identify({ id: uniqueId });
+      });
+    </script>
+    <script>
+        // @ts-ignore
+        !function(t,e){var o,n,p,r;e.__SV||(window.posthog && window.posthog.__loaded)||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="Mi Ri init Vi Gi Rr Wi Ji Bi capture calculateEventProperties tn register register_once register_for_session unregister unregister_for_session an getFeatureFlag getFeatureFlagPayload getFeatureFlagResult isFeatureEnabled reloadFeatureFlags updateFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey displaySurvey cancelPendingSurvey canRenderSurvey canRenderSurveyAsync un identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset setIdentity clearIdentity get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException addExceptionStep captureLog startExceptionAutocapture stopExceptionAutocapture loadToolbar get_property getSessionProperty nn Xi createPersonProfile setInternalOrTestUser sn Hi cn opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing get_explicit_consent_status is_capturing clear_opt_in_out_capturing Ki debug Lr rn getPageViewId captureTraceFeedback captureTraceMetric Di".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+        posthog.init('phc_W61EUtAZyy2ozax98rHSe8H8r4zJ1WhLmY3Rz8eiXvq', {
+            api_host: 'https://ppht.buasis.eu.org', // your managed reverse proxy domain
+            ui_host: 'https://us.posthog.com', // necessary because you're using a proxy, this way links will point back to PostHog properly
+            defaults: '2026-01-30',
+            person_profiles: 'identified_only', // or 'always' to create profiles for anonymous users as well
+        })
+    </script>
 </head>
 <body>
     <div class="container">
