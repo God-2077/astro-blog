@@ -41,7 +41,7 @@ site:
   # Enable slug transliteration (converts CJK characters to pinyin/romaji)
   # Note: enabling this will break existing CJK URLs. Run `pnpm save-slugs` first to save old slugs into frontmatter.link
   # enableSlugTransliteration: true
-  assetsCdn: https://blog-v-cdn.ksable.top
+  # assetsCdn: https://blog-v-cdn.ksable.top
 
 # =============================================================================
 # Internationalization (i18n)
