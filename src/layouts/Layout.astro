@@ -26,7 +26,7 @@ import CodeBlockFullscreen from '@components/markdown/CodeBlockFullscreen';
 import DiagramFullscreen from '@components/markdown/DiagramFullscreen';
 import ImageLightbox from '@components/markdown/ImageLightbox';
 import { Toaster } from '@components/ui/sonner';
-import { bgmConfig, christmasConfig, seoConfig, siteConfig } from '@constants/site-config';
+import { bgmConfig, christmasConfig, injectConfig, seoConfig, siteConfig } from '@constants/site-config';
 import { getOgImageUrl } from '@lib/seo/og-image';
 import LoadingIndicator from 'astro-loading-indicator/component';
 import { SEO } from 'astro-seo';
@@ -355,6 +355,7 @@ const fonts_url_2 =
         });
       });
     </script>
+    { injectConfig.head && <Fragment set:html={injectConfig.head}></Fragment> }
   </head>
   <body>
     <ChristmasEffects transition:persist="christmas-snowfall" />
@@ -379,7 +380,8 @@ const fonts_url_2 =
       <AnnouncementProvider />
       <LanguageDetectProvider />
     </div>
-  </body>
+    { injectConfig.body && <Fragment set:html={injectConfig.body}></Fragment> }
+</body>
 </html>
 
 <style is:global>

@@ -387,3 +387,8 @@ export const enabledSeriesSlugs = new Set(
 // Footer
 // =============================================================================
 export const footerConfig = yamlConfig.footer || {};
+
+// =============================================================================
+// Inject
+// =============================================================================
+export const injectConfig = yamlConfig.inject || {};

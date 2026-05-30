@@ -601,6 +601,11 @@ export interface FooterConfig {
   }[];
 }
 
+export interface InjectConfig {
+  head?: string;
+  body?: string;
+}
+
 // =============================================================================
 // Root Configuration Type
 // =============================================================================
@@ -632,4 +637,6 @@ export interface SiteYamlConfig {
   i18n?: I18nConfig;
   /** Footer configuration */
   footer?: FooterConfig;
+  /** Inject configuration */
+  inject?: InjectConfig;
 }
