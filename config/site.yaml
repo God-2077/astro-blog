@@ -575,7 +575,7 @@ content:
   enhanceCodeBlock: true # 增强代码块
   enableCodeCopy: true # 代码复制按钮
   enableCodeFullscreen: true # 代码全屏按钮
-  enableLinkEmbed: true # 链接卡片预览
+  enableLinkEmbed: false # 链接卡片预览
   enableCodePenEmbed: true # CodePen 嵌入
   enableTweetEmbed: true # 推文嵌入
   enableOGPreview: false # OG 预览卡片
@@ -594,7 +594,7 @@ content:
   enableQuiz: true              # 练习题交互功能
   enableEncryptedBlock: true    # :::encrypted{password="..."} 加密内容块
   donate: "https://ik.imagekit.io/ziw9wtigz/me/WeChat-Appreciation-code-3.png?updatedAt=1778394979458"  # 赞赏图片链接，设置后文章下方显示赞赏按钮
-  mdxSupport: true # 启用 MDX 支持
+  mdxSupport: false # 启用 MDX 支持
 
 # =============================================================================
 # Christmas/Seasonal Features
