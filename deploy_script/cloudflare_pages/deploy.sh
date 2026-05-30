@@ -5,9 +5,9 @@
 # 开启错误终止：任一命令失败则脚本退出
 set -e
 
-# 1. 全局安装 pnpm
-echo "===== 全局安装 pnpm ====="
-npm install -g pnpm
+# 1. 全局安装 pnpm (环境已自带pnpm，直接用)
+# echo "===== 全局安装 pnpm ====="
+# npm install -g pnpm
 
 # 2. 安装项目依赖
 echo "===== 安装项目依赖 ====="
