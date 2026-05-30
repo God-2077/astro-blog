@@ -1,0 +1,1055 @@
+---
+---
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>抽卡概率计算器 · 真实保底模拟</title>
+    <style is:global>
+        :root {
+            --bg: #0a0a14;
+            --surface: #141428;
+            --surface2: #1e1e38;
+            --text: #e0e0e0;
+            --text2: #9898b8;
+            --accent: #f0a050;
+            --accent2: #f0a05044;
+            --accent3: #f0a05022;
+            --blue: #5b9bd5;
+            --green: #4ecb71;
+            --border: #2a2a48;
+            --radius: 14px;
+            --radius-sm: 10px;
+            --radius-xl: 22px;
+            --transition: 0.25s ease;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 16px 10px 60px;
+            display: flex;
+            justify-content: center;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .container {
+            width: 100%;
+            max-width: 880px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .header {
+            text-align: center;
+            padding: 6px 0;
+        }
+        .header .icon {
+            font-size: 2.6rem;
+            display: block;
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-7px); }
+        }
+        .header h1 {
+            font-size: 1.7rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #f0c060, #f08040);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subtitle {
+            font-size: 0.82rem;
+            color: var(--text2);
+            margin-top: 2px;
+        }
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px 18px;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.35);
+            position: relative;
+        }
+        .presets-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+        .presets-label {
+            font-size: 0.78rem;
+            color: var(--text2);
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            margin-right: 2px;
+            white-space: nowrap;
+        }
+        .preset-btn {
+            padding: 7px 13px;
+            border-radius: 18px;
+            border: 1.5px solid var(--border);
+            background: var(--surface2);
+            color: var(--text);
+            font-size: 0.82rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+            user-select: none;
+        }
+        .preset-btn:hover {
+            border-color: var(--accent);
+            background: #2a2a42;
+            color: #fff;
+            box-shadow: 0 0 16px var(--accent2);
+        }
+        .preset-btn.active {
+            border-color: var(--accent);
+            background: #2a1e14;
+            color: var(--accent);
+            font-weight: 700;
+            box-shadow: 0 0 16px var(--accent2);
+        }
+        .settings-section {
+            margin-bottom: 14px;
+        }
+        .settings-section:last-child {
+            margin-bottom: 0;
+        }
+        .section-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text2);
+            font-weight: 700;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .section-title .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: inline-block;
+        }
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+        }
+        .settings-grid.two-col-fixed { grid-template-columns: 1fr 1fr; }
+        .settings-grid.three-col { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+        .setting-item { display: flex; flex-direction: column; gap: 4px; }
+        .setting-item label {
+            font-size: 0.75rem;
+            color: var(--text2);
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            white-space: nowrap;
+        }
+        .setting-item input,
+        .setting-item select {
+            background: var(--surface2);
+            border: 1.5px solid var(--border);
+            color: #fff;
+            border-radius: 8px;
+            padding: 8px 10px;
+            font-size: 0.88rem;
+            font-family: monospace;
+            outline: none;
+            transition: var(--transition);
+            width: 100%;
+        }
+        .setting-item input:focus,
+        .setting-item select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 10px var(--accent2);
+        }
+        .setting-item input[type="range"] { padding: 4px 0; accent-color: var(--accent); }
+        .setting-inline { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .setting-inline label {
+            font-size: 0.75rem;
+            color: var(--text2);
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .setting-inline input[type="checkbox"] { accent-color: var(--accent); width: 17px; height: 17px; cursor: pointer; flex-shrink: 0; }
+        .setting-inline input[type="number"] {
+            background: var(--surface2);
+            border: 1.5px solid var(--border);
+            color: #fff;
+            border-radius: 8px;
+            padding: 7px 9px;
+            font-size: 0.85rem;
+            font-family: monospace;
+            outline: none;
+            transition: var(--transition);
+            width: 80px;
+            text-align: center;
+        }
+        .setting-inline input[type="number"]:focus { border-color: var(--accent); box-shadow: 0 0 10px var(--accent2); }
+        .setting-inline select {
+            background: var(--surface2);
+            border: 1.5px solid var(--border);
+            color: #fff;
+            border-radius: 8px;
+            padding: 7px 9px;
+            font-size: 0.85rem;
+            font-family: monospace;
+            outline: none;
+            transition: var(--transition);
+            min-width: 140px;
+        }
+        .setting-inline select:focus { border-color: var(--accent); box-shadow: 0 0 10px var(--accent2); }
+        .range-row { display: flex; align-items: center; gap: 8px; }
+        .range-row span { font-size: 0.82rem; color: var(--accent); min-width: 40px; font-weight: 600; text-align: right; }
+        .range-row input[type="range"] { flex: 1; }
+        .disabled-opacity { opacity: 0.45; pointer-events: none; transition: opacity 0.2s; }
+        .chart-wrapper { position: relative; width: 100%; aspect-ratio: 16/10; min-height: 340px; margin: 4px 0; }
+        .chart-wrapper canvas { width: 100% !important; height: 100% !important; border-radius: 8px; }
+        .chart-top-bar { display: flex; align-items: center; justify-content: flex-end; margin-bottom: 2px; min-height: 28px; }
+        .legend-hint { display: flex; gap: 16px; justify-content: center; align-items: center; font-size: 0.78rem; color: var(--text2); flex-wrap: wrap; margin-top: 6px; }
+        .legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+        .legend-dot.cdf { background: #f0a050; }
+        .legend-dot.pmf { background: #5b9bd5; }
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 9px 18px;
+            border-radius: var(--radius-xl);
+            border: 1.5px solid var(--border);
+            background: var(--surface2);
+            color: var(--text);
+            font-size: 0.84rem;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.03em;
+            white-space: nowrap;
+            user-select: none;
+            transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+            position: relative;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+            font-family: inherit;
+        }
+        .download-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: var(--radius-xl);
+            background: linear-gradient(135deg, var(--accent3), transparent 60%);
+            opacity: 0;
+            transition: opacity 0.35s ease;
+            z-index: 0;
+        }
+        .download-btn:hover::before { opacity: 1; }
+        .download-btn:hover {
+            border-color: var(--accent);
+            color: #fff;
+            box-shadow: 0 0 20px var(--accent2), 0 4px 16px rgba(0,0,0,0.3);
+            transform: translateY(-1px);
+        }
+        .download-btn:active { transform: scale(0.96); transition: transform 0.12s ease; box-shadow: 0 0 10px var(--accent2); }
+        .download-btn .btn-icon { font-size: 1.15rem; position: relative; z-index: 1; transition: transform 0.3s ease; line-height: 1; }
+        .download-btn:hover .btn-icon { transform: translateY(2px); animation: bounceDown 0.5s ease infinite; }
+        .download-btn .btn-text { position: relative; z-index: 1; }
+        @keyframes bounceDown {
+            0%, 100% { transform: translateY(0); }
+            40% { transform: translateY(3px); }
+            60% { transform: translateY(-1px); }
+            80% { transform: translateY(1px); }
+        }
+        .download-btn.success-flash {
+            border-color: var(--green) !important;
+            background: #1a2e1f !important;
+            color: var(--green) !important;
+            box-shadow: 0 0 20px rgba(78,203,113,0.35) !important;
+        }
+        .download-btn.success-flash .btn-icon { animation: popIn 0.4s ease; }
+        @keyframes popIn {
+            0% { transform: scale(1); }
+            40% { transform: scale(1.35); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); }
+        }
+        .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; }
+        .stat-card { background: var(--surface2); border-radius: var(--radius-sm); padding: 14px 10px; text-align: center; border: 1px solid transparent; }
+        .stat-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #f0c060, #f09040);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .stat-label { font-size: 0.72rem; color: var(--text2); margin-top: 4px; }
+        .apply-btn {
+            margin-top: 12px;
+            padding: 11px 24px;
+            border-radius: 22px;
+            border: none;
+            background: linear-gradient(135deg, #e08830, #d06020);
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            width: 100%;
+            letter-spacing: 0.03em;
+            transition: all 0.3s;
+            box-shadow: 0 4px 16px rgba(208,96,32,0.3);
+            font-family: inherit;
+        }
+        .apply-btn:hover { box-shadow: 0 6px 24px rgba(208,96,32,0.5); transform: translateY(-1px); }
+        .apply-btn:active { transform: scale(0.98); }
+        .sim-header-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; }
+        .sim-header-row .section-title { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+        .resim-btn {
+            padding: 7px 16px;
+            border-radius: 18px;
+            border: 1.5px solid var(--border);
+            background: var(--surface2);
+            color: var(--text);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.03em;
+            white-space: nowrap;
+            user-select: none;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+        .resim-btn:hover { border-color: var(--accent); background: #2a2a42; color: #fff; box-shadow: 0 0 14px var(--accent2); }
+        .resim-btn:active { transform: scale(0.95); transition: transform 0.12s ease; }
+        .sim-charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; transition: grid-template-columns 0.3s ease; }
+        .sim-chart-container { position: relative; width: 100%; aspect-ratio: 1/1; min-height: 280px; transition: aspect-ratio 0.3s ease; }
+        .sim-chart-container canvas { width: 100% !important; height: 100% !important; border-radius: 8px; }
+        .sim-chart-container.wide { aspect-ratio: 16/10; min-height: 300px; }
+        .sim-stats-mini { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 8px; font-size: 0.76rem; color: var(--text2); }
+        .sim-stats-mini span { background: var(--surface2); padding: 5px 10px; border-radius: 12px; white-space: nowrap; }
+        .sim-stats-mini .val { color: var(--accent); font-weight: 700; }
+        @media (max-width: 600px) {
+            .header h1 { font-size: 1.4rem; }
+            .card { padding: 12px 10px; }
+            .preset-btn { padding: 6px 10px; font-size: 0.74rem; }
+            .chart-wrapper { aspect-ratio: 4/3; min-height: 260px; }
+            .stats-row { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+            .settings-grid, .settings-grid.two-col-fixed, .settings-grid.three-col { grid-template-columns: 1fr 1fr; gap: 8px; }
+            .setting-inline { gap: 6px; }
+            .setting-inline input[type="number"] { width: 65px; }
+            .setting-inline select { min-width: 110px; font-size: 0.8rem; }
+            .section-title { font-size: 0.68rem; }
+            .download-btn { padding: 8px 14px; font-size: 0.78rem; gap: 5px; border-radius: 18px; }
+            .download-btn .btn-icon { font-size: 1rem; }
+            .chart-top-bar { min-height: 24px; }
+            .sim-charts-grid { grid-template-columns: 1fr; }
+            .sim-chart-container, .sim-chart-container.wide { aspect-ratio: 4/3; min-height: 240px; }
+            .resim-btn { padding: 6px 12px; font-size: 0.74rem; }
+            .sim-stats-mini { font-size: 0.7rem; gap: 6px; }
+        }
+        @media (max-width: 420px) {
+            .settings-grid, .settings-grid.two-col-fixed, .settings-grid.three-col { grid-template-columns: 1fr; }
+            .setting-inline { flex-wrap: wrap; }
+            .setting-inline input[type="number"] { width: 100%; flex: 1; min-width: 55px; }
+            .presets-row { gap: 5px; }
+            .preset-btn { padding: 5px 8px; font-size: 0.7rem; border-radius: 14px; }
+            .download-btn { padding: 7px 11px; font-size: 0.74rem; gap: 4px; }
+            .legend-hint { gap: 10px; font-size: 0.7rem; }
+            .sim-charts-grid { grid-template-columns: 1fr; }
+            .sim-chart-container, .sim-chart-container.wide { aspect-ratio: 4/3; min-height: 220px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <span class="icon">🎰</span>
+            <h1>抽卡概率计算器</h1>
+            <p class="subtitle">真实保底模拟 · 软保底递增 / 直接提升 · 自适应X轴</p>
+        </div>
+        <div class="card">
+            <div class="presets-row">
+                <span class="presets-label">🎮 预设</span>
+                <button class="preset-btn active" data-preset="yihuan">异环·S 级限定</button>
+                <button class="preset-btn" data-preset="genshin">原神·五星</button>
+                <button class="preset-btn" data-preset="arknights">明日方舟·六星</button>
+                <button class="preset-btn" data-preset="azure">碧蓝航线·UR</button>
+                <button class="preset-btn" data-preset="starrail">崩铁·五星</button>
+            </div>
+        </div>
+        <div class="card" id="settingsCard">
+            <div class="settings-section">
+                <div class="section-title"><span class="dot"></span>基础设置</div>
+                <div class="settings-grid two-col-fixed">
+                    <div class="setting-item">
+                        <label for="baseProb">🎯 基础概率 (%)</label>
+                        <input type="number" id="baseProb" value="0.99" min="0.01" max="99" step="0.01">
+                    </div>
+                    <div class="setting-item">
+                        <label for="xMax">📏 X轴最大次数</label>
+                        <div class="range-row">
+                            <input type="range" id="xMax" min="20" max="205" value="100" step="5">
+                            <span id="xMaxVal">100</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="settings-section">
+                <div class="section-title"><span class="dot"></span>硬保底设置</div>
+                <div class="setting-inline" style="gap:14px;">
+                    <label style="cursor:pointer;">
+                        <input type="checkbox" id="enableHardPity" checked>
+                        🔒 启用硬保底
+                    </label>
+                    <label for="hardPityAt" style="gap:4px;">保底次数</label>
+                    <input type="number" id="hardPityAt" value="90" min="2" max="1000" step="1">
+                </div>
+            </div>
+            <div class="settings-section">
+                <div class="section-title"><span class="dot"></span>软保底设置</div>
+                <div class="setting-inline" style="gap:14px; margin-bottom:10px;">
+                    <label style="cursor:pointer;">
+                        <input type="checkbox" id="enableSoftPity" checked>
+                        📈 启用软保底
+                    </label>
+                    <label for="softType" style="gap:4px;">类型</label>
+                    <select id="softType">
+                        <option value="increment">概率递增 (每抽+n%)</option>
+                        <option value="direct" selected>直接提升至固定概率</option>
+                    </select>
+                </div>
+                <div class="settings-grid three-col">
+                    <div class="setting-item">
+                        <label for="softStart">起始抽数</label>
+                        <input type="number" id="softStart" value="71" min="1" max="1000" step="1">
+                    </div>
+                    <div class="setting-item" id="softIncrContainer">
+                        <label for="softIncrement">每抽递增 (%)</label>
+                        <input type="number" id="softIncrement" value="19.5" min="0" step="0.01">
+                    </div>
+                    <div class="setting-item" id="softDirectContainer">
+                        <label for="softDirectProb">直接提升至 (%)</label>
+                        <input type="number" id="softDirectProb" value="19.5" min="0" max="100" step="0.01">
+                    </div>
+                </div>
+            </div>
+            <button class="apply-btn" id="applySettingsBtn">📊 应用设置 & 更新图表</button>
+        </div>
+        <div class="card" id="chartCard">
+            <div class="chart-top-bar">
+                <button class="download-btn" id="downloadPngBtn" title="导出高清图表（字体更大，清晰可读）">
+                    <span class="btn-icon">📥</span>
+                    <span class="btn-text">下载PNG图表</span>
+                </button>
+            </div>
+            <div class="chart-wrapper"><canvas id="probChart"></canvas></div>
+            <div class="legend-hint">
+                <span><span class="legend-dot cdf"></span> 累积概率 (前k次内获得)</span>
+                <span><span class="legend-dot pmf"></span> 恰好第k次首次获得</span>
+            </div>
+        </div>
+        <div class="stats-row" id="statsRow">
+            <div class="stat-card"><div class="stat-value" id="statExpect">--</div><div class="stat-label">🎯 期望次数</div></div>
+            <div class="stat-card"><div class="stat-value" id="statMedian">--</div><div class="stat-label">50% 概率次数</div></div>
+            <div class="stat-card"><div class="stat-value" id="stat90">--</div><div class="stat-label">90% 概率次数</div></div>
+            <div class="stat-card"><div class="stat-value" id="stat99">--</div><div class="stat-label">99% 概率次数</div></div>
+        </div>
+        <div class="card" id="simCard">
+            <div class="sim-header-row">
+                <div class="section-title"><span class="dot"></span>🎯 模拟抽卡 (1000样本)</div>
+                <button class="resim-btn" id="resimBtn">🔄 重新模拟</button>
+            </div>
+            <div class="sim-charts-grid" id="simChartsGrid">
+                <div class="sim-chart-container wide" id="simHistContainer">
+                    <canvas id="simHistChart"></canvas>
+                </div>
+                <div class="sim-chart-container" id="simPieContainer">
+                    <canvas id="simPieChart"></canvas>
+                </div>
+            </div>
+            <div class="sim-stats-mini" id="simStatsMini">
+                <span>平均: <span class="val" id="simAvg">--</span></span>
+                <span>中位数: <span class="val" id="simMed">--</span></span>
+                <span>软保底区间占比: <span class="val" id="simSoftRatio">--</span></span>
+                <span>硬保底占比: <span class="val" id="simHardRatio">--</span></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+      import Chart from 'chart.js/auto';
+
+      (function() {
+        const PRESETS: Record<string, any> = {
+          yihuan: {
+            name: '异环·S 级限定',
+            baseProb: 0.0099,
+            hardPityEnabled: true,
+            hardPityAt: 90,
+            softPityEnabled: true,
+            softType: 'direct',
+            softStart: 71,
+            softIncrement: 0.195,
+            softDirectProb: 0.195,
+            xMax: 95,
+          },
+          genshin: {
+            name: '原神·五星',
+            baseProb: 0.006,
+            hardPityEnabled: true,
+            hardPityAt: 90,
+            softPityEnabled: true,
+            softType: 'increment',
+            softStart: 74,
+            softIncrement: 0.06,
+            softDirectProb: 0.5,
+            xMax: 95,
+          },
+          arknights: {
+            name: '明日方舟·六星',
+            baseProb: 0.02,
+            hardPityEnabled: true,
+            hardPityAt: 99,
+            softPityEnabled: true,
+            softType: 'increment',
+            softStart: 51,
+            softIncrement: 0.02,
+            softDirectProb: 0.5,
+            xMax: 104,
+          },
+          azure: {
+            name: '碧蓝航线·UR',
+            baseProb: 0.012,
+            hardPityEnabled: true,
+            hardPityAt: 200,
+            softPityEnabled: false,
+            softType: 'increment',
+            softStart: 1,
+            softIncrement: 0,
+            softDirectProb: 0.1,
+            xMax: 205,
+          },
+          starrail: {
+            name: '崩铁·五星',
+            baseProb: 0.006,
+            hardPityEnabled: true,
+            hardPityAt: 90,
+            softPityEnabled: true,
+            softType: 'increment',
+            softStart: 74,
+            softIncrement: 0.06,
+            softDirectProb: 0.5,
+            xMax: 95,
+          },
+        };
+
+        const canvas = document.getElementById('probChart') as HTMLCanvasElement;
+        const ctx = canvas.getContext('2d')!;
+        const presetBtns = document.querySelectorAll('.preset-btn');
+        const applyBtn = document.getElementById('applySettingsBtn')!;
+        const downloadBtn = document.getElementById('downloadPngBtn')!;
+        const resimBtn = document.getElementById('resimBtn')!;
+
+        const baseProbInput = document.getElementById('baseProb') as HTMLInputElement;
+        const xMaxSlider = document.getElementById('xMax') as HTMLInputElement;
+        const xMaxVal = document.getElementById('xMaxVal')!;
+        const enableHardPity = document.getElementById('enableHardPity') as HTMLInputElement;
+        const hardPityAt = document.getElementById('hardPityAt') as HTMLInputElement;
+        const enableSoftPity = document.getElementById('enableSoftPity') as HTMLInputElement;
+        const softType = document.getElementById('softType') as HTMLSelectElement;
+        const softStart = document.getElementById('softStart') as HTMLInputElement;
+        const softIncrement = document.getElementById('softIncrement') as HTMLInputElement;
+        const softDirectProb = document.getElementById('softDirectProb') as HTMLInputElement;
+        const softIncrContainer = document.getElementById('softIncrContainer')!;
+        const softDirectContainer = document.getElementById('softDirectContainer')!;
+
+        const statExpect = document.getElementById('statExpect')!;
+        const statMedian = document.getElementById('statMedian')!;
+        const stat90 = document.getElementById('stat90')!;
+        const stat99 = document.getElementById('stat99')!;
+
+        const simAvg = document.getElementById('simAvg')!;
+        const simMed = document.getElementById('simMed')!;
+        const simSoftRatio = document.getElementById('simSoftRatio')!;
+        const simHardRatio = document.getElementById('simHardRatio')!;
+
+        const simChartsGrid = document.getElementById('simChartsGrid')!;
+        const simHistContainer = document.getElementById('simHistContainer')!;
+        const simPieContainer = document.getElementById('simPieContainer')!;
+
+        let chartInstance: any = null;
+        let simHistInstance: any = null;
+        let simPieInstance: any = null;
+        let currentSettings: any = null;
+        let currentActivePresetKey = 'yihuan';
+        let lastSimResults: any = null;
+        let currentLayoutMode: string | null = null;
+        let layoutResizeObserver: ResizeObserver | null = null;
+
+        const LAYOUT_BREAKPOINT = 520;
+
+        function applyLayoutByWidth(containerWidth: number) {
+          const newMode = containerWidth >= LAYOUT_BREAKPOINT ? 'two-col' : 'single-col';
+          if (newMode === currentLayoutMode) return;
+          currentLayoutMode = newMode;
+          if (newMode === 'two-col') {
+            simChartsGrid.style.gridTemplateColumns = '1fr 1fr';
+            simChartsGrid.style.alignItems = 'center';
+            simHistContainer.style.aspectRatio = '16/10';
+            simHistContainer.style.minHeight = '0';
+            simPieContainer.style.aspectRatio = '1/1';
+            simPieContainer.style.minHeight = '0';
+            simHistContainer.classList.add('wide');
+            simPieContainer.classList.remove('wide');
+          } else {
+            simChartsGrid.style.gridTemplateColumns = '1fr';
+            simChartsGrid.style.alignItems = '';
+            simHistContainer.style.aspectRatio = '4/3';
+            simHistContainer.style.minHeight = '';
+            simPieContainer.style.aspectRatio = '4/3';
+            simPieContainer.style.minHeight = '';
+            simHistContainer.classList.remove('wide');
+            simPieContainer.classList.add('wide');
+          }
+          requestAnimationFrame(() => {
+            setTimeout(() => {
+              if (simHistInstance) simHistInstance.resize();
+              if (simPieInstance) simPieInstance.resize();
+            }, 80);
+          });
+        }
+
+        function setupLayoutObserver() {
+          if (layoutResizeObserver) layoutResizeObserver.disconnect();
+          const initialWidth = simChartsGrid.clientWidth;
+          if (initialWidth > 0) applyLayoutByWidth(initialWidth);
+          layoutResizeObserver = new ResizeObserver((entries) => {
+            for (const entry of entries) {
+              const width = entry.contentRect.width;
+              if (width > 0) applyLayoutByWidth(width);
+            }
+          });
+          layoutResizeObserver.observe(simChartsGrid);
+        }
+
+        function getSettings() {
+          return {
+            baseProb: parseFloat(baseProbInput.value) / 100,
+            xMax: parseInt(xMaxSlider.value, 10),
+            hardPityEnabled: enableHardPity.checked,
+            hardPityAt: parseInt(hardPityAt.value, 10),
+            softPityEnabled: enableSoftPity.checked,
+            softType: softType.value,
+            softStart: parseInt(softStart.value, 10),
+            softIncrement: parseFloat(softIncrement.value) / 100,
+            softDirectProb: parseFloat(softDirectProb.value) / 100,
+          };
+        }
+
+        function applySettingsToUI(s: any) {
+          baseProbInput.value = (s.baseProb * 100).toFixed(2);
+          xMaxSlider.value = String(s.xMax);
+          xMaxVal.textContent = String(s.xMax);
+          enableHardPity.checked = s.hardPityEnabled;
+          hardPityAt.value = String(s.hardPityAt);
+          enableSoftPity.checked = s.softPityEnabled;
+          softType.value = s.softType;
+          softStart.value = String(s.softStart);
+          softIncrement.value = (s.softIncrement * 100).toFixed(2);
+          softDirectProb.value = (s.softDirectProb * 100).toFixed(2);
+          updateSoftTypeUI();
+          updateDisabledStates();
+        }
+
+        function updateSoftTypeUI() {
+          if (softType.value === 'increment') {
+            softIncrContainer.style.display = '';
+            softDirectContainer.style.display = 'none';
+          } else {
+            softIncrContainer.style.display = 'none';
+            softDirectContainer.style.display = '';
+          }
+        }
+
+        function updateDisabledStates() {
+          hardPityAt.disabled = !enableHardPity.checked;
+          softStart.disabled = !enableSoftPity.checked;
+          softType.disabled = !enableSoftPity.checked;
+          softIncrement.disabled = !enableSoftPity.checked;
+          softDirectProb.disabled = !enableSoftPity.checked;
+          [softIncrContainer, softDirectContainer].forEach((el) => {
+            if (!enableSoftPity.checked) el.classList.add('disabled-opacity');
+            else el.classList.remove('disabled-opacity');
+          });
+        }
+
+        function buildProbabilityArray(s: any) {
+          const { baseProb, xMax, hardPityEnabled, hardPityAt, softPityEnabled, softType, softStart, softIncrement, softDirectProb } = s;
+          const probs: number[] = [];
+          for (let k = 1; k <= xMax; k++) {
+            let p = baseProb;
+            if (hardPityEnabled && k >= hardPityAt) p = 1.0;
+            else if (softPityEnabled && k >= softStart && (!hardPityEnabled || k < hardPityAt)) {
+              if (softType === 'increment') p = Math.min(1.0, baseProb + (k - softStart + 1) * softIncrement);
+              else p = Math.min(1.0, softDirectProb);
+            }
+            probs.push(p);
+          }
+          return probs;
+        }
+
+        function computeDistribution(probs: number[]) {
+          const pmf: number[] = [], cdf: number[] = [];
+          let survival = 1.0;
+          for (let i = 0; i < probs.length; i++) {
+            const p = probs[i], prob = p * survival;
+            pmf.push(prob);
+            survival *= 1 - p;
+            cdf.push(1 - survival);
+          }
+          return { pmf, cdf };
+        }
+
+        function computeStats(probs: number[]) {
+          let expectation = 0, cumProb = 0, median: number | null = null, k90: number | null = null, k99: number | null = null;
+          const maxK = probs.length;
+          for (let i = 0; i < maxK; i++) {
+            let surv = 1;
+            for (let j = 0; j < i; j++) surv *= 1 - probs[j];
+            const prob = probs[i] * surv;
+            expectation += (i + 1) * prob;
+            cumProb += prob;
+            if (median === null && cumProb >= 0.5) median = i + 1;
+            if (k90 === null && cumProb >= 0.9) k90 = i + 1;
+            if (k99 === null && cumProb >= 0.99) k99 = i + 1;
+          }
+          if (median === null) median = maxK;
+          if (k90 === null) k90 = maxK;
+          if (k99 === null) k99 = maxK;
+          return { expectation: Math.round(expectation * 10) / 10, median, k90, k99 };
+        }
+
+        function getAdaptiveStep(maxK: number, containerWidth: number) {
+          let desired = 6;
+          if (containerWidth > 600) desired = 10;
+          else if (containerWidth > 400) desired = 8;
+          return Math.max(1, Math.ceil(maxK / desired));
+        }
+
+        function createChartConfig(settings: any, targetCanvas?: HTMLCanvasElement) {
+          const isExport = !!targetCanvas;
+          const probs = buildProbabilityArray(settings);
+          const { pmf, cdf } = computeDistribution(probs);
+          const maxK = settings.xMax;
+          const pmfMax = Math.max(...pmf, 0.001);
+          const yPmfMax = Math.max(pmfMax * 1.15, settings.baseProb * 1.4, 0.015);
+          const containerWidth = targetCanvas ? 1200 : canvas.parentElement!.clientWidth || 400;
+          const step = getAdaptiveStep(maxK, containerWidth);
+          const fontSize = isExport ? 18 : 12;
+          return {
+            type: 'bar' as const,
+            data: {
+              labels: Array.from({ length: maxK }, (_, i) => i + 1),
+              datasets: [{
+                label: '恰好第k次首次获得', data: pmf,
+                backgroundColor: 'rgba(91,155,213,0.35)', borderColor: 'rgba(91,155,213,0.7)',
+                borderWidth: 1, borderRadius: 2, yAxisID: 'yPmf', order: 2, categoryPercentage: 0.95,
+              }, {
+                label: '累积概率', data: cdf, type: 'line' as const,
+                borderColor: '#f0a050', backgroundColor: 'rgba(240,160,80,0.08)',
+                borderWidth: 2.5, pointRadius: 0, pointHoverRadius: 5, fill: true, tension: 0.2,
+                yAxisID: 'yCdf', order: 1,
+              }],
+            },
+            options: {
+              responsive: !isExport, maintainAspectRatio: !isExport,
+              animation: isExport ? false : { duration: 400, easing: 'easeOutQuart' },
+              interaction: { mode: 'index' as const, intersect: false },
+              plugins: {
+                legend: { display: false },
+                tooltip: isExport ? { enabled: false } : {
+                  callbacks: {
+                    title: (items: any[]) => `抽取次数: 第 ${items[0].label} 次`,
+                    label: (ctx: any) => ctx.datasetIndex === 0 ? `恰好第${ctx.label}次获得: ${(ctx.raw * 100).toFixed(4)}%` : `前${ctx.label}次内获得: ${(ctx.raw * 100).toFixed(2)}%`,
+                  },
+                },
+              },
+              scales: {
+                x: {
+                  title: { display: true, text: '抽取次数', color: '#a0a0b8', font: { size: fontSize } },
+                  ticks: { color: '#8888a0', font: { size: fontSize }, autoSkip: false,
+                    callback: function(this: any, val: any) { const label = this.getLabelForValue(val); const num = parseInt(label); if (num === 1 || num === maxK) return label; return (num % step === 0) ? label : ''; },
+                  },
+                  grid: { color: 'rgba(255,255,255,0.04)' },
+                },
+                yCdf: {
+                  position: 'left' as const, title: { display: true, text: '累积概率', color: '#f0a050', font: { size: fontSize } },
+                  min: 0, max: 1.02,
+                  ticks: { color: '#f0a050', font: { size: fontSize }, callback: (v: any) => (v * 100).toFixed(0) + '%', stepSize: 0.1 },
+                },
+                yPmf: {
+                  position: 'right' as const, title: { display: true, text: '单次概率', color: '#5b9bd5', font: { size: fontSize } },
+                  min: 0, max: yPmfMax,
+                  ticks: { color: '#5b9bd5', font: { size: fontSize }, callback: (v: any) => (v * 100).toFixed(2) + '%', maxTicksLimit: 6 },
+                },
+              },
+            },
+            plugins: [{ id: 'darkBackground', beforeDraw: (chart: any) => { const bgCtx = chart.ctx; bgCtx.save(); bgCtx.fillStyle = '#141428'; bgCtx.fillRect(0, 0, chart.width, chart.height); bgCtx.restore(); } }],
+          };
+        }
+
+        function updateChart(settings: any, isExport = false) {
+          if (!isExport && chartInstance) chartInstance.destroy();
+          const probs = buildProbabilityArray(settings);
+          const stats = computeStats(probs);
+          if (!isExport) {
+            statExpect.textContent = String(stats.expectation % 1 === 0 ? Math.round(stats.expectation) : stats.expectation.toFixed(1));
+            statMedian.textContent = String(stats.median);
+            stat90.textContent = String(stats.k90);
+            stat99.textContent = String(stats.k99);
+          }
+          const config = createChartConfig(settings, isExport ? ({} as any) : undefined);
+          if (isExport) return config;
+          chartInstance = new Chart(ctx, config);
+          currentSettings = settings;
+        }
+
+        function exportHighResPNG() {
+          if (!currentSettings) { alert('请先应用设置生成图表'); return; }
+          const btnIcon = downloadBtn.querySelector('.btn-icon')!;
+          const btnText = downloadBtn.querySelector('.btn-text')!;
+          const origIcon = btnIcon.textContent, origText = btnText.textContent;
+          downloadBtn.classList.add('success-flash');
+          btnIcon.textContent = '⏳'; btnText.textContent = '生成高清图...';
+          const exportCanvas = document.createElement('canvas');
+          exportCanvas.width = 1200; exportCanvas.height = 750;
+          exportCanvas.style.display = 'none';
+          document.body.appendChild(exportCanvas);
+          const exportCtx = exportCanvas.getContext('2d')!;
+          const config = createChartConfig(currentSettings, exportCanvas);
+          const tempChart = new Chart(exportCtx, config);
+          setTimeout(() => {
+            try {
+              exportCanvas.toBlob((blob) => {
+                if (!blob) throw new Error('Blob生成失败');
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                const now = new Date();
+                const ds = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+                const ts = `${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}`;
+                a.download = `抽卡概率图表_${ds}_${ts}.png`;
+                a.href = url;
+                document.body.appendChild(a); a.click(); document.body.removeChild(a);
+                setTimeout(() => URL.revokeObjectURL(url), 500);
+                btnIcon.textContent = '✅'; btnText.textContent = '下载完成';
+                setTimeout(() => { downloadBtn.classList.remove('success-flash'); btnIcon.textContent = origIcon; btnText.textContent = origText; }, 1500);
+              }, 'image/png', 1.0);
+            } catch (e) {
+              console.error(e);
+              btnIcon.textContent = '❌'; btnText.textContent = '导出失败';
+              setTimeout(() => { downloadBtn.classList.remove('success-flash'); btnIcon.textContent = origIcon; btnText.textContent = origText; }, 2000);
+            } finally {
+              tempChart.destroy();
+              document.body.removeChild(exportCanvas);
+            }
+          }, 100);
+        }
+
+        downloadBtn.addEventListener('click', exportHighResPNG);
+
+        function secureRandom() {
+          try { const arr = new Uint32Array(1); window.crypto.getRandomValues(arr); return arr[0] / 4294967295; }
+          catch (e) { return Math.random(); }
+        }
+
+        function runSimulation(settings: any) {
+          const probs = buildProbabilityArray(settings);
+          const maxK = probs.length;
+          const results: number[] = [];
+          const sampleSize = 1000;
+          for (let s = 0; s < sampleSize; s++) {
+            let drawn = false;
+            for (let k = 0; k < maxK; k++) {
+              if (secureRandom() < probs[k]) { results.push(k + 1); drawn = true; break; }
+            }
+            if (!drawn) results.push(maxK);
+          }
+          return results;
+        }
+
+        function getSmartBinInfo(data: number[], settings: any) {
+          const minVal = 1;
+          const maxVal = Math.max(...data);
+          const range = maxVal - minVal + 1;
+          let binWidth: number;
+          if (range <= 40) binWidth = 2;
+          else if (range <= 80) binWidth = 5;
+          else if (range <= 160) binWidth = 10;
+          else binWidth = 15;
+          const bins: any[] = [];
+          let edge = minVal;
+          while (edge <= maxVal) {
+            const binStart = edge;
+            const binEnd = Math.min(edge + binWidth - 1, maxVal);
+            bins.push({ start: binStart, end: binEnd, count: 0, label: '', isSoft: false, isHard: false });
+            edge = binEnd + 1;
+          }
+          for (const val of data) {
+            for (const bin of bins) {
+              if (val >= bin.start && val <= bin.end) { bin.count++; break; }
+            }
+          }
+          const softStartVal = settings.softPityEnabled ? settings.softStart : null;
+          const hardPityAtVal = settings.hardPityEnabled ? settings.hardPityAt : null;
+          for (const bin of bins) {
+            let label = bin.start === bin.end ? `${bin.start}` : `${bin.start}-${bin.end}`;
+            const overlapsSoft = softStartVal !== null && bin.end >= softStartVal && bin.start < (hardPityAtVal || Infinity);
+            const containsHard = hardPityAtVal !== null && bin.start <= hardPityAtVal && bin.end >= hardPityAtVal;
+            if (containsHard) { label += ' 硬保底'; bin.isHard = true; }
+            else if (overlapsSoft) { label += ' 软保底'; bin.isSoft = true; }
+            bin.label = label;
+          }
+          return bins;
+        }
+
+        function getPieDataFromBins(bins: any[], totalSamples: number) {
+          const nonEmptyBins = bins.filter((b) => b.count > 0);
+          const labels: string[] = [], values: number[] = [], colors: string[] = [];
+          let softCount = 0, hardCount = 0, normalCount = 0;
+          const normalBins = nonEmptyBins.filter((b) => !b.isSoft && !b.isHard);
+          const softBins = nonEmptyBins.filter((b) => b.isSoft && !b.isHard);
+          const hardBins = nonEmptyBins.filter((b) => b.isHard);
+          normalBins.forEach((_bin, i) => { const lightness = 55 + (i / Math.max(normalBins.length - 1, 1)) * 20; colors.push(`hsla(210, 60%, ${lightness}%, 0.78)`); });
+          softBins.forEach((_bin, i) => { const lightness = 50 + (i / Math.max(softBins.length - 1, 1)) * 20; colors.push(`hsla(38, 75%, ${lightness}%, 0.78)`); });
+          hardBins.forEach(() => { colors.push('rgba(220, 75, 55, 0.82)'); });
+          const orderedBins = [...normalBins, ...softBins, ...hardBins];
+          orderedBins.sort((a, b) => a.start - b.start);
+          const orderedColors: string[] = [], orderedLabels: string[] = [], orderedValues: number[] = [];
+          for (const bin of orderedBins) {
+            orderedLabels.push(bin.label); orderedValues.push(bin.count);
+            if (bin.isHard) { orderedColors.push('rgba(220, 75, 55, 0.82)'); hardCount += bin.count; }
+            else if (bin.isSoft) { const idx = softBins.indexOf(bin); const lightness = 50 + (idx / Math.max(softBins.length - 1, 1)) * 20; orderedColors.push(`hsla(38, 75%, ${lightness}%, 0.78)`); softCount += bin.count; }
+            else { const idx = normalBins.indexOf(bin); const lightness = 55 + (idx / Math.max(normalBins.length - 1, 1)) * 20; orderedColors.push(`hsla(210, 60%, ${lightness}%, 0.78)`); normalCount += bin.count; }
+          }
+          return { labels: orderedLabels, values: orderedValues, colors: orderedColors, normalCount, softCount, hardCount, total: totalSamples };
+        }
+
+        function updateSimCharts(settings: any) {
+          const results = runSimulation(settings);
+          lastSimResults = { results, settings };
+          renderSimCharts(results, settings);
+        }
+
+        function renderSimCharts(results: number[], settings: any) {
+          if (simHistInstance) simHistInstance.destroy();
+          if (simPieInstance) simPieInstance.destroy();
+          const bins = getSmartBinInfo(results, settings);
+          const pieData = getPieDataFromBins(bins, results.length);
+          const histCtx = (document.getElementById('simHistChart') as HTMLCanvasElement).getContext('2d')!;
+          const binLabels = bins.map((b) => b.label);
+          const binCounts = bins.map((b) => b.count);
+          const softBgColors = bins.map((b) => b.isHard ? 'rgba(220,80,60,0.65)' : (b.isSoft ? 'rgba(240,160,50,0.6)' : 'rgba(91,155,213,0.5)'));
+          const softBorderColors = bins.map((b) => b.isHard ? 'rgba(220,80,60,0.9)' : (b.isSoft ? 'rgba(240,160,50,0.85)' : 'rgba(91,155,213,0.75)'));
+          simHistInstance = new Chart(histCtx, {
+            type: 'bar', data: { labels: binLabels, datasets: [{ label: '样本数', data: binCounts, backgroundColor: softBgColors, borderColor: softBorderColors, borderWidth: 1.5, borderRadius: 3 }] },
+            options: {
+              responsive: true, maintainAspectRatio: false, animation: { duration: 300, easing: 'easeOutQuart' },
+              plugins: { legend: { display: false }, tooltip: { callbacks: { title: (items: any[]) => `次数区间: ${items[0].label}`, label: (ctx: any) => `样本数: ${ctx.raw} (${((ctx.raw / results.length) * 100).toFixed(1)}%)` } } },
+              scales: {
+                x: { title: { display: true, text: '抽卡次数区间', color: '#a0a0b8', font: { size: 11 } }, ticks: { color: '#8888a0', font: { size: 10 }, maxRotation: 55, minRotation: 30 }, grid: { color: 'rgba(255,255,255,0.04)' } },
+                y: { title: { display: true, text: '频数', color: '#a0a0b8', font: { size: 11 } }, ticks: { color: '#8888a0', font: { size: 10 }, beginAtZero: true }, grid: { color: 'rgba(255,255,255,0.05)' } },
+              },
+            },
+            plugins: [{ id: 'darkBgHist', beforeDraw: (chart: any) => { const bgCtx = chart.ctx; bgCtx.save(); bgCtx.fillStyle = '#141428'; bgCtx.fillRect(0, 0, chart.width, chart.height); bgCtx.restore(); } }],
+          });
+          const pieCtx = (document.getElementById('simPieChart') as HTMLCanvasElement).getContext('2d')!;
+          simPieInstance = new Chart(pieCtx, {
+            type: 'doughnut', data: { labels: pieData.labels, datasets: [{ data: pieData.values, backgroundColor: pieData.colors, borderColor: 'rgba(20,20,40,0.8)', borderWidth: 2, hoverBorderColor: '#fff', hoverBorderWidth: 3 }] },
+            options: {
+              responsive: true, maintainAspectRatio: false, animation: { duration: 400, easing: 'easeOutQuart' },
+              plugins: {
+                legend: { position: 'bottom', labels: { color: '#c0c0d0', font: { size: 10 }, padding: 10, usePointStyle: true, pointStyleWidth: 10,
+                  generateLabels: function(chart: any) { const data = chart.data; if (data.labels.length && data.datasets.length) { const total = data.datasets[0].data.reduce((a: number, b: number) => a + b, 0); return data.labels.map((label: string, i: number) => { const value = data.datasets[0].data[i]; const pct = ((value / total) * 100).toFixed(1); return { text: `${label} (${pct}%)`, fillStyle: data.datasets[0].backgroundColor[i], strokeStyle: data.datasets[0].borderColor, lineWidth: 1, hidden: false, index: i, pointStyle: 'circle', rotation: 0, fontColor: '#c0c0d0', color: '#c0c0d0' }; }); } return []; } },
+                },
+                tooltip: { callbacks: { label: (ctx: any) => { const val = ctx.raw; const pct = ((val / pieData.total) * 100).toFixed(1); return `${ctx.label}: ${val} 样本 (${pct}%)`; } } },
+              },
+            },
+            plugins: [{ id: 'darkBgPie', beforeDraw: (chart: any) => { const bgCtx = chart.ctx; bgCtx.save(); bgCtx.fillStyle = '#141428'; bgCtx.fillRect(0, 0, chart.width, chart.height); bgCtx.restore(); } }],
+          });
+          const avgVal = results.reduce((a, b) => a + b, 0) / results.length;
+          const sorted = [...results].sort((a, b) => a - b);
+          const medVal = sorted[Math.floor(sorted.length / 2)];
+          simAvg.textContent = avgVal.toFixed(1);
+          simMed.textContent = String(medVal);
+          simSoftRatio.textContent = ((pieData.softCount / pieData.total) * 100).toFixed(1) + '%';
+          simHardRatio.textContent = ((pieData.hardCount / pieData.total) * 100).toFixed(1) + '%';
+        }
+
+        xMaxSlider.addEventListener('input', () => { xMaxVal.textContent = xMaxSlider.value; });
+        softType.addEventListener('change', updateSoftTypeUI);
+        enableHardPity.addEventListener('change', updateDisabledStates);
+        enableSoftPity.addEventListener('change', () => { updateDisabledStates(); updateSoftTypeUI(); });
+
+        function fullUpdate(settings: any, presetKey?: string) {
+          applySettingsToUI(settings); updateChart(settings); updateSimCharts(settings);
+          requestAnimationFrame(() => { const w = simChartsGrid.clientWidth; if (w > 0) applyLayoutByWidth(w); });
+          if (presetKey) { currentActivePresetKey = presetKey; presetBtns.forEach((b) => b.classList.remove('active')); const activeBtn = document.querySelector(`[data-preset="${presetKey}"]`); if (activeBtn) activeBtn.classList.add('active'); }
+        }
+
+        applyBtn.addEventListener('click', () => {
+          const s = getSettings(); applySettingsToUI(s); updateChart(s); updateSimCharts(s);
+          requestAnimationFrame(() => { const w = simChartsGrid.clientWidth; if (w > 0) applyLayoutByWidth(w); });
+          presetBtns.forEach((b) => b.classList.remove('active')); currentActivePresetKey = '';
+        });
+
+        presetBtns.forEach((btn) => {
+          btn.addEventListener('click', () => { const key = (btn as HTMLElement).dataset.preset; if (!key) return; const p = PRESETS[key]; if (!p) return; fullUpdate(p, key); });
+        });
+
+        resimBtn.addEventListener('click', () => {
+          if (!currentSettings) currentSettings = getSettings();
+          const results = runSimulation(currentSettings);
+          lastSimResults = { results, settings: currentSettings };
+          renderSimCharts(results, currentSettings);
+          requestAnimationFrame(() => { const w = simChartsGrid.clientWidth; if (w > 0) applyLayoutByWidth(w); });
+        });
+
+        const dp = PRESETS.yihuan;
+        applySettingsToUI(dp); updateChart(dp); updateSimCharts(dp);
+        updateSoftTypeUI(); updateDisabledStates();
+        const defaultBtn = document.querySelector('[data-preset="yihuan"]');
+        if (defaultBtn) defaultBtn.classList.add('active');
+        currentActivePresetKey = 'yihuan';
+        setupLayoutObserver();
+        requestAnimationFrame(() => { const initialWidth = simChartsGrid.clientWidth; if (initialWidth > 0 && currentLayoutMode === null) applyLayoutByWidth(initialWidth); });
+        let resizeDebounceTimer: any = null;
+        window.addEventListener('resize', () => {
+          if (resizeDebounceTimer) clearTimeout(resizeDebounceTimer);
+          resizeDebounceTimer = setTimeout(() => { if (chartInstance) chartInstance.resize(); if (simHistInstance) simHistInstance.resize(); if (simPieInstance) simPieInstance.resize(); }, 150);
+        });
+      })();
+    </script>
+</body>
+</html>
