@@ -1,0 +1,58 @@
+---
+import type { GetStaticPaths } from 'astro';
+
+export const getStaticPaths: GetStaticPaths = () => {
+  const configs = import.meta.glob('../../playground/*/config.ts', { eager: true });
+  return Object.keys(configs)
+    .map((path) => {
+      const slug = path.match(/playground\/(.+)\/config\.ts$/)?.[1];
+      if (!slug) return null;
+      return { params: { project: slug } };
+    })
+    .filter((item): item is { params: { project: string } } => item !== null);
+};
+
+const { project } = Astro.params;
+
+const allModules = import.meta.glob('../../playground/*/index.astro', {
+  eager: true,
+});
+
+const matchedKey = Object.keys(allModules).find((k) => k.includes(`/${project}/`));
+
+const Component = matchedKey ? ((allModules[matchedKey] as Record<string, unknown>).default as any) : null;
+---
+
+{Component ? <Component /> : (
+  <html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>未找到</title>
+    <style>
+      *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: #f8f9fa;
+        color: #1a1a2e;
+      }
+      div { text-align: center; }
+      h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+      p { color: #555; margin-bottom: 1rem; }
+      a { color: #4f6ef7; text-decoration: none; }
+      a:hover { text-decoration: underline; }
+    </style>
+  </head>
+  <body>
+    <div>
+      <h1>项目未找到</h1>
+      <p>没有名为 &quot;{project}&quot; 的 Playground 项目。</p>
+      <p><a href="/playground">&larr; 返回 Playground</a></p>
+    </div>
+  </body>
+  </html>
+)}
