@@ -33,7 +33,9 @@
     "docker:logs": "docker compose -f docker/docker-compose.yml logs -f",
     "docker:rebuild": "bash docker/rebuild.sh",
     "translation:install": "cd blog-translation && pnpm i",
-    "translation:start": "cd blog-translation && pnpm start"
+    "translation:start": "cd blog-translation && pnpm start",
+    "codegraph:index": "codegraph index",
+    "codegraph:re-index": "codegraph re-index"
   },
   "dependencies": {
     "@antv/infographic": "^0.2.4",

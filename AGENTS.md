@@ -5,7 +5,8 @@
 - `pnpm dev` — dev server (localhost:4321)
 - `pnpm build` — production build
 - `pnpm check` — Astro type-check
-- `pnpm lint:fix` — Biome auto-fix（严禁运行！会污染整个项目的格式化）
+- `pnpm lint` — Biome check (safe, no writes)
+- `pnpm lint:fix` — Biome auto-fix（严禁！会大面积格式化改动）
 - `pnpm knip` — find dead code/deps
 
 **All commands use `pnpm`, not npm/yarn.**
@@ -68,10 +69,19 @@ Do NOT reorder remark plugins in `astro.config.mjs`. `remarkShokaPreprocess` MUS
 
 Husky runs `lint-staged` which runs Biome on `*.{js,jsx,ts,tsx,json,astro}` and `lint-md` on `*.{md,mdx}`.
 
+## CodeGraph
+
+CodeGraph provides code intelligence for OpenCode sessions via MCP (configured in `opencode.jsonc`). It runs as a background daemon that auto-syncs on file changes.
+
+- `pnpm codegraph:index` — initial index build
+- `pnpm codegraph:re-index` — rebuild the index (use when search/explore returns stale results)
+- `.codegraph/` directory: DB/cache/logs are gitignored; the directory itself and its `.gitignore` should be committed
+
+CodeGraph replaces the need for grep/glob-based codebase exploration in most cases. Prefer `codegraph_explore` for understanding how a feature works, and `codegraph_search` to locate symbols.
+
 ## Full architecture reference
 
 See `CLAUDE.md` for comprehensive module structure, component patterns, state management rules, and performance guidelines.
-
 
 ## Git Commit Conventions
 
