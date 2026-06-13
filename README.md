@@ -1,8 +1,8 @@
-# astro-koharu
+# astro-blog
 
 个人博客引擎源码。文章与私密页面存档在私有仓库，CI 自动合并构建后推送到公开部署仓库，由 Vercel / Cloudflare Pages 静态托管。
 
-> 主题基于 Astro，萌系/二次元/粉蓝配色。命名灵感来源于「小春日和」（こはるびより）。
+> 基于 [cosZone/astro-koharu](https://github.com/cosZone/astro-koharu) 主题二次开发。萌系/二次元/粉蓝配色，命名灵感来源于「小春日和」（こはるびより）。
 
 ---
 
