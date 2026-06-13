@@ -1,0 +1,49 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: [main]
+  repository_dispatch:
+    types: [content-updated]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout engine repo
+        uses: actions/checkout@v4
+
+      - name: Clone content repo
+        run: |
+          git clone --depth 1 https://x-access-token:${{ secrets.GH_PAT }}@github.com/God-2077/astro-blog-content.git /tmp/content
+          cp -r /tmp/content/src/content/blog/* src/content/blog/
+          cp /tmp/content/src/pages/*.md src/pages/
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Deploy to deploy repo
+        run: |
+          git clone --depth 1 https://x-access-token:${{ secrets.GH_PAT }}@github.com/God-2077/astro-blog-deploy.git /tmp/deploy
+          rm -rf /tmp/deploy/*
+          cp -r dist/* /tmp/deploy/
+          cd /tmp/deploy
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --staged --quiet || git commit -m "Deploy: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push
