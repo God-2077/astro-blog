@@ -5,6 +5,10 @@ on:
     branches: [main]
   repository_dispatch:
     types: [content-updated]
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build-and-deploy:
@@ -16,13 +20,14 @@ jobs:
       - name: Clone content repo
         run: |
           git clone --depth 1 https://x-access-token:${{ secrets.GH_PAT }}@github.com/God-2077/astro-blog-content.git /tmp/content
+          mkdir -p src/content/blog
           cp -r /tmp/content/src/content/blog/* src/content/blog/
           cp /tmp/content/src/pages/*.md src/pages/
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: latest
+          version: 9
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
