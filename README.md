@@ -18,6 +18,20 @@
 
 > 并发控制：新 push 触发时会自动取消正在进行的旧构建。
 
+### astro-blog-content 目录结构
+
+私有内容仓库需保持与引擎仓库一致的目录布局，CI 构建时将整体复制合并：
+
+```
+astro-blog-content/
+└── src/
+    ├── content/
+    │   └── blog/                 ← 文章（映射到引擎 src/content/blog/）
+    │       └── hello-world.md    ← 文章
+    └── pages/                    
+        └── about.md              ← 关于我页面（映射到引擎 src/pages/about.md）
+```
+
 ---
 
 ## 技术栈
@@ -27,7 +41,7 @@
 - **包管理：** pnpm
 - **搜索：** Pagefind（无后端全站搜索）
 - **评论：** Waline / Giscus / Remark42 / Twikoo 可切换
-- **统计：** Umami
+- **统计：** Umami PV 展示 (无统计跟踪代码，需手动配置)
 - **多语言：** 内置 i18n（zh / en / ja）
 - **Markdown：** Shoka 兼容语法、GFM、Mermaid 图表、KaTeX 数学公式
 - **图片：** LQIP 渐变色占位
@@ -35,8 +49,6 @@
 ---
 
 ## 本地开发
-
-需要同时拥有本仓库和私有内容仓库的访问权限：
 
 ```bash
 # 1. 克隆引擎仓库
