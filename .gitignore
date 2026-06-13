@@ -52,4 +52,7 @@ src/pages/notes.md
 src/pages/software.md
 src/pages/web-tools.md
 
+# Session files
+session-*.md
+
 *.bak
