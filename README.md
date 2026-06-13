@@ -64,7 +64,10 @@ CONTENT="$(cd ../astro-blog-content && pwd)"
 ln -s "$CONTENT/src/content/blog" src/content/blog
 for f in "$CONTENT/src/pages"/*.md; do ln -s "$f" src/pages/; done
 
-# Windows (需管理员或无管理员用 junction):
+# Windows:
+#   前置：先删除已有目录（仓库自带的 .gitkeep）
+rmdir /s /q src\content\blog
+#   mklink /J 无需管理员；文件软链接需管理员权限或开启开发者模式
 mklink /J src\content\blog ..\astro-blog-content\src\content\blog
 for %f in (..\astro-blog-content\src\pages\*.md) do mklink src\pages\%~nxf %~ff
 
