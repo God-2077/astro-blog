@@ -56,3 +56,8 @@ src/pages/web-tools.md
 session-*.md
 
 *.bak
+
+Env files
+.env
+.env.production
+.env*.local
