@@ -58,14 +58,15 @@ cd astro-blog
 # 2. 克隆私有内容仓库
 git clone git@github.com:God-2077/astro-blog-content.git ../astro-blog-content
 
-# 3. 将内容链接到引擎目录（Windows 使用 mklink /J）
+# 3. 将内容链接到引擎目录
 # Linux/macOS:
-ln -s ../../astro-blog-content/src/content/blog src/content/blog
-ln -s ../../astro-blog-content/src/pages/*.md src/pages/
+CONTENT="$(cd ../astro-blog-content && pwd)"
+ln -s "$CONTENT/src/content/blog" src/content/blog
+for f in "$CONTENT/src/pages"/*.md; do ln -s "$f" src/pages/; done
 
 # Windows (需管理员或无管理员用 junction):
-mklink /J src\content\blog ..\..\astro-blog-content\src\content\blog
-copy ..\astro-blog-content\src\pages\*.md src\pages\
+mklink /J src\content\blog ..\astro-blog-content\src\content\blog
+for %f in (..\astro-blog-content\src\pages\*.md) do mklink src\pages\%~nxf %~ff
 
 # 4. 安装依赖并启动
 pnpm install
