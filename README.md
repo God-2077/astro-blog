@@ -2,7 +2,7 @@
 
 个人博客引擎源码。文章与私密页面存档在私有仓库，CI 自动合并构建后推送到公开部署仓库，由 Vercel / Cloudflare Pages 静态托管。
 
-> 基于 [cosZone/astro-koharu](https://github.com/cosZone/astro-koharu) 主题二次开发。萌系/二次元/粉蓝配色，命名灵感来源于「小春日和」（こはるびより）。
+> 基于 [cosZone/astro-koharu](https://github.com/cosZone/astro-koharu) 主题二次开发。萌系/二次元/粉蓝配色。
 
 ---
 
@@ -64,6 +64,7 @@ pnpm dev
 
 ## 鸣谢
 
+- 基于 [cosZone/astro-koharu](https://github.com/cosZone/astro-koharu) 主题二次开发。
 - 设计灵感来自 Hexo 主题 [Shoka](https://shoka.lostyu.me/)
 - 字体 [寒蝉全圆体](https://chinese-font.netlify.app/zh-cn/fonts/hcqyt/ChillRoundFRegular)
 - 参考项目：mx-space、yfi.moe、纸鹿摸鱼处 等
