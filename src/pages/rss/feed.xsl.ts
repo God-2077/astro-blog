@@ -1,6 +1,7 @@
 import { siteConfig, socialConfig } from '@constants/site-config';
 import type { APIContext } from 'astro';
 import { capitalize } from 'es-toolkit';
+import { defaultLocale, getLocalizedDescription, getLocalizedSubtitle, getLocalizedTitle } from '@/i18n';
 
 // Convert icon format: ri:github-fill -> ri-github-fill (Remix Icon CDN uses dash)
 const toRemixIconClass = (icon: string) => icon.replace(':', '-');
@@ -54,9 +55,9 @@ export async function GET(_context: APIContext) {
                             </div>
 
                             <div class="profile-info">
-                                <h1 class="site-title">${siteConfig.title}</h1>
-                                <p class="site-subtitle">${siteConfig.subtitle}</p>
-                                <p class="site-bio">${siteConfig.description}</p>
+                                <h1 class="site-title">${getLocalizedTitle(defaultLocale)}</h1>
+                                <p class="site-subtitle">${getLocalizedSubtitle(defaultLocale)}</p>
+                                <p class="site-bio">${getLocalizedDescription(defaultLocale)}</p>
 
                                 <div class="social-links">
                                                     ${socialLinks}

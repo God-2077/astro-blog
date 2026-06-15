@@ -1,11 +1,10 @@
 import rss from '@astrojs/rss';
-import { siteConfig } from '@constants/site-config';
 import { filterHiddenPosts, getCategoryArr, getPostSlug, getSortedPosts } from '@lib/content';
 import { encodeSlug } from '@lib/route';
 import { buildRssItemFields } from '@lib/rss-utils';
 import type { APIContext } from 'astro';
 import type { BlogPost } from 'types/blog';
-import { defaultLocale, getHtmlLang, localeList, localizedPath } from '@/i18n';
+import { defaultLocale, getHtmlLang, getLocalizedSubtitle, getLocalizedTitle, localeList, localizedPath } from '@/i18n';
 
 export function getStaticPaths() {
   return localeList.filter((l) => l !== defaultLocale).map((lang) => ({ params: { lang } }));
@@ -22,8 +21,8 @@ export async function GET(context: APIContext) {
   }
 
   const response = await rss({
-    title: siteConfig.title,
-    description: siteConfig.subtitle || 'No description',
+    title: getLocalizedTitle(lang),
+    description: getLocalizedSubtitle(lang) || 'No description',
     site,
     trailingSlash: false,
     customData: `<language>${getHtmlLang(lang)}</language>`,

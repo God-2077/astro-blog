@@ -5,7 +5,9 @@
  * Designed as pure functions for testability and SSR compatibility.
  */
 
+import { siteConfig } from '@constants/site-config';
 import { defaultLocale, isLocaleSupported } from './config';
+import { getContentNavName, getContentSiteField, getContentSiteKeywords } from './content';
 import { translations } from './translations';
 import { uiStrings as defaultStrings } from './translations/zh';
 import type { Locale, TranslationKey, TranslationParams } from './types';
@@ -186,6 +188,11 @@ export function getHtmlLang(locale: Locale): string {
  *
  * Used by Navigator, DropdownNav, and HomeInfo to render locale-aware nav labels.
  *
+ * Lookup order:
+ * 1. i18n-content.yaml navigation overrides (per locale)
+ * 2. TS translation dictionary
+ * 3. Fallback `name` from site.yaml
+ *
  * @example
  * ```ts
  * resolveNavName('nav.home', '首页', 'en')  // => 'Home'
@@ -194,7 +201,60 @@ export function getHtmlLang(locale: Locale): string {
  */
 export function resolveNavName(nameKey: string | undefined, fallbackName: string | undefined, locale: Locale): string {
   if (nameKey) {
-    return tryTranslate(locale, nameKey) ?? fallbackName ?? '';
+    return getContentNavName(locale, nameKey) ?? tryTranslate(locale, nameKey) ?? fallbackName ?? '';
   }
   return fallbackName ?? '';
+}
+
+/**
+ * Get the localized site title for a given locale.
+ * Checks i18n-content.yaml first, falls back to site.yaml default.
+ */
+export function getLocalizedTitle(locale: Locale): string {
+  return getContentSiteField(locale, 'title') ?? siteConfig.title;
+}
+
+/**
+ * Get the localized site subtitle for a given locale.
+ * Only consults i18n-content.yaml when site.yaml has a subtitle defined.
+ */
+export function getLocalizedSubtitle(locale: Locale): string {
+  if (!siteConfig.subtitle) return '';
+  return getContentSiteField(locale, 'subtitle') ?? siteConfig.subtitle;
+}
+
+/**
+ * Get the localized site description for a given locale.
+ * Only consults i18n-content.yaml when site.yaml has a description defined.
+ */
+export function getLocalizedDescription(locale: Locale): string {
+  if (!siteConfig.description) return '';
+  return getContentSiteField(locale, 'description') ?? siteConfig.description;
+}
+
+/**
+ * Get the localized site keywords for a given locale.
+ * Only consults i18n-content.yaml when site.yaml has keywords defined.
+ */
+export function getLocalizedKeywords(locale: Locale): string[] {
+  if (!siteConfig.keywords?.length) return [];
+  return getContentSiteKeywords(locale) ?? siteConfig.keywords;
+}
+
+/**
+ * Get the localized site alternate name for a given locale.
+ * Only consults i18n-content.yaml when site.yaml has an alternate defined.
+ */
+export function getLocalizedAlternate(locale: Locale): string | undefined {
+  if (!siteConfig.alternate) return undefined;
+  return getContentSiteField(locale, 'alternate') ?? siteConfig.alternate;
+}
+
+/**
+ * Get the localized mobile logo text for a given locale.
+ * Only consults i18n-content.yaml when site.yaml has a mobileLogoText defined.
+ */
+export function getLocalizedMobileLogoText(locale: Locale): string | undefined {
+  if (!siteConfig.mobileLogoText) return undefined;
+  return getContentSiteField(locale, 'mobileLogoText') ?? siteConfig.mobileLogoText;
 }

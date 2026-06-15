@@ -2,12 +2,11 @@
 import HomeSider from '@components/layout/HomeSider.astro';
 import Cover from '@components/ui/cover/Cover.astro';
 import { CONTENT_PADDING } from '@constants/layout';
-import { siteConfig } from '@constants/site-config';
 import TwoColumnLayout from '@layouts/TwoColumnLayout.astro';
 import { filterHiddenPosts, getPostSlug, getSortedPosts } from '@lib/content';
 import { displayDate } from '@lib/date';
 import { encodeSlug } from '@lib/route';
-import { getLocaleFromUrl, localizedPath, t } from '@/i18n';
+import { getLocaleFromUrl, getLocalizedTitle, localizedPath, t } from '@/i18n';
 import Layout from '../layouts/Layout.astro';
 
 const locale = getLocaleFromUrl(Astro.url.pathname);
@@ -30,7 +29,7 @@ const postsByYear = posts.reduce(
 const years = Object.keys(postsByYear).sort((a, b) => Number(b) - Number(a));
 ---
 
-<Layout title={`${t(locale, 'archives.title')} | ${siteConfig.title}`} description={t(locale, 'archives.title')}>
+<Layout title={`${t(locale, 'archives.title')} | ${getLocalizedTitle(locale)}`} description={t(locale, 'archives.title')}>
   <TwoColumnLayout>
     <Cover slot="cover" title={t(locale, 'archives.title')} />
     <HomeSider slot="sider" />

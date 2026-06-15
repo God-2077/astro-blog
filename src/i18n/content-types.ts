@@ -13,10 +13,21 @@ export interface FeaturedCategoryContentTranslation {
   description?: string;
 }
 
+export interface SiteContentTranslation {
+  title?: string;
+  alternate?: string;
+  mobileLogoText?: string;
+  subtitle?: string;
+  description?: string;
+  keywords?: string[];
+}
+
 export interface LocaleContentTranslations {
   categories?: Record<string, string>;
   series?: Record<string, SeriesContentTranslation>;
   featuredCategories?: Record<string, FeaturedCategoryContentTranslation>;
+  navigation?: Record<string, string>;
+  site?: SiteContentTranslation;
 }
 
 export type I18nContentConfig = Record<string, LocaleContentTranslations>;

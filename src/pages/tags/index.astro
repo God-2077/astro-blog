@@ -4,11 +4,10 @@ import { CollapsibleTags } from '@components/tag/CollapsibleTags';
 import { TagItem } from '@components/tag/TagItem';
 import Cover from '@components/ui/cover/Cover.astro';
 import { CONTENT_PADDING } from '@constants/layout';
-import { siteConfig } from '@constants/site-config';
 import Layout from '@layouts/Layout.astro';
 import TwoColumnLayout from '@layouts/TwoColumnLayout.astro';
 import { filterHiddenPosts, getAllTags, getSortedPosts } from '@lib/content';
-import { getLocaleFromUrl, localizedPath, t } from '@/i18n';
+import { getLocaleFromUrl, getLocalizedTitle, localizedPath, t } from '@/i18n';
 
 const locale = getLocaleFromUrl(Astro.url.pathname);
 const allPosts = await getSortedPosts(locale);
@@ -22,7 +21,7 @@ const mainTags = sortedTags.filter(({ count }) => count > 1);
 const singleTags = sortedTags.filter(({ count }) => count === 1);
 ---
 
-<Layout title={`${t(locale, 'tag.allTags')} | ${siteConfig.title}`} description={t(locale, 'tag.allTags')}>
+<Layout title={`${t(locale, 'tag.allTags')} | ${getLocalizedTitle(locale)}`} description={t(locale, 'tag.allTags')}>
   <TwoColumnLayout>
     <Cover slot="cover" title={t(locale, 'tag.allTags')} />
     <HomeSider slot="sider" />

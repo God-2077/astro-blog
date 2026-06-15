@@ -3,16 +3,16 @@ import { BangumiCollection } from '@components/bangumi';
 import HomeSider from '@components/layout/HomeSider.astro';
 import Cover from '@components/ui/cover/Cover.astro';
 import { CONTENT_PADDING } from '@constants/layout';
-import { bangumiConfig, siteConfig } from '@constants/site-config';
+import { bangumiConfig } from '@constants/site-config';
 import Layout from '@layouts/Layout.astro';
 import TwoColumnLayout from '@layouts/TwoColumnLayout.astro';
 import { Comment } from '@/components/comment';
-import { getLocaleFromUrl, t } from '@/i18n';
+import { getLocaleFromUrl, getLocalizedTitle, t } from '@/i18n';
 
 if (!bangumiConfig) return Astro.redirect('/404');
 
 const locale = getLocaleFromUrl(Astro.url.pathname);
-const title = `${t(locale, 'bangumi.title')} | ${siteConfig.title}`;
+const title = `${t(locale, 'bangumi.title')} | ${getLocalizedTitle(locale)}`;
 const description = t(locale, 'bangumi.description');
 ---
 

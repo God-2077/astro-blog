@@ -3,14 +3,13 @@ import HomeSider from '@components/layout/HomeSider.astro';
 import PostList from '@components/post/PostList.astro';
 import Cover from '@components/ui/cover/Cover.astro';
 import { CONTENT_PADDING, PAGINATION } from '@constants/layout';
-import { seoConfig } from '@constants/site-config';
 import Layout from '@layouts/Layout.astro';
 import TwoColumnLayout from '@layouts/TwoColumnLayout.astro';
 import { getNonFeaturedPosts } from '@lib/content';
 import { toPostCardDataList } from '@lib/content/transforms';
 import type { PaginateFunction } from 'astro';
 import Divider from '@/components/ui/divider';
-import { defaultLocale, getLocaleFromUrl, t } from '@/i18n';
+import { defaultLocale, getLocaleFromUrl, getLocalizedTitle, t } from '@/i18n';
 
 export async function getStaticPaths({ paginate }: { paginate: PaginateFunction }) {
   const postCollections = await getNonFeaturedPosts(defaultLocale);
@@ -22,7 +21,7 @@ const locale = getLocaleFromUrl(Astro.url.pathname);
 const postCardData = toPostCardDataList(page.data, locale);
 ---
 
-<Layout title={seoConfig.title}>
+<Layout title={getLocalizedTitle(locale)}>
   <TwoColumnLayout>
     <Cover slot="cover" />
     <HomeSider slot="sider" />

@@ -27,7 +27,15 @@ import { Icon } from 'astro-icon/components';
 import { Comment } from '@/components/comment';
 import EditButton from '@/components/EditButton';
 import DonateButton from '@/components/post/DonateButton.astro';
-import { defaultLocale, getLocaleFromUrl, getLocaleLabel, localizedPath, t } from '@/i18n';
+import {
+  defaultLocale,
+  getLocaleFromUrl,
+  getLocaleLabel,
+  getLocalizedKeywords,
+  getLocalizedTitle,
+  localizedPath,
+  t,
+} from '@/i18n';
 import { extractTextFromMarkdown } from '@/lib/sanitize';
 
 export async function getStaticPaths() {
@@ -64,7 +72,7 @@ const ogImage = getOgImageUrl(post?.data.cover, Astro.site);
 
 const categoryKeywords = categories?.length ? categories.flat() : [];
 const postKw = postKeywords?.length ? postKeywords : [...tags, ...categoryKeywords];
-const keywords = [...new Set([...postKw, ...(siteConfig.keywords ?? [])])] as string[];
+const keywords = [...new Set([...postKw, ...getLocalizedKeywords(locale)])] as string[];
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
@@ -151,7 +159,7 @@ if (post.data.description) {
 ---
 
 <Layout
-  title={`${post.data.title}${categoryStr} | ${siteConfig.title}`}
+  title={`${post.data.title}${categoryStr} | ${getLocalizedTitle(locale)}`}
   description={finalDescription}
   siderType={HomeSiderType.POST}
   post={post}

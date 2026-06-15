@@ -3,8 +3,8 @@ import CustomContent from '@components/common/CustomContent.astro';
 import HomeSider from '@components/layout/HomeSider.astro';
 import Cover from '@components/ui/cover/Cover.astro';
 import { CONTENT_PADDING } from '@constants/layout';
-import { seoConfig } from '@constants/site-config';
 import { Comment } from '@/components/comment';
+import { getLocaleFromUrl, getLocalizedTitle } from '@/i18n';
 import Layout from './Layout.astro';
 import TwoColumnLayout from './TwoColumnLayout.astro';
 
@@ -19,9 +19,10 @@ export interface Props {
 
 const { frontmatter } = Astro.props;
 const showComments = frontmatter.comments ?? true;
+const locale = getLocaleFromUrl(Astro.url.pathname);
 ---
 
-<Layout title={`${frontmatter.title} | ${seoConfig.title}`}>
+<Layout title={`${frontmatter.title} | ${getLocalizedTitle(locale)}`}>
   <TwoColumnLayout>
     <Cover slot="cover" title={frontmatter.coverTitle ?? frontmatter.title} />
     <HomeSider slot="sider" />

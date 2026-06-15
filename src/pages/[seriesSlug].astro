@@ -3,14 +3,13 @@ import HomeSider from '@components/layout/HomeSider.astro';
 import PostList from '@components/post/PostList.astro';
 import SeriesCover from '@components/ui/cover/SeriesCover.astro';
 import { CONTENT_PADDING } from '@constants/layout';
-import { siteConfig } from '@constants/site-config';
 import Layout from '@layouts/Layout.astro';
 import TwoColumnLayout from '@layouts/TwoColumnLayout.astro';
 import type { FeaturedSeriesItem } from '@lib/config/types';
 import { getEnabledSeries, getPostsByCategory, translateSeriesField } from '@lib/content';
 import { toPostCardDataList } from '@lib/content/transforms';
 import type { GetStaticPaths } from 'astro';
-import { getLocaleFromUrl, localizedPath, t } from '@/i18n';
+import { getLocaleFromUrl, getLocalizedTitle, localizedPath, t } from '@/i18n';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const enabledSeries = getEnabledSeries();
@@ -38,7 +37,7 @@ const seriesLabel = translateSeriesField(series.slug, 'label', series.label, loc
 const pageTitle = seriesFullName || seriesLabel || series.categoryName;
 ---
 
-<Layout title={`${pageTitle} | ${siteConfig.title}`} description={series.description?.slice(0, 160)}>
+<Layout title={`${pageTitle} | ${getLocalizedTitle(locale)}`} description={series.description?.slice(0, 160)}>
   <TwoColumnLayout>
     <SeriesCover slot="cover" series={series} />
     <HomeSider slot="sider" />

@@ -1,12 +1,11 @@
 // edit https://github.com/lawvs/lawvs.github.io/blob/dba2e51e312765f8322ee87755b4e9c22b520048/src/pages/rss.xml.ts
 import rss from '@astrojs/rss';
-import { siteConfig } from '@constants/site-config';
 import { filterHiddenPosts, getCategoryArr, getPostSlug, getSortedPosts } from '@lib/content';
 import { encodeSlug } from '@lib/route';
 import { buildRssItemFields } from '@lib/rss-utils';
 import type { APIContext } from 'astro';
 import type { BlogPost } from 'types/blog';
-import { defaultLocale } from '@/i18n';
+import { defaultLocale, getLocalizedSubtitle, getLocalizedTitle } from '@/i18n';
 
 export async function GET(context: APIContext) {
   const allPosts = await getSortedPosts(defaultLocale);
@@ -18,8 +17,8 @@ export async function GET(context: APIContext) {
   }
 
   const response = await rss({
-    title: siteConfig.title,
-    description: siteConfig.subtitle || 'No description',
+    title: getLocalizedTitle(defaultLocale),
+    description: getLocalizedSubtitle(defaultLocale) || 'No description',
     site,
     trailingSlash: false,
     stylesheet: '/rss/feed.xsl', // https://docs.astro.build/en/recipes/rss/#adding-a-stylesheet

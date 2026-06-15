@@ -6,43 +6,121 @@
 #
 # Structure:
 #   <locale>:
-#     categories:    { <slug>: <translated name> }
-#     series:        { <slug>: { label?, fullName?, description? } }
+#     navigation:   { <nameKey>: <translated name> }
+#     site:         { title?, subtitle?, description?, keywords? }
+#     categories:   { <slug>: <translated name> }
+#     series:       { <slug>: { label?, fullName?, description? } }
 #     featuredCategories: { <link>: { label?, description? } }
 # =============================================================================
 
 en:
+  # ── Navigation ──────────────────────────────────────────────
+  navigation:
+    nav.home: Home
+    nav.lyb: Guestbook
+    nav.posts: Posts
+    nav.categories: Categories
+    nav.tags: Tags
+    nav.archives: Archives
+    nav.friends: Friends
+    nav.about: About
+    nav.more: More
+    nav.useful-websites: Tools
+    nav.music: Music
+    nav.bangumi: Bangumi
+    nav.changelog: Changelog
+
+  # ── Site Metadata ───────────────────────────────────────────
+  site:
+    alternate: ksable
+    mobileLogoText: ksable
+    title: "Ksable's Nest"
+    subtitle: "A blog about life & tech"
+    description: "Kissablecho's personal blog — recording life, sharing technology, anime & white stockings enthusiast."
+    keywords:
+      - blog
+      - Kissablecho
+      - ksable
+      - diary
+      - notes
+      - tech
+      - anime
+
+  # ── Categories ──────────────────────────────────────────────
   categories:
     ssn: Mutter
     reads: Reading Notes
     note: Memo
     post: Article
 
+  # ── Series ──────────────────────────────────────────────────
   series:
     weekly:
       label: My Weekly
       fullName: My Tech Weekly
 
+  # ── Featured Categories ─────────────────────────────────────
   featuredCategories:
     ssn:
       label: Mutter
       description: Life records, random thoughts
     note:
       label: Memo
-      description: Technical Notes, Study Notes
+      description: Technical notes, study notes
+    post:
+      label: Article
+      description: Technical articles, study articles
+    reads:
+      label: Reading Notes
+      description: Book notes and reviews
 
 ja:
+  # ── ナビゲーション ──────────────────────────────────────────
+  navigation:
+    nav.home: ホーム
+    nav.lyb: 掲示板
+    nav.posts: 投稿
+    nav.categories: カテゴリー
+    nav.tags: タグ
+    nav.archives: アーカイブ
+    nav.friends: 友達
+    nav.about: ブログについて
+    nav.more: もっと
+    nav.useful-websites: ツール
+    nav.music: 音楽
+    nav.bangumi: オタ活の記録
+    nav.changelog: 変更履歴
+
+  # ── サイトメタデータ ────────────────────────────────────────
+  site:
+    alternate: ksable
+    mobileLogoText: ksable
+    title: "Ksableの小屋"
+    subtitle: "生活を記録し、技術を共有するブログ"
+    description: "kissablechoの個人ブログ。生活の記録、技術の共有、二次元と白い靴下が好き。"
+    keywords:
+      - ブログ
+      - Kissablecho
+      - ksable
+      - 日記
+      - ノート
+      - 技術
+      - アニメ
+
+  # ── カテゴリー ──────────────────────────────────────────────
   categories:
     ssn: ぶつぶつ
     reads: 読書ノート
     note: 付箋
     post: 文章
 
+  # ── シリーズ ────────────────────────────────────────────────
   series:
     weekly:
       label: 週間ダイジェスト
       fullName: テック週間ダイジェスト
 
+  # ── おすすめカテゴリー ──────────────────────────────────────
   featuredCategories:
     ssn:
       label: ぶつぶつ
@@ -50,3 +128,9 @@ ja:
     note:
       label: 付箋
       description: 技術ノート、学習ノート
+    post:
+      label: 文章
+      description: 技術記事、学習記事
+    reads:
+      label: 読書ノート
+      description: 本のノートとレビュー

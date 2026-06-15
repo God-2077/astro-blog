@@ -7,7 +7,7 @@ import { MobilePostHeader } from '@components/layout/MobilePostHeader';
 import { MenuIcon } from '@components/ui/MenuIcon';
 import { MAX_WIDTH } from '@constants/layout';
 import { christmasConfig, siteConfig } from 'constants/site-config';
-import { getLocaleFromUrl } from '@/i18n';
+import { getLocaleFromUrl, getLocalizedAlternate, getLocalizedMobileLogoText, getLocalizedTitle } from '@/i18n';
 import Navigator from './Navigator';
 
 interface Props {
@@ -16,8 +16,10 @@ interface Props {
 }
 
 const { isPostPage = false, tocNumbering = true } = Astro.props;
-const { alternate, title, showLogo, mobileLogoText } = siteConfig;
+const { showLogo } = siteConfig;
 const locale = getLocaleFromUrl(Astro.url.pathname);
+const headerTitle = getLocalizedAlternate(locale) || getLocalizedTitle(locale);
+const headerMobileLogo = getLocalizedMobileLogoText(locale) || getLocalizedTitle(locale);
 ---
 
 <div
@@ -32,10 +34,10 @@ const locale = getLocaleFromUrl(Astro.url.pathname);
       class="tablet:hidden -my-4 mr-4 flex cursor-pointer items-center justify-center gap-1 whitespace-nowrap"
       href="/"
       target="_self"
-      title={alternate || title}
-      aria-label={alternate || title}
+      title={headerTitle}
+      aria-label={headerTitle}
     >
-      {showLogo ? <LogoSvg className="h-8" /> : <p class="logo-text">{alternate || title}</p>}
+      {showLogo ? <LogoSvg className="h-8" /> : <p class="logo-text">{headerTitle}</p>}
     </a>
     <!-- Mobile: MobilePostHeader (shows heading on post pages, logo otherwise) -->
     <div class="tablet:flex tablet:grow hidden items-center justify-center">
@@ -44,7 +46,7 @@ const locale = getLocaleFromUrl(Astro.url.pathname);
         isPostPage={isPostPage}
         enableNumbering={tocNumbering}
         logoElement={showLogo ? 'svg' : 'text'}
-        logoText={mobileLogoText || title}
+        logoText={headerMobileLogo}
         logoSrc={logoSrc}
       />
     </div>

@@ -9,7 +9,7 @@ import { Icon } from 'astro-icon/components';
 import type { BlogPost } from 'types/blog';
 import UmamiPVSpan from '@/components/umami/UmamiPVSpan';
 import { MAX_WIDTH } from '@/constants/layout';
-import { getLocaleFromUrl, localizedPath, t } from '@/i18n';
+import { getLocaleFromUrl, getLocalizedAlternate, getLocalizedSubtitle, getLocalizedTitle, localizedPath, t } from '@/i18n';
 import WaveSvg from './wave';
 
 export interface CoverProps {
@@ -94,9 +94,9 @@ const pageStatsConfig = href ? createArticleStatsConfig(href) : null;
         </>
       ) : (
         <>
-          <h2 class="shadow-text font-chill-round text-5xl/[1.2]">{siteConfig?.alternate}</h2>
-          <h1 class="shadow-text font-chill-round mt-3 text-5xl/[1.2] font-bold tracking-widest">{siteConfig?.title}</h1>
-          <p class="shadow-text mt-5 text-sm">= {siteConfig?.subtitle} =</p>
+          <h2 class="shadow-text font-chill-round text-5xl/[1.2]">{getLocalizedAlternate(locale)}</h2>
+          <h1 class="shadow-text font-chill-round mt-3 text-5xl/[1.2] font-bold tracking-widest">{getLocalizedTitle(locale)}</h1>
+          <p class="shadow-text mt-5 text-sm">= {getLocalizedSubtitle(locale)} =</p>
         </>
       )
     }

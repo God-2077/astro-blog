@@ -134,6 +134,7 @@ navigation:
         path: /bangumi
         icon: ri:bilibili-fill
       - name: 修改记录
+        nameKey: nav.changelog
         path: /note/便笺-个人-astro-koharu-主题修改记录
         icon: ri:edit-line
 

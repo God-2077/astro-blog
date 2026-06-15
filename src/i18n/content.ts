@@ -39,3 +39,28 @@ export function getContentFeaturedCategoryField(locale: string, link: string, fi
   if (!cat) return undefined;
   return cat[field as keyof typeof cat];
 }
+
+/**
+ * Look up a translated navigation name from the YAML content config.
+ * The `nameKey` matches the `nameKey` field in site.yaml navigation items (e.g. 'nav.home').
+ */
+export function getContentNavName(locale: string, nameKey: string): string | undefined {
+  return config[locale]?.navigation?.[nameKey];
+}
+
+/**
+ * Look up a translated site metadata field (title, alternate, mobileLogoText, subtitle, description) from the YAML content config.
+ */
+export function getContentSiteField(
+  locale: string,
+  field: 'title' | 'alternate' | 'mobileLogoText' | 'subtitle' | 'description',
+): string | undefined {
+  return config[locale]?.site?.[field];
+}
+
+/**
+ * Look up translated site keywords from the YAML content config.
+ */
+export function getContentSiteKeywords(locale: string): string[] | undefined {
+  return config[locale]?.site?.keywords;
+}
