@@ -12,7 +12,7 @@ import { routeBuilder } from '@lib/route';
 import { cn } from '@lib/utils';
 import { Icon } from 'astro-icon/components';
 import UmamiPVSpan from '@/components/umami/UmamiPVSpan';
-import { defaultLocale, getLocaleFromUrl, getLocaleLabel, localizedPath, t } from '@/i18n';
+import { defaultLocale, getLocaleFromUrl, localizedPath, type TranslationKey, t } from '@/i18n';
 import type { PostCardData } from '@/types/blog';
 
 export interface PostItemCardProps {
@@ -178,7 +178,7 @@ const pageStatsConfig = createArticleStatsConfig(href);
           isFallback && (
             <Badge className="border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-400 gap-1 shrink-0 whitespace-nowrap transition-colors duration-300">
               <Icon name="ri:translate-2" class="h-3 w-3" />
-              {getLocaleLabel(postLocale ?? defaultLocale)}
+              {t(locale, `locale.${postLocale ?? defaultLocale}` as TranslationKey)}
             </Badge>
           )
         }

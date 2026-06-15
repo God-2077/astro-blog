@@ -348,4 +348,9 @@ export const uiStrings = {
   'bangumi.noItems': '暂无收藏',
   'bangumi.error': '加载失败，请稍后重试',
   'bangumi.retry': '重试',
+
+  // ── Locale Names ──────────────────────────────────────────
+  'locale.zh': '中文',
+  'locale.en': '英文',
+  'locale.ja': '日文',
 } as const;

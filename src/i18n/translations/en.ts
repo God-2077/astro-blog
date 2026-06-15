@@ -349,4 +349,9 @@ export const uiStrings: UIStrings = {
   'bangumi.noItems': 'No collections',
   'bangumi.error': 'Failed to load, please try again',
   'bangumi.retry': 'Retry',
+
+  // ── Locale Names ──────────────────────────────────────────
+  'locale.zh': 'Chinese',
+  'locale.en': 'English',
+  'locale.ja': 'Japanese',
 };
