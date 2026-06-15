@@ -61,3 +61,7 @@ Env files
 .env
 .env.production
 .env*.local
+
+# Temporary files
+.temp_*
+_temp_*
