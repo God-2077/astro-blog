@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { commentConfig } from '@/constants/site-config';
-import { getHtmlLang, getLocaleFromUrl } from '@/i18n/utils';
+import { getHtmlLang, getLocaleFromUrl, stripLocaleFromPath } from '@/i18n/utils';
 import 'twikoo/dist/twikoo.css';
 import '@/styles/components/twikoo.css';
 
@@ -54,7 +54,7 @@ export default function Twikoo() {
         envId: config.envId,
         el: containerRef.current,
         region: config.region,
-        path: window.location.pathname,
+        path: stripLocaleFromPath(window.location.pathname),
         lang: config.lang ?? getHtmlLang(locale),
       });
       setLoading(false);
