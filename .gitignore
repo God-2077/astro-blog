@@ -41,16 +41,9 @@ backups/
 # Private content (stored in God-2077/astro-blog-content)
 src/content/blog/*
 !src/content/blog/.gitkeep
-src/pages/about.md
-src/pages/all-pages.md
-src/pages/all-web.md
-src/pages/cookie.md
-src/pages/lyb.md
-src/pages/music.md
-src/pages/name.md
-src/pages/notes.md
-src/pages/software.md
-src/pages/web-tools.md
+src/pages/*.md
+src/pages/**/*.md
+!src/pages/.gitkeep
 
 # Session files
 session-*.md
