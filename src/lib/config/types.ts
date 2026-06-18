@@ -419,14 +419,6 @@ export interface TwikooConfig {
   region?: string;
 
   /**
-   * 用于区分不同文章的自定义 js 路径
-   * Custom js path to distinguish different articles
-   * 如果您的文章路径不是 location.pathname，需传此参数
-   * If your article path is not location.pathname, you need to pass this parameter
-   */
-  path?: string;
-
-  /**
    * 用于手动设定评论区语言
    * Manually set comment area language
    */

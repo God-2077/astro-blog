@@ -678,7 +678,6 @@ content:
   # twikoo:
     # envId: # Twikoo 环境 ID (腾讯云) 或 Vercel 环境地址 (必填)
     # region: # 环境地域，默认为 ap-shanghai
-    # path: # 用于区分不同文章的自定义 js 路径，如果您的文章路径不是 location.pathname，需传此参数
     # lang: # 语言 (默认: 'zh-CN')
 comment:
   provider: twikoo  # 'remark42' | 'giscus' | 'waline' | 'twikoo' | 'none'
@@ -736,7 +735,6 @@ comment:
   twikoo:
     envId: https://twikoo.ksable.top/  # Twikoo 环境 ID (腾讯云) 或 Vercel 环境地址 (必填)
     # region: ap-shanghai              # 环境地域，默认为 ap-shanghai
-    # path: location.pathname          # 用于区分不同文章的自定义 js 路径
     # lang: zh-CN                     # 语言 (默认: 'zh-CN')
 
 # =============================================================================

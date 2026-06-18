@@ -54,7 +54,7 @@ export default function Twikoo() {
         envId: config.envId,
         el: containerRef.current,
         region: config.region,
-        path: config.path ?? window.location.pathname,
+        path: window.location.pathname,
         lang: config.lang ?? getHtmlLang(locale),
       });
       setLoading(false);
