@@ -26,7 +26,7 @@ jobs:
           git clone --depth 1 https://x-access-token:${{ secrets.GH_PAT }}@github.com/God-2077/astro-blog-content.git /tmp/content
           mkdir -p src/content/blog
           cp -r /tmp/content/src/content/blog/* src/content/blog/
-          find /tmp/content/src/pages/ -name "*.md" -printf "%P\0" | xargs -0 -I {} cp --parents {} src/pages/
+          (cd /tmp/content/src/pages && find . -name "*.md" -print0 | xargs -0 cp --parents -t "$GITHUB_WORKSPACE/src/pages/")
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
