@@ -9,7 +9,20 @@ import UmamiPVSpan from '@/components/umami/UmamiPVSpan';
 import { getLocaleFromUrl, t } from '@/i18n';
 import SakuraSVG from '../svg/SakuraSvg';
 
-const footerSocial = footerConfig?.social || [];
+const footerSocialRaw = footerConfig?.social || [];
+const footerSocialGroups: (typeof footerSocialRaw)[] = [];
+let currentGroup: typeof footerSocialRaw = [];
+for (const item of footerSocialRaw) {
+  if (item.br) {
+    if (currentGroup.length > 0) {
+      footerSocialGroups.push(currentGroup);
+      currentGroup = [];
+    }
+  } else {
+    currentGroup.push(item);
+  }
+}
+if (currentGroup.length > 0) footerSocialGroups.push(currentGroup);
 
 interface Props {
   className?: string;
@@ -65,37 +78,41 @@ const startYear = siteConfig?.startYear ?? currentYear;
     </div>
 
     <!-- Social Links -->
-    <div class="text-muted-foreground flex items-center gap-4 text-sm">
-      {
-        footerSocial.map((item) => (
-          item.url ? (
-            <a
-              href={item.url}
-              target="_blank"
-              class="footer-link font-medium transition-all duration-300"
-            >
-              {item.icon ? ( 
-                <Icon name={item.icon} class="h-4 w-4" />
-              ) : item.img ? (
-                <img src={item.img} alt={item.title} class="h-6 w-auto" />
+    {
+      footerSocialGroups.map((group) => (
+        <div class="text-muted-foreground flex items-center gap-4 text-sm">
+          {
+            group.map((item) => (
+              item.url ? (
+                <a
+                  href={item.url}
+                  target="_blank"
+                  class="footer-link font-medium transition-all duration-300"
+                >
+                  {item.icon ? ( 
+                    <Icon name={item.icon} class="h-4 w-4" />
+                  ) : item.img ? (
+                    <img src={item.img} alt={item.title} class="h-6 w-auto" />
+                  ) : (
+                    item.title
+                  )}
+                </a>
               ) : (
-                item.title
-              )}
-            </a>
-          ) : (
-            <span class="footer-link font-medium transition-all duration-300">
-              {item.icon ? ( 
-                <Icon name={item.icon} class="h-4 w-4" />
-              ) : item.img ? (
-                <img src={item.img} alt={item.title} class="h-6 w-auto" />
-              ) : (
-                item.title
-              )}
-            </span>
-          )
-        ))
-      }
-    </div>
+                <span class="footer-link font-medium transition-all duration-300">
+                  {item.icon ? ( 
+                    <Icon name={item.icon} class="h-4 w-4" />
+                  ) : item.img ? (
+                    <img src={item.img} alt={item.title} class="h-6 w-auto" />
+                  ) : (
+                    item.title
+                  )}
+                </span>
+              )
+            ))
+          }
+        </div>
+      ))
+    }
 
     <!-- Copyright -->
     <div class="text-muted-foreground flex items-center gap-0.5 text-sm">

@@ -590,6 +590,7 @@ export interface FooterConfig {
     url?: string;
     icon?: string;
     img?: string;
+    br?: boolean;
   }[];
 }
 
