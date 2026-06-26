@@ -893,6 +893,11 @@ footer:
     - title: foreverblog
       url: https://foreverblog.cn/go.html
       img: https://assets.ksable.top/img/foreverblog.png
+    - title: Build and Deploy
+      img: https://github.com/God-2077/astro-blog/actions/workflows/deploy.yml/badge.svg?branch=main
+      url: https://github.com/God-2077/astro-blog/actions/workflows/deploy.yml
+
+# [![Build and Deploy](https://github.com/God-2077/astro-blog/actions/workflows/deploy.yml/badge.svg?branch=main)](https://github.com/God-2077/astro-blog/actions/workflows/deploy.yml)
 
 # =============================================================================
 # Inject
