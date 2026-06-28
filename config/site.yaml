@@ -895,7 +895,7 @@ footer:
       img: https://assets.ksable.top/img/foreverblog.png
     - br: true
     - title: Build and Deploy
-      img: https://github.com/God-2077/astro-blog/actions/workflows/deploy.yml/badge.svg?branch=main
+      img: https://img.shields.io/github/actions/workflow/status/God-2077/astro-blog/deploy.yml?branch=main&label=Build%20and%20Deploy
       url: https://github.com/God-2077/astro-blog/actions/workflows/deploy.yml
 
 # [![Build and Deploy](https://github.com/God-2077/astro-blog/actions/workflows/deploy.yml/badge.svg?branch=main)](https://github.com/God-2077/astro-blog/actions/workflows/deploy.yml)
