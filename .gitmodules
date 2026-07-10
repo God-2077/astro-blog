@@ -1,6 +1,0 @@
-[submodule "blog-translation"]
-	path = blog-translation
-    # 适配 cloudflare pages 构建环境
-	# url = git@github.com:God-2077/fast_md_fanyi.git
-	url = https://github.com/God-2077/fast_md_fanyi.git
-	branch = main

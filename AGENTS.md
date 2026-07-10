@@ -63,7 +63,6 @@ Do NOT reorder remark plugins in `astro.config.mjs`. `remarkShokaPreprocess` MUS
 ## Sub-projects
 
 - `cms/` — Decap CMS admin (separate pnpm project, `pnpm cms`)
-- `blog-translation/` — Translation tooling (separate pnpm project, `pnpm translation:start`)
 
 ## Pre-commit
 
