@@ -951,3 +951,6 @@ inject:
         var a = location.hostname;if (a === 'localhost' || a.startsWith('192.168.')) {localStorage.setItem('umami.disabled', '1');}
       })();
     </script>
+    <script>
+    document.addEventListener("astro:page-load", () => {fetch("https://tally.ksable.dpdns.org/hits/blog/pv.json",{mode: "no-cors"})});
+    </script>
