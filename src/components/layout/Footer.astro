@@ -119,9 +119,9 @@ const startYear = siteConfig?.startYear ?? currentYear;
                                     <Icon name={item.icon} class="h-4 w-4" />
                                 ) : item.img ? (
                                     <img
-                                        src={item.img}
+                                        src={typeof item.img === "string" ? item.img : item.img.src}
                                         alt={item.title}
-                                        class="h-6 w-auto"
+                                        class={`h-${typeof item.img === 'object' ? item.img.height ?? 6 : 6} w-${typeof item.img === 'object' ? item.img.width ?? "auto" : "auto"}`}
                                     />
                                 ) : (
                                     item.title
@@ -133,9 +133,9 @@ const startYear = siteConfig?.startYear ?? currentYear;
                                     <Icon name={item.icon} class="h-4 w-4" />
                                 ) : item.img ? (
                                     <img
-                                        src={item.img}
+                                        src={typeof item.img === "string" ? item.img : item.img.src}
                                         alt={item.title}
-                                        class="h-6 w-auto"
+                                        class={`h-${typeof item.img === 'object' ? item.img.height ?? 6 : 6} w-${typeof item.img === 'object' ? item.img.width ?? "auto" : "auto"}`}
                                     />
                                 ) : (
                                     item.title

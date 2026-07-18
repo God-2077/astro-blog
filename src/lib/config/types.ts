@@ -589,7 +589,13 @@ export interface FooterConfig {
     title: string;
     url?: string;
     icon?: string;
-    img?: string;
+    img?:
+      | string
+      | {
+          src: string;
+          width?: string;
+          height?: string;
+        };
     br?: boolean;
   }[];
 }
