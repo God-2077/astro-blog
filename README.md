@@ -22,7 +22,7 @@
 
 私有内容仓库需保持与引擎仓库一致的目录布局，CI 构建时将整体复制合并：
 
-```
+```plain
 astro-blog-content/
 └── src/
     ├── content/
@@ -90,3 +90,5 @@ pnpm dev
 ## License
 
 GNU Affero General Public License v3 (AGPL-3.0)
+
+![count](https://tally.ksable.dpdns.org/hits/github/astro-blog.svg)
