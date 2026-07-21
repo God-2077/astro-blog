@@ -38,7 +38,7 @@
   "dependencies": {
     "@antv/infographic": "^0.2.4",
     "@astrojs/mdx": "^5.0.6",
-    "@astrojs/netlify": "^6.6.4",
+    "@astrojs/netlify": "^8.1.2",
     "@astrojs/node": "^9.5.2",
     "@astrojs/react": "^4.4.2",
     "@astrojs/rss": "^4.0.14",
