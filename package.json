@@ -41,7 +41,7 @@
     "@astrojs/netlify": "^6.6.4",
     "@astrojs/node": "^9.5.2",
     "@astrojs/react": "^4.4.2",
-    "@astrojs/rss": "^4.0.14",
+    "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.0",
     "@astrojs/vercel": "^9.0.4",
     "@blocknote/core": "^0.46.1",
