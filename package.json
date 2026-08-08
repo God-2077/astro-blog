@@ -83,7 +83,7 @@
     "hast-util-to-html": "^9.0.5",
     "js-yaml": "^4.1.1",
     "marked": "^17.0.1",
-    "mermaid": "^11.12.2",
+    "mermaid": "^11.16.1",
     "metascraper": "^5.49.7",
     "metascraper-description": "^5.49.7",
     "metascraper-image": "^5.49.7",
