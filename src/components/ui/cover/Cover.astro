@@ -36,7 +36,8 @@ const pageStatsConfig = href ? createArticleStatsConfig(href) : null;
 
 <div class="relative flex h-[60dvh] z-0 max-h-200 overflow-hidden">
   <div class="absolute inset-0 h-full bg-black/40"></div>
-  <div class="absolute inset-0 bottom-[8dvh] flex flex-col items-center justify-center px-5 text-white">
+  {/* px-5 修改为 px-3，以适应移动端(适应自己的手机) */}
+  <div class="absolute inset-0 bottom-[8dvh] flex flex-col items-center justify-center px-3 text-white">
     {
       title ? (
         <h1
