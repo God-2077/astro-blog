@@ -1,5 +1,4 @@
 import { getPageviews } from '@lib/umami-stats';
-import { formatCompactNumber } from '@lib/utils';
 import { useEffect, useState } from 'react';
 import type { UmamiStatsConfig } from '@/types/umami-stats';
 
@@ -28,6 +27,6 @@ export default function UmamiPVSpan({ statsConfig, compact = true }: Props) {
 
   if (pageviews === undefined) return <span>...</span>;
   if (pageviews === null) return <span>N/A</span>;
-  const display = compact ? formatCompactNumber(pageviews) : pageviews.toString();
+  const display = compact ? pageviews : pageviews.toString();
   return <span title={pageviews.toLocaleString()}>{display}</span>;
 }
