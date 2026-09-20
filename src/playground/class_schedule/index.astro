@@ -1,6 +1,8 @@
 ---
-import exportScript from './exportScript.js?raw';
-import readmeRaw from './readme.md?raw';
+// @ts-expect-error
+import exportScript from './exportScript.js.txt?raw';
+// import readmeRaw from './readme.md?raw';
+// @ts-expect-error
 import styles from './style.css?raw';
 // const exportScript = readmeRaw.match(/```javascript\r?\n([\s\S]*?)```/)?.[1]?.trim() ?? '// 未在 readme.md 中找到导出脚本';
 ---
@@ -173,6 +175,7 @@ import styles from './style.css?raw';
   <div id="toast-wrap" class="toast-wrap"></div>
 
   <script>
+    // @ts-ignore
     import demoTableRaw from './demo-course-table.json?raw';
     import { CAMPUSES, TEACHING_SCHEDULE, WEEKDAYS } from './data';
     import type { Campus, Course, CourseEntry, CourseTable, TeachingEntry, Timetable, Weekday } from './data';
