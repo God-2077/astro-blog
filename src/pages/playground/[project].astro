@@ -1,5 +1,6 @@
 ---
 import type { GetStaticPaths } from 'astro';
+import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
 
 export const getStaticPaths: GetStaticPaths = () => {
   const configs = import.meta.glob('../../playground/*/config.ts', { eager: true });
@@ -14,13 +15,11 @@ export const getStaticPaths: GetStaticPaths = () => {
 
 const { project } = Astro.params;
 
-const allModules = import.meta.glob('../../playground/*/index.astro', {
-  eager: true,
-});
+const allModules = import.meta.glob<{ default: AstroComponentFactory }>('../../playground/*/index.astro');
 
-const matchedKey = Object.keys(allModules).find((k) => k.includes(`/${project}/`));
+const matchedKey = Object.keys(allModules).find((key) => key.includes(`/${project}/`));
 
-const Component = matchedKey ? ((allModules[matchedKey] as Record<string, unknown>).default as any) : null;
+const Component = matchedKey ? (await allModules[matchedKey]()).default : null;
 ---
 
 {Component ? <Component /> : (

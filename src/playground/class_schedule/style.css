@@ -1,0 +1,956 @@
+html.kmcc-schedule {
+  --bg: #0b0d12;
+  --bg-elev: #10131a;
+  --panel: #151923;
+  --panel-soft: #1a1f2b;
+  --border: #242b38;
+  --border-soft: #1c222d;
+  --text: #e9edf4;
+  --text-dim: #9aa4b5;
+  --text-faint: #667082;
+  --accent: #5b8cff;
+  --accent-soft: rgba(91, 140, 255, 0.14);
+  --danger: #f87171;
+  --radius: 14px;
+  --shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+  color-scheme: dark;
+}
+
+.kmcc-schedule * {
+  box-sizing: border-box;
+}
+
+.kmcc-schedule,
+.kmcc-schedule body {
+  margin: 0;
+  padding: 0;
+}
+
+.kmcc-schedule [hidden] {
+  display: none !important;
+}
+
+.kmcc-schedule body {
+  display: block;
+  min-height: 100vh;
+  background: radial-gradient(1200px 600px at 50% -10%, rgba(91, 140, 255, 0.08), transparent 60%), var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  font-size: 14px;
+}
+
+.kmcc-schedule button {
+  font-family: inherit;
+}
+
+.kmcc-schedule .app {
+  width: min(1500px, 100%);
+  margin: 0 auto;
+  padding: 22px 20px 40px;
+}
+
+.kmcc-schedule .topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.kmcc-schedule .brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.kmcc-schedule .brand-mark {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 20px;
+  color: #fff;
+  background: linear-gradient(135deg, #5b8cff, #8b5cf6);
+  box-shadow: 0 8px 20px rgba(91, 140, 255, 0.35);
+  flex-shrink: 0;
+}
+
+.kmcc-schedule .brand-text {
+  min-width: 0;
+}
+
+.kmcc-schedule .brand-text h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kmcc-schedule .brand-text p {
+  margin: 3px 0 0;
+  font-size: 12.5px;
+  color: var(--text-dim);
+}
+
+.kmcc-schedule .topbar-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.kmcc-schedule .btn {
+  appearance: none;
+  border: 1px solid var(--border);
+  background: var(--panel-soft);
+  color: var(--text);
+  font-size: 13.5px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition:
+    background 0.18s,
+    border-color 0.18s,
+    transform 0.12s,
+    filter 0.18s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.kmcc-schedule .btn:hover {
+  background: #232a38;
+  border-color: #313a4b;
+}
+
+.kmcc-schedule .btn:active {
+  transform: scale(0.97);
+}
+
+.kmcc-schedule .btn.primary {
+  background: linear-gradient(135deg, #4f7dff, #6d5cf6);
+  border-color: transparent;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 6px 18px rgba(79, 125, 255, 0.28);
+}
+
+.kmcc-schedule .btn.primary:hover {
+  filter: brightness(1.08);
+  background: linear-gradient(135deg, #4f7dff, #6d5cf6);
+}
+
+.kmcc-schedule .btn.ghost {
+  background: transparent;
+}
+
+.kmcc-schedule .btn.tiny {
+  padding: 5px 10px;
+  font-size: 12.5px;
+  border-radius: 8px;
+}
+
+.kmcc-schedule .btn.danger {
+  border-color: rgba(248, 113, 113, 0.5);
+  color: #fca5a5;
+  background: rgba(248, 113, 113, 0.1);
+}
+
+.kmcc-schedule .icon-btn {
+  border: none;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+
+.kmcc-schedule .icon-btn:hover {
+  background: var(--panel-soft);
+  color: var(--text);
+}
+
+.kmcc-schedule .tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  margin-top: 18px;
+  padding-bottom: 4px;
+}
+
+.kmcc-schedule .tab {
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text-dim);
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    color 0.18s,
+    border-color 0.18s,
+    background 0.18s;
+}
+
+.kmcc-schedule .tab:hover {
+  color: var(--text);
+  border-color: #354054;
+}
+
+.kmcc-schedule .tab.active {
+  background: var(--accent-soft);
+  border-color: rgba(91, 140, 255, 0.55);
+  color: #bcd0ff;
+  font-weight: 600;
+}
+
+.kmcc-schedule .tab-add {
+  border-style: dashed;
+  color: var(--text-faint);
+}
+
+.kmcc-schedule .toolbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+  padding: 10px 14px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.kmcc-schedule .field {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.kmcc-schedule .field select {
+  background: var(--panel-soft);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 6px 10px;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  outline: none;
+}
+
+.kmcc-schedule .field select:focus {
+  border-color: rgba(91, 140, 255, 0.6);
+}
+
+.kmcc-schedule .toolbar-spacer {
+  flex: 1;
+}
+
+.kmcc-schedule .count {
+  font-size: 12.5px;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.kmcc-schedule .grid-wrap {
+  margin-top: 16px;
+  overflow: auto;
+  max-height: calc(100vh - 250px);
+  min-height: 320px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-elev);
+}
+
+.kmcc-schedule .timetable {
+  position: relative;
+  display: grid;
+  min-width: 100%;
+}
+
+.kmcc-schedule .tt-head {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: var(--panel);
+  padding: 12px 10px;
+  text-align: center;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-dim);
+  letter-spacing: 0.4px;
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border-soft);
+  user-select: none;
+}
+
+.kmcc-schedule .tt-head.is-today {
+  color: #bcd0ff;
+  background: linear-gradient(180deg, rgba(91, 140, 255, 0.18), rgba(91, 140, 255, 0.06));
+}
+
+.kmcc-schedule .tt-time-head {
+  left: 0;
+  z-index: 5;
+  background: var(--panel);
+  color: var(--text-faint);
+  font-size: 12px;
+}
+
+.kmcc-schedule .tt-time {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: var(--panel-soft);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  justify-content: center;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.kmcc-schedule .tt-sec {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.kmcc-schedule .tt-time-range {
+  font-size: 11.5px;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.kmcc-schedule .tt-time.is-now {
+  box-shadow: inset 3px 0 0 var(--accent);
+  background: rgba(91, 140, 255, 0.09);
+}
+
+.kmcc-schedule .tt-time.is-now .tt-sec {
+  color: #bcd0ff;
+}
+
+.kmcc-schedule .tt-cell {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-height: 96px;
+  border-right: 1px solid var(--border-soft);
+  border-bottom: 1px solid var(--border-soft);
+  background: rgba(255, 255, 255, 0.008);
+}
+
+.kmcc-schedule .tt-cell.is-today {
+  background: rgba(91, 140, 255, 0.045);
+}
+
+.kmcc-schedule .tt-empty {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  min-height: 62px;
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  color: var(--text-faint);
+  font-size: 12px;
+}
+
+.kmcc-schedule .course-card {
+  appearance: none;
+  text-align: left;
+  font: inherit;
+  color: var(--text);
+  cursor: pointer;
+  border: 1px solid;
+  border-radius: 10px;
+  padding: 9px 10px 9px 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    filter 0.15s ease;
+}
+
+.kmcc-schedule .course-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3);
+  filter: brightness(1.06);
+}
+
+.kmcc-schedule .course-card:active {
+  transform: scale(0.985);
+}
+
+.kmcc-schedule .cc-name {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13.5px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.kmcc-schedule .cc-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.kmcc-schedule .cc-line {
+  font-size: 12px;
+  color: var(--text-dim);
+  line-height: 1.35;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kmcc-schedule .cc-weeks {
+  font-size: 11px;
+  color: var(--text-faint);
+  margin-top: 2px;
+}
+
+.kmcc-schedule .remark {
+  margin: 14px 2px 0;
+  font-size: 12.5px;
+  color: var(--text-dim);
+  line-height: 1.7;
+}
+
+.kmcc-schedule .empty-state {
+  margin-top: 40px;
+  padding: 46px 24px;
+  text-align: center;
+  border: 1px dashed var(--border);
+  border-radius: 18px;
+  background: var(--panel);
+}
+
+.kmcc-schedule .empty-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 18px;
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  font-size: 28px;
+  background: var(--accent-soft);
+}
+
+.kmcc-schedule .empty-state h2 {
+  margin: 0 0 8px;
+  font-size: 19px;
+}
+
+.kmcc-schedule .empty-state p {
+  margin: 0 auto 20px;
+  max-width: 540px;
+  font-size: 13.5px;
+  color: var(--text-dim);
+  line-height: 1.8;
+}
+
+.kmcc-schedule .empty-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.kmcc-schedule .footer {
+  margin-top: 28px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-faint);
+  line-height: 1.8;
+}
+
+.kmcc-schedule dialog {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--panel);
+  color: var(--text);
+  padding: 0;
+  margin: auto;
+  width: min(760px, calc(100vw - 28px));
+  max-height: min(86vh, 880px);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.kmcc-schedule dialog::backdrop {
+  background: rgba(5, 8, 14, 0.66);
+  backdrop-filter: blur(4px);
+}
+
+.kmcc-schedule dialog[open] {
+  animation: kmcc-dialog-in 0.18s ease;
+}
+
+@keyframes kmcc-dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.kmcc-schedule .dialog-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px 14px;
+}
+
+.kmcc-schedule .dialog-head h2 {
+  margin: 0;
+  font-size: 17px;
+}
+
+.kmcc-schedule .dialog-body {
+  padding: 0 20px 20px;
+  overflow: auto;
+  max-height: calc(86vh - 150px);
+}
+
+.kmcc-schedule .dialog-foot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px 18px;
+  border-top: 1px solid var(--border-soft);
+  flex-wrap: wrap;
+}
+
+.kmcc-schedule .spacer {
+  flex: 1;
+}
+
+.kmcc-schedule .segmented {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  background: var(--panel-soft);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 14px;
+}
+
+.kmcc-schedule .seg-btn {
+  border: none;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 13px;
+  padding: 6px 14px;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.kmcc-schedule .seg-btn.active {
+  background: var(--accent-soft);
+  color: #bcd0ff;
+  font-weight: 600;
+}
+
+.kmcc-schedule textarea,
+.kmcc-schedule input[type="text"] {
+  width: 100%;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 11px 12px;
+  font: inherit;
+  font-size: 13px;
+  outline: none;
+}
+
+.kmcc-schedule textarea {
+  min-height: 220px;
+  resize: vertical;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+
+.kmcc-schedule textarea:focus,
+.kmcc-schedule input[type="text"]:focus {
+  border-color: rgba(91, 140, 255, 0.6);
+  box-shadow: 0 0 0 3px rgba(91, 140, 255, 0.14);
+}
+
+.kmcc-schedule .dropzone {
+  display: grid;
+  place-items: center;
+  gap: 6px;
+  min-height: 170px;
+  padding: 24px;
+  text-align: center;
+  border: 1.5px dashed var(--border);
+  border-radius: 12px;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition:
+    border-color 0.18s,
+    background 0.18s,
+    color 0.18s;
+}
+
+.kmcc-schedule .dropzone:hover,
+.kmcc-schedule .dropzone.dragging {
+  border-color: rgba(91, 140, 255, 0.65);
+  background: var(--accent-soft);
+  color: #bcd0ff;
+}
+
+.kmcc-schedule .dropzone strong {
+  font-size: 14px;
+  color: var(--text);
+}
+
+.kmcc-schedule .dropzone small {
+  font-size: 12px;
+}
+
+.kmcc-schedule .file-list {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.kmcc-schedule .file-list li {
+  font-size: 12.5px;
+  color: var(--text-dim);
+  background: var(--panel-soft);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 7px 10px;
+}
+
+.kmcc-schedule .field-block {
+  display: block;
+  margin-top: 14px;
+}
+
+.kmcc-schedule .field-block span {
+  display: block;
+  font-size: 12.5px;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+
+.kmcc-schedule .form-error {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  font-size: 12.5px;
+  line-height: 1.6;
+  white-space: pre-line;
+  color: #fca5a5;
+  background: rgba(248, 113, 113, 0.08);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  border-radius: 10px;
+}
+
+.kmcc-schedule .manage-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.kmcc-schedule .manage-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--panel-soft);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.kmcc-schedule .manage-item.active {
+  border-color: rgba(91, 140, 255, 0.5);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.kmcc-schedule .manage-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.kmcc-schedule .manage-title {
+  background: transparent;
+  border-color: transparent;
+  padding: 4px 6px;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.kmcc-schedule .manage-title:hover {
+  border-color: var(--border);
+}
+
+.kmcc-schedule .manage-meta {
+  font-size: 11.5px;
+  color: var(--text-faint);
+  padding-left: 6px;
+}
+
+.kmcc-schedule .manage-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.kmcc-schedule .manage-empty {
+  text-align: center;
+  color: var(--text-faint);
+  font-size: 13px;
+  padding: 30px 0;
+}
+
+.kmcc-schedule .help-steps {
+  margin: 0 0 16px;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.75;
+}
+
+.kmcc-schedule .help-steps code {
+  background: var(--panel-soft);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1px 6px;
+  font-size: 12px;
+  color: #bcd0ff;
+}
+
+.kmcc-schedule .code-block {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg-elev);
+}
+
+.kmcc-schedule .code-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 12px;
+  background: var(--panel-soft);
+  border-bottom: 1px solid var(--border);
+  font-size: 12.5px;
+  color: var(--text-dim);
+}
+
+.kmcc-schedule .code-block pre {
+  margin: 0;
+  padding: 14px;
+  max-height: 340px;
+  overflow: auto;
+  font-size: 12px;
+  line-height: 1.65;
+  color: #cbd5e1;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.kmcc-schedule .schedule-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.kmcc-schedule .schedule-table th,
+.kmcc-schedule .schedule-table td {
+  padding: 9px 10px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.kmcc-schedule .schedule-table thead th {
+  position: sticky;
+  top: 0;
+  background: var(--panel-soft);
+  color: var(--text-dim);
+  font-weight: 600;
+  font-size: 12.5px;
+  z-index: 1;
+}
+
+.kmcc-schedule .schedule-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.kmcc-schedule .schedule-table .is-campus {
+  color: #bcd0ff;
+  background: rgba(91, 140, 255, 0.07);
+}
+
+.kmcc-schedule .detail-row {
+  display: flex;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom: 1px dashed var(--border-soft);
+  font-size: 13px;
+}
+
+.kmcc-schedule .detail-label {
+  flex-shrink: 0;
+  width: 78px;
+  color: var(--text-faint);
+}
+
+.kmcc-schedule .detail-value {
+  flex: 1;
+  word-break: break-all;
+  line-height: 1.65;
+}
+
+.kmcc-schedule .toast-wrap {
+  position: fixed;
+  left: 50%;
+  bottom: 26px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  z-index: 999;
+  pointer-events: none;
+}
+
+.kmcc-schedule .toast {
+  background: #1d2330;
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 13px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+  animation: kmcc-toast-in 0.22s ease;
+  max-width: min(80vw, 520px);
+}
+
+.kmcc-schedule .toast-success {
+  border-color: rgba(74, 222, 128, 0.45);
+  color: #bbf7d0;
+}
+
+.kmcc-schedule .toast-error {
+  border-color: rgba(248, 113, 113, 0.5);
+  color: #fecaca;
+}
+
+.kmcc-schedule .toast-out {
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
+}
+
+@keyframes kmcc-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.kmcc-schedule::-webkit-scrollbar,
+.kmcc-schedule *::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.kmcc-schedule::-webkit-scrollbar-track,
+.kmcc-schedule *::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.kmcc-schedule::-webkit-scrollbar-thumb,
+.kmcc-schedule *::-webkit-scrollbar-thumb {
+  background: #2a3242;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.kmcc-schedule::-webkit-scrollbar-thumb:hover,
+.kmcc-schedule *::-webkit-scrollbar-thumb:hover {
+  background: #384357;
+  background-clip: content-box;
+}
+
+@media (max-width: 720px) {
+  .kmcc-schedule .app {
+    padding: 16px 12px 32px;
+  }
+
+  .kmcc-schedule .brand-text h1 {
+    font-size: 17px;
+  }
+
+  .kmcc-schedule .topbar-actions {
+    width: 100%;
+  }
+
+  .kmcc-schedule .topbar-actions .btn {
+    flex: 1;
+  }
+
+  .kmcc-schedule .grid-wrap {
+    max-height: calc(100vh - 300px);
+  }
+
+  .kmcc-schedule .toolbar {
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .kmcc-schedule .manage-item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .kmcc-schedule .manage-actions {
+    justify-content: flex-end;
+  }
+}

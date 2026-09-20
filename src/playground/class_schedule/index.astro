@@ -1,0 +1,1219 @@
+---
+import exportScript from './exportScript.js?raw';
+import readmeRaw from './readme.md?raw';
+import styles from './style.css?raw';
+// const exportScript = readmeRaw.match(/```javascript\r?\n([\s\S]*?)```/)?.[1]?.trim() ?? '// 未在 readme.md 中找到导出脚本';
+---
+
+<!DOCTYPE html>
+<html lang="zh-CN" class="kmcc-schedule">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>昆明城市学院课表 | 导入与查看</title>
+  <meta
+    name="description"
+    content="昆明城市学院课表查看器：导入教务系统导出的 JSON 课表，支持多课表切换、周次筛选、今日高亮与作息时间查询。"
+  />
+  <meta name="keywords" content="昆明城市学院,课表,课程表,作息时间,JSON导入" />
+  <meta name="robots" content="index, follow" />
+  <style is:inline set:html={styles}></style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">昆</div>
+        <div class="brand-text">
+          <h1 id="schedule-title">我的课表</h1>
+          <p id="schedule-meta">昆明城市学院 · 导入课表开始使用</p>
+        </div>
+      </div>
+      <nav class="topbar-actions">
+        <button type="button" id="btn-import" class="btn primary">导入课表</button>
+        <button type="button" id="btn-manage" class="btn">管理</button>
+        <button type="button" id="btn-schedule" class="btn">作息时间</button>
+        <button type="button" id="btn-help" class="btn">使用说明</button>
+      </nav>
+    </header>
+
+    <div id="tabs" class="tabs" hidden></div>
+
+    <div id="toolbar" class="toolbar" hidden>
+      <label class="field">
+        <span>周次</span>
+        <select id="week-select"></select>
+      </label>
+      <label class="field" style="display: none;">
+        <span>校区</span>
+        <select id="campus-select"></select>
+      </label>
+      <div class="toolbar-spacer"></div>
+      <span id="course-count" class="count"></span>
+    </div>
+
+    <main>
+      <section id="grid-wrap" class="grid-wrap" hidden>
+        <div id="timetable" class="timetable"></div>
+      </section>
+
+      <p id="remark" class="remark" hidden></p>
+
+      <section id="empty-state" class="empty-state">
+        <div class="empty-icon">📅</div>
+        <h2>还没有课表数据</h2>
+        <p>
+          在教务系统运行导出脚本获取课程表 JSON，然后粘贴或上传导入。数据只保存在本机浏览器中，不会上传到任何服务器。
+        </p>
+        <div class="empty-actions">
+          <button type="button" id="btn-empty-import" class="btn primary">导入课表</button>
+          <button type="button" id="btn-empty-demo" class="btn">加载示例</button>
+          <button type="button" id="btn-empty-help" class="btn ghost">使用说明</button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">昆明城市学院课表 · 数据保存在浏览器 localStorage 中</footer>
+  </div>
+
+  <dialog id="dlg-import" aria-labelledby="dlg-import-title">
+    <div class="dialog-head">
+      <h2 id="dlg-import-title">导入课表数据</h2>
+      <button type="button" class="icon-btn" data-close aria-label="关闭">×</button>
+    </div>
+    <div class="dialog-body">
+      <div class="segmented">
+        <button type="button" id="seg-paste" class="seg-btn active">粘贴 JSON</button>
+        <button type="button" id="seg-file" class="seg-btn">上传文件</button>
+      </div>
+      <div id="panel-paste">
+        <textarea id="import-text" spellcheck="false" placeholder="在此粘贴教务系统导出的 JSON 数据……"></textarea>
+      </div>
+      <div id="panel-file" hidden>
+        <label id="dropzone" class="dropzone" for="import-file">
+          <strong>点击选择或拖拽 .json 文件到此处</strong>
+          <small>支持一次选择多个文件</small>
+        </label>
+        <input id="import-file" type="file" accept=".json,application/json" multiple hidden />
+        <ul id="file-list" class="file-list"></ul>
+      </div>
+      <label class="field-block">
+        <span>课表标题（可选，留空自动命名）</span>
+        <input id="import-title" type="text" placeholder="例如：2026-2027-1 我的课表" />
+      </label>
+      <p id="import-error" class="form-error" hidden></p>
+    </div>
+    <div class="dialog-foot">
+      <button type="button" id="btn-load-demo" class="btn ghost">加载示例数据</button>
+      <div class="spacer"></div>
+      <button type="button" class="btn" data-close>取消</button>
+      <button type="button" id="btn-import-confirm" class="btn primary">导入</button>
+    </div>
+  </dialog>
+
+  <dialog id="dlg-manage" aria-labelledby="dlg-manage-title">
+    <div class="dialog-head">
+      <h2 id="dlg-manage-title">管理课表</h2>
+      <button type="button" class="icon-btn" data-close aria-label="关闭">×</button>
+    </div>
+    <div class="dialog-body">
+      <ul id="manage-list" class="manage-list"></ul>
+    </div>
+    <div class="dialog-foot">
+      <button type="button" id="btn-manage-import" class="btn primary">导入新课表</button>
+      <div class="spacer"></div>
+      <button type="button" class="btn" data-close>关闭</button>
+    </div>
+  </dialog>
+
+  <dialog id="dlg-schedule" aria-labelledby="dlg-schedule-title">
+    <div class="dialog-head">
+      <h2 id="dlg-schedule-title">教学作息时间</h2>
+      <button type="button" class="icon-btn" data-close aria-label="关闭">×</button>
+    </div>
+    <div class="dialog-body">
+      <div id="schedule-body"></div>
+    </div>
+  </dialog>
+
+  <dialog id="dlg-help" aria-labelledby="dlg-help-title">
+    <div class="dialog-head">
+      <h2 id="dlg-help-title">使用说明</h2>
+      <button type="button" class="icon-btn" data-close aria-label="关闭">×</button>
+    </div>
+    <div class="dialog-body">
+      <ol class="help-steps">
+        <li>
+          打开教务系统
+          <code>http://jw.kmcc.edu.cn/ynsfdxsxy_jsxsd/xskb/xskb_list.do</code>
+          ，登录后进入「学生课表」页面。
+        </li>
+        <li>按 F12 打开控制台，粘贴下方导出脚本并回车，课表 JSON 会自动复制到剪贴板。</li>
+        <li>回到本页点击「导入课表」，粘贴 JSON 或上传文件即可。</li>
+      </ol>
+      <div class="code-block">
+        <div class="code-head">
+          <span>导出脚本（在教务系统控制台运行）</span>
+          <button type="button" id="btn-copy-script" class="btn tiny">复制</button>
+        </div>
+        <pre id="code-export"><code></code></pre>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="dlg-detail" aria-labelledby="detail-title">
+    <div class="dialog-head">
+      <h2 id="detail-title">课程详情</h2>
+      <button type="button" class="icon-btn" data-close aria-label="关闭">×</button>
+    </div>
+    <div id="detail-body" class="dialog-body"></div>
+  </dialog>
+
+  <div id="export-script-data" data-script={exportScript} hidden></div>
+  <div id="toast-wrap" class="toast-wrap"></div>
+
+  <script>
+    import demoTableRaw from './demo-course-table.json?raw';
+    import { CAMPUSES, TEACHING_SCHEDULE, WEEKDAYS } from './data';
+    import type { Campus, Course, CourseEntry, CourseTable, TeachingEntry, Timetable, Weekday } from './data';
+
+    interface SavedSchedule {
+      id: string;
+      title: string;
+      data: CourseTable;
+      createdAt: number;
+      updatedAt: number;
+    }
+
+    interface Store {
+      activeId: string | null;
+      items: SavedSchedule[];
+      campus: Campus;
+    }
+
+    const STORAGE_KEY = 'class-schedule.v1';
+    const ALL_WEEKS = 'all';
+    const SECTION_ORDER = [
+      '第1大节',
+      '第2大节',
+      '第3大节',
+      '第4大节',
+      '第5大节',
+      '第6大节',
+      '早上',
+      '上午',
+      '中午',
+      '下午',
+      '傍晚',
+      '晚上',
+    ];
+    const PALETTE = [
+      '#f87171',
+      '#fb923c',
+      '#fbbf24',
+      '#a3e635',
+      '#4ade80',
+      '#2dd4bf',
+      '#38bdf8',
+      '#60a5fa',
+      '#a78bfa',
+      '#f472b6',
+    ];
+    const DAY_SET = new Set<string>(WEEKDAYS);
+
+    function byId<T extends HTMLElement>(id: string): T {
+      return document.getElementById(id) as T;
+    }
+
+    const els = {
+      title: byId<HTMLHeadingElement>('schedule-title'),
+      meta: byId<HTMLParagraphElement>('schedule-meta'),
+      tabs: byId<HTMLDivElement>('tabs'),
+      toolbar: byId<HTMLDivElement>('toolbar'),
+      weekSelect: byId<HTMLSelectElement>('week-select'),
+      campusSelect: byId<HTMLSelectElement>('campus-select'),
+      count: byId<HTMLSpanElement>('course-count'),
+      gridWrap: byId<HTMLElement>('grid-wrap'),
+      timetable: byId<HTMLDivElement>('timetable'),
+      remark: byId<HTMLParagraphElement>('remark'),
+      emptyState: byId<HTMLElement>('empty-state'),
+      importDialog: byId<HTMLDialogElement>('dlg-import'),
+      importText: byId<HTMLTextAreaElement>('import-text'),
+      importTitle: byId<HTMLInputElement>('import-title'),
+      importError: byId<HTMLParagraphElement>('import-error'),
+      importFile: byId<HTMLInputElement>('import-file'),
+      fileList: byId<HTMLUListElement>('file-list'),
+      dropzone: byId<HTMLLabelElement>('dropzone'),
+      manageDialog: byId<HTMLDialogElement>('dlg-manage'),
+      manageList: byId<HTMLUListElement>('manage-list'),
+      helpDialog: byId<HTMLDialogElement>('dlg-help'),
+      scheduleDialog: byId<HTMLDialogElement>('dlg-schedule'),
+      scheduleBody: byId<HTMLDivElement>('schedule-body'),
+      detailDialog: byId<HTMLDialogElement>('dlg-detail'),
+      detailBody: byId<HTMLDivElement>('detail-body'),
+      detailTitle: byId<HTMLHeadingElement>('detail-title'),
+      toastWrap: byId<HTMLDivElement>('toast-wrap'),
+    };
+
+    let store = loadStore();
+    let selectedWeek: number | typeof ALL_WEEKS = ALL_WEEKS;
+    let activeRenderedId: string | null = null;
+    let pendingDeleteId: string | null = null;
+    let importMode: 'paste' | 'file' = 'paste';
+    const exportScript = byId<HTMLDivElement>('export-script-data').dataset.script ?? '';
+
+    function emptyStore(): Store {
+      return { activeId: null, items: [], campus: '杨林校区' };
+    }
+
+    function isSavedSchedule(value: unknown): value is SavedSchedule {
+      if (typeof value !== 'object' || value === null) return false;
+      const item = value as Partial<SavedSchedule>;
+      return (
+        typeof item.id === 'string' &&
+        typeof item.title === 'string' &&
+        typeof item.data === 'object' &&
+        item.data !== null
+      );
+    }
+
+    function loadStore(): Store {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return emptyStore();
+        const parsed = JSON.parse(raw) as Partial<Store>;
+        const items = Array.isArray(parsed.items) ? parsed.items.filter(isSavedSchedule) : [];
+        const campus = CAMPUSES.includes(parsed.campus as Campus) ? (parsed.campus as Campus) : '杨林校区';
+        const active = items.find((item) => item.id === parsed.activeId);
+        return { activeId: active?.id ?? items[0]?.id ?? null, items, campus };
+      } catch {
+        return emptyStore();
+      }
+    }
+
+    function saveStore(): void {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+      } catch {
+        toast('本地存储写入失败，改动可能无法保存', 'error');
+      }
+    }
+
+    function activeItem(): SavedSchedule | null {
+      return store.items.find((item) => item.id === store.activeId) ?? null;
+    }
+
+    function isRecord(value: unknown): value is Record<string, unknown> {
+      return typeof value === 'object' && value !== null && !Array.isArray(value);
+    }
+
+    function asString(value: unknown): string {
+      return typeof value === 'string' ? value : '';
+    }
+
+    function normalizeCourse(raw: Record<string, unknown>, label: string, errors: string[]): Course | null {
+      const name = asString(raw.courseName).trim();
+      if (!name) {
+        errors.push(`${label}: 缺少必填字段 courseName`);
+        return null;
+      }
+      return {
+        courseName: name,
+        courseTitle: asString(raw.courseTitle) || name,
+        teacher: asString(raw.teacher),
+        className: asString(raw.className),
+        weeks: asString(raw.weeks),
+        periods: asString(raw.periods),
+        weeksAndPeriods: asString(raw.weeksAndPeriods),
+        location: asString(raw.location),
+        raw: asString(raw.raw),
+      };
+    }
+
+    function normalizeTimetable(raw: unknown, errors: string[]): Timetable {
+      const timetable: Timetable = {};
+      if (!isRecord(raw)) return timetable;
+      for (const [section, dayMap] of Object.entries(raw)) {
+        if (!isRecord(dayMap)) continue;
+        const out: Partial<Record<Weekday, Course[]>> = {};
+        for (const [day, list] of Object.entries(dayMap)) {
+          if (!DAY_SET.has(day) || !Array.isArray(list)) continue;
+          const courses: Course[] = [];
+          list.forEach((item, index) => {
+            if (!isRecord(item)) {
+              errors.push(`${section}.${day}[${index}]: 课程数据不是对象`);
+              return;
+            }
+            const course = normalizeCourse(item, `${section}.${day}[${index}]`, errors);
+            if (course) courses.push(course);
+          });
+          if (courses.length) out[day as Weekday] = courses;
+        }
+        if (Object.keys(out).length) timetable[section] = out;
+      }
+      return timetable;
+    }
+
+    function normalizeCourseEntries(raw: unknown, errors: string[]): CourseEntry[] {
+      const entries: CourseEntry[] = [];
+      if (!Array.isArray(raw)) return entries;
+      raw.forEach((item, index) => {
+        if (!isRecord(item)) {
+          errors.push(`courses[${index}]: 数据不是对象`);
+          return;
+        }
+        const section = asString(item.section).trim();
+        const day = asString(item.day);
+        if (!section || !DAY_SET.has(day)) return;
+        const course = normalizeCourse(item, `courses[${index}]`, errors);
+        if (course) entries.push({ ...course, section, day: day as Weekday });
+      });
+      return entries;
+    }
+
+    function buildTimetable(entries: CourseEntry[]): Timetable {
+      const timetable: Timetable = {};
+      for (const entry of entries) {
+        const { section, day, ...course } = entry;
+        const dayMap = (timetable[section] ??= {});
+        (dayMap[day] ??= []).push(course);
+      }
+      return timetable;
+    }
+
+    function flattenTimetable(timetable: Timetable): CourseEntry[] {
+      const entries: CourseEntry[] = [];
+      for (const [section, dayMap] of Object.entries(timetable)) {
+        for (const [day, list] of Object.entries(dayMap)) {
+          for (const course of list ?? []) entries.push({ ...course, section, day: day as Weekday });
+        }
+      }
+      return entries;
+    }
+
+    function normalizeTable(raw: unknown): { table: CourseTable | null; errors: string[] } {
+      const errors: string[] = [];
+      if (!isRecord(raw)) return { table: null, errors: ['JSON 根节点必须是一个对象'] };
+      if (Array.isArray(raw.schedule) && !raw.timetable && !raw.courses) {
+        return { table: null, errors: ['这是「教学作息时间表」，本页已内置，无需导入。请导入课程表 JSON'] };
+      }
+
+      const timetable = normalizeTimetable(raw.timetable, errors);
+      let courses = normalizeCourseEntries(raw.courses, errors);
+      const hasTimetable = Object.keys(timetable).length > 0;
+
+      if (!hasTimetable && !courses.length) {
+        return {
+          table: null,
+          errors: [
+            ...errors,
+            '无法识别数据结构：需要 timetable 或 courses 字段，请使用页内「使用说明」中的导出脚本获取数据',
+          ],
+        };
+      }
+
+      const finalTimetable = hasTimetable ? timetable : buildTimetable(courses);
+      if (!courses.length) courses = flattenTimetable(finalTimetable);
+
+      let days: Weekday[] = [];
+      if (Array.isArray(raw.days)) {
+        days = raw.days.filter((day): day is Weekday => typeof day === 'string' && DAY_SET.has(day));
+      }
+      if (!days.length) {
+        const daySet = new Set<Weekday>();
+        for (const dayMap of Object.values(finalTimetable)) {
+          for (const day of Object.keys(dayMap)) daySet.add(day as Weekday);
+        }
+        days = WEEKDAYS.filter((day) => daySet.has(day));
+        if (!days.length) days = WEEKDAYS.slice(0, 5);
+      }
+
+      return {
+        table: {
+          xnxq: asString(raw.xnxq),
+          zc: asString(raw.zc) || '(全部)',
+          days,
+          courses,
+          timetable: finalTimetable,
+          remark: asString(raw.remark),
+        },
+        errors,
+      };
+    }
+
+    function newId(): string {
+      if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') return crypto.randomUUID();
+      return `kb-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    }
+
+    function defaultTitle(table: CourseTable, fallback: string): string {
+      const name = fallback.trim();
+      if (name) return name;
+      return table.xnxq ? `${table.xnxq} 课程表` : '未命名课表';
+    }
+
+    function importText(text: string, fallbackTitle: string): { ok: boolean; errors: string[] } {
+      let parsed: unknown;
+      try {
+        parsed = JSON.parse(text);
+      } catch (error) {
+        return { ok: false, errors: [`JSON 解析失败：${error instanceof Error ? error.message : String(error)}`] };
+      }
+      const { table, errors } = normalizeTable(parsed);
+      if (!table) return { ok: false, errors };
+
+      const now = Date.now();
+      const item: SavedSchedule = {
+        id: newId(),
+        title: defaultTitle(table, fallbackTitle),
+        data: table,
+        createdAt: now,
+        updatedAt: now,
+      };
+      store.items.push(item);
+      store.activeId = item.id;
+      selectedWeek = ALL_WEEKS;
+      activeRenderedId = null;
+      saveStore();
+      renderAll();
+      if (errors.length) toast(`已导入，忽略 ${errors.length} 条异常数据`, 'info');
+      else toast(`已导入「${item.title}」`, 'success');
+      return { ok: true, errors: [] };
+    }
+
+    function colorFor(name: string): string {
+      let hash = 0;
+      for (let index = 0; index < name.length; index += 1) {
+        hash = (hash * 31 + name.charCodeAt(index)) >>> 0;
+      }
+      return PALETTE[hash % PALETTE.length] as string;
+    }
+
+    function hexToRgba(hex: string, alpha: number): string {
+      const value = Number.parseInt(hex.slice(1), 16);
+      return `rgba(${(value >> 16) & 255}, ${(value >> 8) & 255}, ${value & 255}, ${alpha})`;
+    }
+
+    function parseWeekRanges(text: string): Array<[number, number]> {
+      const ranges: Array<[number, number]> = [];
+      for (const part of text.split(/[,，、;；]/)) {
+        const range = part.match(/(\d+)\s*[-–~—至]\s*(\d+)/);
+        if (range) {
+          ranges.push([Number(range[1]), Number(range[2])]);
+          continue;
+        }
+        const single = part.match(/(\d+)/);
+        if (single) ranges.push([Number(single[1]), Number(single[1])]);
+      }
+      return ranges;
+    }
+
+    function courseActiveInWeek(course: Course, week: number | typeof ALL_WEEKS): boolean {
+      if (week === ALL_WEEKS) return true;
+      const weeks = course.weeks || '';
+      const ranges = parseWeekRanges(weeks);
+      if (ranges.length && !ranges.some(([start, end]) => week >= start && week <= end)) return false;
+      if (weeks.includes('单') && week % 2 === 0) return false;
+      if (weeks.includes('双') && week % 2 === 1) return false;
+      return true;
+    }
+
+    function maxWeekOf(table: CourseTable): number {
+      let max = 0;
+      for (const dayMap of Object.values(table.timetable)) {
+        for (const list of Object.values(dayMap)) {
+          for (const course of list ?? []) {
+            for (const [start, end] of parseWeekRanges(course.weeks)) max = Math.max(max, start, end);
+          }
+        }
+      }
+      return Math.max(max, 20);
+    }
+
+    function orderedSections(keys: string[]): string[] {
+      return [...keys].sort((a, b) => {
+        const ai = SECTION_ORDER.indexOf(a);
+        const bi = SECTION_ORDER.indexOf(b);
+        if (ai === -1 && bi === -1) return a.localeCompare(b, 'zh');
+        if (ai === -1) return 1;
+        if (bi === -1) return -1;
+        return ai - bi;
+      });
+    }
+
+    function sessionForSection(section: string): string {
+      const match = section.match(/^第(\d+)大节$/);
+      if (!match) return section;
+      const index = Number(match[1]);
+      return `第${2 * index - 1}-${2 * index}节`;
+    }
+
+    function resolveTeachingSchedule(campus: Campus): TeachingEntry[] {
+      return TEACHING_SCHEDULE.filter((entry) => !entry.campus || entry.campus === campus);
+    }
+
+    function sectionEntry(section: string, entries: TeachingEntry[]): TeachingEntry | null {
+      const session = sessionForSection(section);
+      return (
+        entries.find((entry) => entry.session === session) ?? entries.find((entry) => entry.period === section) ?? null
+      );
+    }
+
+    function toMinutes(time: string): number | null {
+      const match = time.match(/^(\d{1,2}):(\d{2})/);
+      if (!match) return null;
+      return Number(match[1]) * 60 + Number(match[2]);
+    }
+
+    function isCurrentSection(entry: TeachingEntry | null): boolean {
+      if (!entry) return false;
+      const [startText = '', endText = ''] = entry.time.split('-');
+      const start = toMinutes(startText);
+      const end = toMinutes(endText);
+      if (start === null || end === null) return false;
+      const now = new Date();
+      const minutes = now.getHours() * 60 + now.getMinutes();
+      return minutes >= start && minutes <= end;
+    }
+
+    function currentWeekdayName(): Weekday {
+      const index = new Date().getDay();
+      return WEEKDAYS[(index + 6) % 7] as Weekday;
+    }
+
+    function formatDate(timestamp: number): string {
+      const date = new Date(timestamp);
+      const pad = (value: number) => String(value).padStart(2, '0');
+      return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(
+        date.getMinutes(),
+      )}`;
+    }
+
+    function renderAll(): void {
+      renderTabs();
+      renderHeader();
+      renderToolbar();
+      renderGrid();
+    }
+
+    function renderHeader(): void {
+      const item = activeItem();
+      els.title.textContent = item ? item.title : '我的课表';
+      if (item) {
+        const parts = [item.data.xnxq || '未知学期', item.data.zc].filter(Boolean);
+        els.meta.textContent = `昆明城市学院 · ${parts.join(' · ')}`;
+      } else {
+        els.meta.textContent = '昆明城市学院 · 导入课表开始使用';
+      }
+    }
+
+    function renderTabs(): void {
+      els.tabs.innerHTML = '';
+      els.tabs.hidden = store.items.length === 0;
+      for (const item of store.items) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = `tab${item.id === store.activeId ? ' active' : ''}`;
+        button.textContent = item.title;
+        button.addEventListener('click', () => {
+          if (store.activeId === item.id) return;
+          store.activeId = item.id;
+          selectedWeek = ALL_WEEKS;
+          activeRenderedId = null;
+          saveStore();
+          renderAll();
+        });
+        els.tabs.appendChild(button);
+      }
+      const add = document.createElement('button');
+      add.type = 'button';
+      add.className = 'tab tab-add';
+      add.textContent = '+ 导入';
+      add.addEventListener('click', openImportDialog);
+      els.tabs.appendChild(add);
+    }
+
+    function renderToolbar(): void {
+      const item = activeItem();
+      els.toolbar.hidden = !item;
+      if (!item) return;
+
+      const maxWeek = maxWeekOf(item.data);
+      els.weekSelect.innerHTML = '';
+      const allOption = document.createElement('option');
+      allOption.value = ALL_WEEKS;
+      allOption.textContent = '全部周次';
+      els.weekSelect.appendChild(allOption);
+      for (let week = 1; week <= maxWeek; week += 1) {
+        const option = document.createElement('option');
+        option.value = String(week);
+        option.textContent = `第 ${week} 周`;
+        els.weekSelect.appendChild(option);
+      }
+      if (selectedWeek !== ALL_WEEKS && selectedWeek > maxWeek) selectedWeek = ALL_WEEKS;
+      els.weekSelect.value = String(selectedWeek);
+
+      els.campusSelect.innerHTML = '';
+      for (const campus of CAMPUSES) {
+        const option = document.createElement('option');
+        option.value = campus;
+        option.textContent = campus;
+        els.campusSelect.appendChild(option);
+      }
+      els.campusSelect.value = store.campus;
+    }
+
+    function addGridCell(row: number, column: number, className: string): HTMLDivElement {
+      const cell = document.createElement('div');
+      cell.className = className;
+      cell.style.gridRow = String(row);
+      cell.style.gridColumn = String(column);
+      els.timetable.appendChild(cell);
+      return cell;
+    }
+
+    function createCourseCard(course: Course, showWeeks: boolean): HTMLButtonElement {
+      const color = colorFor(course.courseName);
+      const card = document.createElement('button');
+      card.type = 'button';
+      card.className = 'course-card';
+      card.style.background = hexToRgba(color, 0.12);
+      card.style.borderColor = hexToRgba(color, 0.34);
+
+      const name = document.createElement('span');
+      name.className = 'cc-name';
+      const dot = document.createElement('span');
+      dot.className = 'cc-dot';
+      dot.style.background = color;
+      name.append(dot, course.courseName);
+      card.appendChild(name);
+
+      if (course.teacher) {
+        const teacher = document.createElement('span');
+        teacher.className = 'cc-line';
+        teacher.textContent = course.teacher;
+        card.appendChild(teacher);
+      }
+      if (course.location) {
+        const location = document.createElement('span');
+        location.className = 'cc-line';
+        location.textContent = course.location;
+        card.appendChild(location);
+      }
+      if (showWeeks && course.weeks) {
+        const weeks = document.createElement('span');
+        weeks.className = 'cc-weeks';
+        weeks.textContent = course.weeks;
+        card.appendChild(weeks);
+      }
+
+      card.addEventListener('click', () => openDetail(course, color));
+      return card;
+    }
+
+    function renderGrid(): void {
+      const item = activeItem();
+      if (!item) {
+        els.gridWrap.hidden = true;
+        els.remark.hidden = true;
+        els.emptyState.hidden = false;
+        els.count.textContent = '';
+        return;
+      }
+      els.gridWrap.hidden = false;
+      els.emptyState.hidden = true;
+
+      const { data } = item;
+      const days = data.days.length ? data.days : WEEKDAYS.slice(0, 5);
+      const sections = orderedSections(Object.keys(data.timetable));
+      const entries = resolveTeachingSchedule(store.campus);
+      const today = currentWeekdayName();
+      const schoolDay = days.includes(today);
+      const visibleNames = new Set<string>();
+
+      els.timetable.innerHTML = '';
+      els.timetable.style.gridTemplateColumns = `152px repeat(${days.length}, minmax(170px, 1fr))`;
+
+      const corner = addGridCell(1, 1, 'tt-head tt-time-head');
+      corner.textContent = '节次 / 时间';
+
+      days.forEach((day, index) => {
+        const head = addGridCell(1, index + 2, 'tt-head');
+        head.textContent = day;
+        if (day === today) head.classList.add('is-today');
+      });
+
+      sections.forEach((section, rowIndex) => {
+        const entry = sectionEntry(section, entries);
+        const timeCell = addGridCell(rowIndex + 2, 1, 'tt-time');
+        const sectionName = document.createElement('span');
+        sectionName.className = 'tt-sec';
+        sectionName.textContent = section;
+        timeCell.appendChild(sectionName);
+        if (entry) {
+          const range = document.createElement('span');
+          range.className = 'tt-time-range';
+          range.textContent = entry.time;
+          timeCell.appendChild(range);
+        }
+        if (schoolDay && isCurrentSection(entry)) timeCell.classList.add('is-now');
+
+        days.forEach((day, dayIndex) => {
+          const cell = addGridCell(rowIndex + 2, dayIndex + 2, 'tt-cell');
+          if (day === today) cell.classList.add('is-today');
+          const courses = (data.timetable[section]?.[day] ?? []).filter((course) =>
+            courseActiveInWeek(course, selectedWeek),
+          );
+          if (!courses.length) {
+            const empty = document.createElement('div');
+            empty.className = 'tt-empty';
+            empty.textContent = '无课程';
+            cell.appendChild(empty);
+            return;
+          }
+          const showWeeks = courses.length > 1;
+          for (const course of courses) {
+            visibleNames.add(course.courseName);
+            cell.appendChild(createCourseCard(course, showWeeks));
+          }
+        });
+      });
+
+      const weekLabel = selectedWeek === ALL_WEEKS ? '' : ` · 第 ${selectedWeek} 周`;
+      els.count.textContent = `共 ${visibleNames.size} 门课程${weekLabel}`;
+
+      if (data.remark.trim()) {
+        els.remark.hidden = false;
+        els.remark.textContent = `备注：${data.remark.trim()}`;
+      } else {
+        els.remark.hidden = true;
+      }
+
+      if (activeRenderedId !== item.id) {
+        activeRenderedId = item.id;
+        requestAnimationFrame(() => scrollToToday());
+      }
+    }
+
+    function scrollToToday(): void {
+      const header = els.timetable.querySelector<HTMLElement>('.tt-head.is-today');
+      if (!header) return;
+      if (els.gridWrap.scrollWidth <= els.gridWrap.clientWidth) return;
+      const left = header.offsetLeft - 152;
+      els.gridWrap.scrollLeft = Math.max(0, left - 16);
+    }
+
+    function openDetail(course: Course, color: string): void {
+      els.detailBody.innerHTML = '';
+      els.detailTitle.textContent = course.courseName;
+      els.detailTitle.style.color = color;
+
+      const rows: Array<[string, string]> = [
+        ['课程全称', course.courseTitle],
+        ['教师', course.teacher],
+        ['班级', course.className],
+        ['周次', course.weeks],
+        ['节次', course.periods],
+        ['周次/节次', course.weeksAndPeriods],
+        ['地点', course.location],
+        ['原始信息', course.raw],
+      ];
+      for (const [label, value] of rows) {
+        if (!value) continue;
+        const row = document.createElement('div');
+        row.className = 'detail-row';
+        const dt = document.createElement('span');
+        dt.className = 'detail-label';
+        dt.textContent = label;
+        const dd = document.createElement('span');
+        dd.className = 'detail-value';
+        dd.textContent = value;
+        row.append(dt, dd);
+        els.detailBody.appendChild(row);
+      }
+
+      const copy = document.createElement('button');
+      copy.type = 'button';
+      copy.className = 'btn';
+      copy.style.marginTop = '14px';
+      copy.textContent = '复制原始信息';
+      copy.addEventListener('click', () => void copyText(course.raw));
+      els.detailBody.appendChild(copy);
+
+      els.detailDialog.showModal();
+    }
+
+    function openImportDialog(): void {
+      hideImportError();
+      setImportMode('paste');
+      els.importDialog.showModal();
+      window.setTimeout(() => els.importText.focus(), 60);
+    }
+
+    function setImportMode(mode: 'paste' | 'file'): void {
+      importMode = mode;
+      byId<HTMLElement>('panel-paste').hidden = mode !== 'paste';
+      byId<HTMLElement>('panel-file').hidden = mode !== 'file';
+      byId<HTMLElement>('seg-paste').classList.toggle('active', mode === 'paste');
+      byId<HTMLElement>('seg-file').classList.toggle('active', mode === 'file');
+    }
+
+    function showImportError(errors: string[]): void {
+      els.importError.hidden = errors.length === 0;
+      els.importError.textContent = errors.slice(0, 5).join('\n');
+    }
+
+    function hideImportError(): void {
+      els.importError.hidden = true;
+      els.importError.textContent = '';
+    }
+
+    async function confirmImport(): Promise<void> {
+      const title = els.importTitle.value;
+      if (importMode === 'paste') {
+        const text = els.importText.value.trim();
+        if (!text) {
+          showImportError(['请先粘贴 JSON 数据']);
+          return;
+        }
+        const result = importText(text, title);
+        if (!result.ok) {
+          showImportError(result.errors);
+          return;
+        }
+        els.importText.value = '';
+        els.importTitle.value = '';
+        hideImportError();
+        els.importDialog.close();
+        return;
+      }
+
+      const files = Array.from(els.importFile.files ?? []);
+      if (!files.length) {
+        showImportError(['请选择要导入的 .json 文件']);
+        return;
+      }
+      let imported = 0;
+      const errors: string[] = [];
+      for (const file of files) {
+        const text = await file.text();
+        const result = importText(text, title || file.name.replace(/\.json$/i, ''));
+        if (result.ok) imported += 1;
+        else errors.push(`${file.name}: ${result.errors[0] ?? '导入失败'}`);
+      }
+      if (imported > 0) {
+        els.importFile.value = '';
+        renderFileList();
+        if (!errors.length) {
+          hideImportError();
+          els.importDialog.close();
+        } else {
+          showImportError(errors);
+        }
+      } else {
+        showImportError(errors);
+      }
+    }
+
+    function renderFileList(): void {
+      els.fileList.innerHTML = '';
+      const files = Array.from(els.importFile.files ?? []);
+      for (const file of files) {
+        const li = document.createElement('li');
+        li.textContent = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+        els.fileList.appendChild(li);
+      }
+    }
+
+    function loadDemo(): void {
+      const result = importText(demoTableRaw, '示例课表');
+      if (result.ok) {
+        els.importDialog.close();
+        return;
+      }
+      showImportError(result.errors);
+    }
+
+    function openManageDialog(): void {
+      pendingDeleteId = null;
+      renderManageList();
+      els.manageDialog.showModal();
+    }
+
+    function renderManageList(): void {
+      els.manageList.innerHTML = '';
+      if (!store.items.length) {
+        const li = document.createElement('li');
+        li.className = 'manage-empty';
+        li.textContent = '还没有保存的课表，点击下方按钮导入。';
+        els.manageList.appendChild(li);
+        return;
+      }
+
+      for (const item of store.items) {
+        const li = document.createElement('li');
+        li.className = `manage-item${item.id === store.activeId ? ' active' : ''}`;
+
+        const info = document.createElement('div');
+        info.className = 'manage-info';
+        const input = document.createElement('input');
+        input.className = 'manage-title';
+        input.type = 'text';
+        input.value = item.title;
+        input.setAttribute('aria-label', '课表标题');
+        input.addEventListener('change', () => {
+          item.title = input.value.trim() || '未命名课表';
+          input.value = item.title;
+          item.updatedAt = Date.now();
+          saveStore();
+          renderTabs();
+          renderHeader();
+        });
+        const meta = document.createElement('span');
+        meta.className = 'manage-meta';
+        meta.textContent = `${item.data.xnxq || '未知学期'} · ${item.data.courses.length} 条课程 · ${formatDate(
+          item.createdAt,
+        )}`;
+        info.append(input, meta);
+
+        const actions = document.createElement('div');
+        actions.className = 'manage-actions';
+
+        if (item.id !== store.activeId) {
+          const activate = document.createElement('button');
+          activate.type = 'button';
+          activate.className = 'btn tiny';
+          activate.textContent = '设为当前';
+          activate.addEventListener('click', () => {
+            store.activeId = item.id;
+            selectedWeek = ALL_WEEKS;
+            activeRenderedId = null;
+            saveStore();
+            renderAll();
+            renderManageList();
+          });
+          actions.appendChild(activate);
+        }
+
+        const download = document.createElement('button');
+        download.type = 'button';
+        download.className = 'btn tiny';
+        download.textContent = '下载 JSON';
+        download.addEventListener('click', () => downloadItem(item));
+        actions.appendChild(download);
+
+        const remove = document.createElement('button');
+        remove.type = 'button';
+        remove.className = 'btn tiny';
+        remove.textContent = pendingDeleteId === item.id ? '确认删除' : '删除';
+        if (pendingDeleteId === item.id) remove.classList.add('danger');
+        remove.addEventListener('click', () => {
+          if (pendingDeleteId !== item.id) {
+            pendingDeleteId = item.id;
+            renderManageList();
+            return;
+          }
+          pendingDeleteId = null;
+          store.items = store.items.filter((entry) => entry.id !== item.id);
+          if (store.activeId === item.id) {
+            store.activeId = store.items[0]?.id ?? null;
+            activeRenderedId = null;
+          }
+          saveStore();
+          renderAll();
+          renderManageList();
+          toast('已删除课表', 'success');
+        });
+        actions.appendChild(remove);
+
+        li.append(info, actions);
+        els.manageList.appendChild(li);
+      }
+    }
+
+    function downloadItem(item: SavedSchedule): void {
+      const blob = new Blob([JSON.stringify(item.data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${item.title || '课表'}.json`;
+      link.click();
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    function openScheduleDialog(): void {
+      renderScheduleTable();
+      els.scheduleDialog.showModal();
+    }
+
+    function renderScheduleTable(): void {
+      els.scheduleBody.innerHTML = '';
+      const groups = new Map<string, { period: string; session: string; times: Partial<Record<Campus, string>> }>();
+      for (const entry of TEACHING_SCHEDULE) {
+        const key = `${entry.period}|${entry.session ?? ''}`;
+        const group = groups.get(key) ?? { period: entry.period, session: entry.session ?? '—', times: {} };
+        if (entry.campus) {
+          group.times[entry.campus as Campus] = entry.time;
+        } else {
+          for (const campus of CAMPUSES) group.times[campus] = entry.time;
+        }
+        groups.set(key, group);
+      }
+
+      const table = document.createElement('table');
+      table.className = 'schedule-table';
+      const thead = document.createElement('thead');
+      const headRow = document.createElement('tr');
+      for (const label of ['时段', '节次 / 内容', '海源校区', '杨林校区']) {
+        const th = document.createElement('th');
+        th.textContent = label;
+        headRow.appendChild(th);
+      }
+      thead.appendChild(headRow);
+      table.appendChild(thead);
+
+      const tbody = document.createElement('tbody');
+      for (const group of groups.values()) {
+        const tr = document.createElement('tr');
+        const values = [
+          group.period,
+          group.session,
+          group.times['海源校区'] ?? '—',
+          group.times['杨林校区'] ?? '—',
+        ];
+        values.forEach((value, index) => {
+          const td = document.createElement('td');
+          td.textContent = value;
+          if (index === CAMPUSES.indexOf(store.campus) + 2) td.classList.add('is-campus');
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      }
+      table.appendChild(tbody);
+      els.scheduleBody.appendChild(table);
+    }
+
+    async function copyText(text: string): Promise<void> {
+      if (!text) return;
+      try {
+        await navigator.clipboard.writeText(text);
+        toast('已复制到剪贴板', 'success');
+      } catch {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        const execCommand = (document as unknown as { execCommand: (commandId: string) => boolean }).execCommand.bind(
+          document,
+        );
+        execCommand('copy');
+        textarea.remove();
+        toast('已复制到剪贴板', 'success');
+      }
+    }
+
+    function toast(message: string, type: 'info' | 'success' | 'error' = 'info'): void {
+      const el = document.createElement('div');
+      el.className = `toast toast-${type}`;
+      el.textContent = message;
+      els.toastWrap.appendChild(el);
+      window.setTimeout(() => {
+        el.classList.add('toast-out');
+        window.setTimeout(() => el.remove(), 220);
+      }, 2600);
+    }
+
+    function setupDropzone(): void {
+      const zone = els.dropzone;
+      const stop = (event: Event) => {
+        event.preventDefault();
+        event.stopPropagation();
+      };
+      zone.addEventListener('dragover', (event) => {
+        stop(event);
+        zone.classList.add('dragging');
+      });
+      zone.addEventListener('dragleave', (event) => {
+        stop(event);
+        zone.classList.remove('dragging');
+      });
+      zone.addEventListener('drop', (event) => {
+        stop(event);
+        zone.classList.remove('dragging');
+        const files = (event as DragEvent).dataTransfer?.files;
+        if (!files?.length) return;
+        const jsonFiles = Array.from(files).filter(
+          (file) => /\.json$/i.test(file.name) || file.type === 'application/json',
+        );
+        if (!jsonFiles.length) {
+          toast('仅支持 .json 文件', 'error');
+          return;
+        }
+        const transfer = new DataTransfer();
+        for (const file of jsonFiles) transfer.items.add(file);
+        els.importFile.files = transfer.files;
+        renderFileList();
+        setImportMode('file');
+      });
+    }
+
+    function bindEvents(): void {
+      byId<HTMLButtonElement>('btn-import').addEventListener('click', openImportDialog);
+      byId<HTMLButtonElement>('btn-empty-import').addEventListener('click', openImportDialog);
+      byId<HTMLButtonElement>('btn-empty-demo').addEventListener('click', loadDemo);
+      byId<HTMLButtonElement>('btn-empty-help').addEventListener('click', () => els.helpDialog.showModal());
+      byId<HTMLButtonElement>('btn-manage').addEventListener('click', openManageDialog);
+      byId<HTMLButtonElement>('btn-schedule').addEventListener('click', openScheduleDialog);
+      byId<HTMLButtonElement>('btn-help').addEventListener('click', () => els.helpDialog.showModal());
+      byId<HTMLButtonElement>('btn-load-demo').addEventListener('click', loadDemo);
+      byId<HTMLButtonElement>('btn-import-confirm').addEventListener('click', () => void confirmImport());
+      byId<HTMLButtonElement>('btn-copy-script').addEventListener('click', () => void copyText(exportScript));
+      byId<HTMLButtonElement>('btn-manage-import').addEventListener('click', () => {
+        els.manageDialog.close();
+        openImportDialog();
+      });
+      byId<HTMLButtonElement>('seg-paste').addEventListener('click', () => setImportMode('paste'));
+      byId<HTMLButtonElement>('seg-file').addEventListener('click', () => setImportMode('file'));
+
+      els.weekSelect.addEventListener('change', () => {
+        const value = els.weekSelect.value;
+        selectedWeek = value === ALL_WEEKS ? ALL_WEEKS : Number(value);
+        renderGrid();
+      });
+      els.campusSelect.addEventListener('change', () => {
+        store.campus = els.campusSelect.value as Campus;
+        saveStore();
+        renderGrid();
+      });
+
+      els.importFile.addEventListener('change', renderFileList);
+      setupDropzone();
+
+      document.querySelectorAll<HTMLElement>('[data-close]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const dialog = button.closest('dialog') as HTMLDialogElement | null;
+          dialog?.close();
+        });
+      });
+
+      for (const dialog of document.querySelectorAll<HTMLDialogElement>('dialog')) {
+        dialog.addEventListener('click', (event) => {
+          if (event.target === dialog) dialog.close();
+        });
+      }
+
+      window.setInterval(() => {
+        if (!document.hidden && activeItem()) renderGrid();
+      }, 60_000);
+    }
+
+    const codeElement = document.querySelector<HTMLElement>('#code-export code');
+    if (codeElement) codeElement.textContent = exportScript;
+
+    bindEvents();
+    renderAll();
+  </script>
+</body>
+</html>
