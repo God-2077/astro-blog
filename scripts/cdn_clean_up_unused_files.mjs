@@ -9,6 +9,8 @@ const cwd = process.cwd();
 
 // 保留的文件或目录
 const keep = new Set([
+    '.github',
+    '.git',
     '_astro',
     'img',
     'fonts',
