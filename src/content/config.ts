@@ -59,6 +59,15 @@ const blogCollection = defineCollection({
      * - 'all': hidden on all aggregate listing pages
      */
     hideFrom: z.enum(['home', 'home_rss', 'rss', 'all']).optional(),
+    /**
+     * SEO options for this post.
+     * - nofollow: Disables following links to this post
+     * - noindex: Disables indexing this post in search engines
+     * - noarchive: Disables archiving this post in search engines
+     */
+    nofollow: z.boolean().optional(),
+    noindex: z.boolean().optional(),
+    noarchive: z.boolean().optional(),
   }) satisfies z.ZodType<BlogSchema, z.ZodTypeDef, BlogSchemaInput>,
 });
 

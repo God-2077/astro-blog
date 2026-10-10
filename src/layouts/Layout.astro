@@ -96,6 +96,11 @@ const fonts_url_1 =
     : cdn_prefix + 'fonts/ChillRoundFRegular/result.css';
 const fonts_url_2 =
   locale === 'ja' ? cdn_prefix + 'fonts/GenJyuuGothic-P-Bold/result.css' : cdn_prefix + 'fonts/ChillRoundFBold/result.css';
+
+// Post SEO: noindex, noarchive, nofollow
+const postNoindex = post?.data.noindex || false;
+const postNoarchive = post?.data.noarchive || false;
+const postNofollow = post?.data.nofollow || false;
 ---
 
 <!doctype html>
@@ -145,6 +150,9 @@ const fonts_url_2 =
       extend={{
         meta: [{ name: 'author', content: siteConfig.author || '' }],
       }}
+      noindex={postNoindex}
+      noarchive={postNoarchive}
+      nofollow={postNofollow}
     />
     {/* astro-seo 暂不支持管理 keywords */}
     <meta name="keywords" content={keywords.join(', ')} />

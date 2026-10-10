@@ -35,6 +35,15 @@ export interface BlogSchema {
    * - 'all': hidden on all aggregate pages (home, RSS, categories, tags, archives, series, related)
    */
   hideFrom?: 'home' | 'home_rss' | 'rss' | 'all';
+  /**
+   * SEO options for this post.
+   * - nofollow: Disables following links to this post
+   * - noindex: Disables indexing this post in search engines
+   * - noarchive: Disables archiving this post in search engines
+   */
+  nofollow?: boolean;
+  noindex?: boolean;
+  noarchive?: boolean;
 }
 
 /**
