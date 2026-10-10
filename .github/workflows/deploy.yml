@@ -56,6 +56,21 @@ jobs:
           git add -A
           git diff --staged --quiet || git commit -m "Deploy: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
           git push --force
+      
+      # 注意，下方 rm -rf /tmp/deploy-cdn/* 并不会清理 .github 目录
+      - name: Sync to CDN repo and clean up unused files
+        run: |
+          git clone --depth 1 https://x-access-token:${{ secrets.GH_PAT_CDN }}@github.com/liveysl/astro-blog-deploy-cdn.git /tmp/deploy-cdn
+          rm -rf /tmp/deploy-cdn/*
+          cp -r dist/* /tmp/deploy-cdn/
+          cd /tmp/deploy-cdn
+          node ${{ github.workspace }}/scripts/cdn_clean_up_unused_files.mjs
+          echo -e "User-agent: *\nDisallow: /" > robots.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --staged --quiet || git commit -m "Deploy: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push --force
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4

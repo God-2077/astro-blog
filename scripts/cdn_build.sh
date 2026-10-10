@@ -1,3 +1,10 @@
+# outdated script
+# outdated script
+# outdated script
+
+echo "outdated script"
+exit 1
+
 astro build && find dist -mindepth 1 \
   ! -path 'dist/_astro' ! -path 'dist/_astro/*' \
   ! -path 'dist/img' ! -path 'dist/img/*' \
