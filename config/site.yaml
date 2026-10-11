@@ -756,7 +756,7 @@ analytics:
     statistics_display:
       token: gR1PdRDiutFusWn6
       article_page_views: false
-      footer_site_stats: true
+      footer_site_stats: false
 
 # =============================================================================
 # SEO Configuration
