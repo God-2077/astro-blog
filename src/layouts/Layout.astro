@@ -79,14 +79,10 @@ const canonicalHref = canonicalOverride ?? Astro.url.href;
 
 const keywords = keywordsOverride || getLocalizedKeywords(locale) || [getLocalizedTitle(locale)];
 
-// cdn 前缀
+// cdn 前缀（开发环境忽略 site.yaml 的 assetsCdn，始终使用本地静态资源）
 const cdn_prefix = (() => {
-  if (siteConfig.assetsCdn) {
-    const url = new URL(siteConfig.assetsCdn);
-    return url.href;
-  } else {
-    return '/';
-  }
+  if (import.meta.env.DEV || !siteConfig.assetsCdn) return '/';
+  return new URL(siteConfig.assetsCdn).href;
 })();
 
 // Async load rounded fonts — Japanese pages use Gen Jyuu Gothic P, others use ChillRoundF (fix #113)

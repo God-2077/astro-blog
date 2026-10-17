@@ -62,8 +62,9 @@ const hasMultipleLocales = i18nLocales.length > 1;
 const serviceWorkerConfig = yamlConfig.serviceWorker;
 const serviceWorkerEnabled = serviceWorkerConfig?.enabled ?? false;
 
-// CDN config from YAML
-const cdnConfig = yamlConfig.site?.assetsCdn;
+// CDN config from YAML — ignored in development so the dev server always serves local assets
+const isDev = process.env.NODE_ENV === 'development';
+const cdnConfig = isDev ? undefined : yamlConfig.site?.assetsCdn;
 
 // MDX 支持配置
 const mdxSupport = yamlConfig.content?.mdxSupport ?? false;
