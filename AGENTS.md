@@ -56,6 +56,7 @@ Do NOT reorder remark plugins in `astro.config.mjs`. `remarkShokaPreprocess` MUS
 - **Nanostores** for shared state.
 - **Astro i18n**: Do NOT enable `fallback` routing — it breaks `[seriesSlug].astro` dynamic routes.
 - **Christmass/snowfall** uses Three.js. When disabled in config, the Vite plugin replaces SnowfallCanvas with a noop, saving ~879KB.
+- **Rollup is pinned to 4.63.6** — `overrides` in `pnpm-workspace.yaml` (pnpm ≥10, used locally) and `pnpm.overrides` in `package.json` (pnpm 9, used by CI). Rollup 4.64.0's tree-shaking regression ([rollup#6541](https://github.com/rollup/rollup/pull/6541)) strips the argument of `config.getTagNamespace(tag)` inside twikoo's pre-minified Vue 2.7 UMD bundle, so the comment widget crashes with `Cannot read properties of undefined (reading 'toLowerCase')`. Remove both overrides only after confirming `dist/_astro/twikoo.nocss.*.js` contains `getTagNamespace(<arg>)`.
 - Build analysis: `ANALYZE=true pnpm build` (enables Sonda bundle analyzer).
 - `BLOG_PORT=4321` in `.env` to change dev port.
 - `.cache/og-data.json` is **committed** to Git (build cache). Do NOT add to `.gitignore`.

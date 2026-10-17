@@ -1,4 +1,10 @@
 packages: []
+# Rollup 4.64.0+ 的 tree-shaking 回归（rollup#6541）会错误地移除 twikoo 内置
+# Vue 2.7 UMD 包中 `config.getTagNamespace(tag)` 的实参，导致评论系统启动崩溃：
+# "Cannot read properties of undefined (reading 'toLowerCase')"。
+# 暂时锁定在回归发生前的最后一个版本，等上游修复后移除本 overrides。
+overrides:
+  rollup: 4.63.6
 allowBuilds:
   '@parcel/watcher': true
   esbuild: true

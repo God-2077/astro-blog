@@ -160,6 +160,11 @@
     "vite-plugin-svgr": "^4.5.0",
     "yaml": "^2.8.2"
   },
+  "pnpm": {
+    "overrides": {
+      "rollup": "4.63.6"
+    }
+  },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,astro}": [
       "biome check --write --no-errors-on-unmatched"
