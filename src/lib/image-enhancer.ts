@@ -136,18 +136,25 @@ export function enhanceImages(container: Element): void {
 }
 
 function handleImageLoaded(img: HTMLImageElement): void {
+  const wrapper = img.closest('.markdown-image-wrapper');
+
+  // Update the reserved box before revealing the image. Images known to the
+  // manifest already have the same ratio; this matters for the fallback 4:3
+  // box used when dimensions were unavailable at build time.
+  if (wrapper && img.naturalWidth && img.naturalHeight) {
+    const ratio = img.naturalWidth / img.naturalHeight;
+    const el = wrapper as HTMLElement;
+    el.dataset.aspectRatio = String(ratio);
+    el.style.setProperty('--img-ratio', String(Number(ratio.toFixed(6))));
+  }
+
   img.classList.add('loaded');
 
   const isPortrait = img.naturalHeight > img.naturalWidth * 1.2;
-  const wrapper = img.closest('.markdown-image-wrapper');
   if (isPortrait) {
     wrapper?.classList.add('portrait');
   }
 
-  // Store aspect ratio for flex distribution in groupPortraitImages
-  if (wrapper && img.naturalWidth && img.naturalHeight) {
-    (wrapper as HTMLElement).dataset.aspectRatio = String(img.naturalWidth / img.naturalHeight);
-  }
   if (!wrapper || wrapper.querySelector('.markdown-image-fullscreen')) return;
 
   const fullscreenBtn = createFullscreenButton();

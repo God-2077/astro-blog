@@ -361,23 +361,27 @@
 /* ========== Markdown 图片占位符和加载样式 ========== */
 
 /* 图片容器 */
+/* `--img-ratio` is written by the rehype plugin from the manifest. Deriving the
+   width from it reserves the SAME box the loaded image will occupy (height is
+   capped at 70vh), instead of letting the reset's `figure { inline-size:
+   fit-content }` collapse the box until image metadata arrives. */
 .prose .markdown-image-wrapper {
   position: relative;
   display: block;
+  width: min(100%, calc(70vh * var(--img-ratio, 4 / 3)));
+  max-width: 100%;
   margin: 1.5rem auto;
   overflow: hidden;
   border-radius: 0.5rem;
   background-color: hsl(var(--muted));
 }
 
-/* Image styles — default 4:3 placeholder aspect ratio */
+/* Image styles — dimensions come from the width/height attributes, so the
+   intrinsic aspect ratio is reserved before the image finishes loading. */
 .prose .markdown-image {
   display: block;
   width: 100%;
   height: auto;
-
-  /* Default 4:3 ratio to prevent layout shift, balanced for landscape & portrait */
-  aspect-ratio: 4 / 3;
   object-fit: contain;
 
   /* 淡入动画 */
@@ -386,6 +390,11 @@
 
   /* 加载时的背景色 */
   background-color: hsl(var(--muted));
+}
+
+/* Images without known dimensions still need a placeholder ratio. */
+.prose .markdown-image:not(.loaded):not([width]) {
+  aspect-ratio: 4 / 3;
 }
 
 /* 图片加载完成状态 - 使用实际尺寸，限制最大高度 */

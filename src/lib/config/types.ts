@@ -606,6 +606,44 @@ export interface InjectConfig {
 }
 
 // =============================================================================
+// Image Manifest Configuration
+// =============================================================================
+
+/**
+ * Directories to exclude while scanning for images.
+ *
+ * One list applies to both scan sources (`public/` and `src/content/blog/`).
+ * Each entry may be:
+ * - a bare directory name (`astro-koharu` → matches at any depth),
+ * - a relative path (`img/cover/astro-koharu`),
+ * - a simple glob (`img/cover/*`, supports `*`, `?`, `**`).
+ *
+ * Skipped directories are neither scanned nor pruned from the manifest.
+ */
+export interface ScanSkipConfig {
+  skip?: string[];
+}
+
+/** Image manifest generation options (`imageManifest` section in site.yaml) */
+export interface ImageManifestConfig {
+  /**
+   * Whether to generate metadata for external (HTTP/HTTPS) images found in post
+   * content. Defaults to false: no network requests are made.
+   */
+  generateExternal?: boolean;
+  /** Concurrent requests while fetching external images @default 6 */
+  concurrency?: number;
+  /** Per-request timeout in milliseconds @default 15000 */
+  timeoutMs?: number;
+  /** Retry attempts for transient failures @default 2 */
+  retries?: number;
+  /** Maximum bytes accepted for a single image @default 10485760 */
+  maxBytes?: number;
+  /** Scan scope configuration */
+  scan?: ScanSkipConfig;
+}
+
+// =============================================================================
 // Root Configuration Type
 // =============================================================================
 
@@ -638,4 +676,6 @@ export interface SiteYamlConfig {
   footer?: FooterConfig;
   /** Inject configuration */
   inject?: InjectConfig;
+  /** Image manifest (LQIP + dimensions) generation options */
+  imageManifest?: ImageManifestConfig;
 }
