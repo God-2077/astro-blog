@@ -611,17 +611,44 @@ content:
 # 由 `pnpm generate:images` (src/scripts/generateImageManifest.ts) 生成
 # src/assets/image-manifest.json，供文章卡片封面与正文图片作低质量占位图与防抖动。
 #
-# generateExternal: 是否生成外部 (HTTP/HTTPS) 图片信息
-#   - false (默认)：完全跳过网络请求，只处理 public/ 下的本地图片
-#     已存在的远程条目会保留（不会被清理），需要刷新时改用 true 或 `--remote`
-#   - true：额外解析 src/content/blog/**/*.{md,mdx} 的 cover frontmatter 与
-#           正文 ![](url) 中的外部图片，请求其宽度、高度与 LQIP 渐变色
+# 增量逻辑（默认，`--force` 关闭）：
+#   - 本地图片：文件 sha256 未变 → 复用已有条目，不再解码
+#   - 外部图片：带 ETag / Last-Modified 条件请求，304 → 复用已有条目
+#   - 存量远程条目若在扫描范围内找不到引用会被清理，因此 contentDirs 必须
+#     指向真实文章目录；目录全部不存在或扫描不到任何图片引用时会自动保留清单
 #   ⚠️ manifest 在构建期被读取，改完需重启 dev server 或重新 build
+#
+# generateExternal: 是否生成外部 (HTTP/HTTPS) 图片信息
+#   - false：完全跳过网络请求，只处理 public/ 下的本地图片
+#     已存在的远程条目会保留（不会被清理），需要刷新时改用 true 或 `--remote`
+#   - true：额外解析 contentDirs 下文章的 cover frontmatter 与正文 ![](url)
+#           中的外部图片，请求其宽度、高度与 LQIP 渐变色
+#
+# contentDirs: 文章目录（相对项目根目录或绝对路径，可配置多个）
+#   - 默认: [src/content/blog]
+#   - 内容仓库不在项目内时可追加，例如 README 中的 ../astro-blog-content
+#   - 目录不存在会告警；全部不存在则报错退出且不改动清单
+#   - 单个字符串写法也兼容：contentDirs: src/content/blog
+#
+# allowedDomains: 外部图片域名白名单（仅 generateExternal: true 时生效）
+#   - 留空 / 不配置 = 不限制（默认，保持旧行为）
+#   - 精确匹配主机名；'*.example.com' 匹配子域（不含主域）；'*' = 不限制
+#   - YAML 中 *.example.com 必须加引号
+#   - 名单外的 URL 不会请求；其已有条目默认保留，`--force` 时清理
 #
 # 支持的外部图片格式：webp / jpg / jpeg / png（其余格式会被跳过）
 # -----------------------------------------------------------------------------
 imageManifest:
-  generateExternal: true # 默认不生成外部图片信息（避免构建期网络请求）
+  generateExternal: true # 是否解析外部图片（true = 会发起网络请求）
+  contentDirs:
+    # - src/content/blog
+    - ../astro-blog-content/src/content/blog # 内容仓库在项目外的示例
+  allowedDomains: # 外部图片域名白名单，留空 = 不限制
+    - ik.imagekit.io
+    - k-pan.r2.buasis.eu.org
+    - k-pan.r2.space520.eu.org
+    - k-pan.r2.pzyq.dpdns.org
+    # - gcore.jsdelivr.net
   # 以下为外部图片请求参数，仅在 generateExternal: true 时生效
   # concurrency: 6       # 并发请求数
   # timeoutMs: 15000     # 单次请求超时（毫秒）
@@ -629,8 +656,8 @@ imageManifest:
   # maxBytes: 10485760   # 单张图片下载上限（字节）
   # ---------------------------------------------------------------------------
   # scan.skip: 扫描时跳过的目录
-  #   - 一份列表同时作用于 public/ 与 src/content/blog/
-  #   - 三种写法可混用：
+  #   - 一份列表同时作用于 public/ 与 contentDirs 中的每个目录
+  #   - 路径按「内容目录相对路径」与「项目相对路径」各匹配一次，三种写法可混用：
   #       目录名      astro-koharu                      → 跳过任意深度下该名字的目录
   #       相对路径    img/cover/astro-koharu
   #       简单 glob   img/cover/*                       → 支持 * ? **
@@ -638,7 +665,7 @@ imageManifest:
   #   - 示例：
   #       skip:
   #         - astro-koharu    # 跳过 public/img/cover/astro-koharu
-  #         - ja              # 跳过 src/content/blog/ja
+  #         - ja              # 跳过 contentDirs 中任意 ja 目录
   # ---------------------------------------------------------------------------
   scan:
     skip: []

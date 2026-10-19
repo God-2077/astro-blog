@@ -34,7 +34,6 @@ const GENERATOR_VERSION = 1;
 export const DEFAULT_MANIFEST_PATH = 'src/assets/image-manifest.json';
 export const DEFAULT_PUBLIC_DIR = 'public';
 export const DEFAULT_LOCAL_GLOB = 'public/**/*.{webp,jpg,jpeg,png}';
-export const DEFAULT_CONTENT_GLOB = 'src/content/blog/**/*.{md,mdx}';
 
 /** Image formats this generator supports (both locally and remotely). */
 const SUPPORTED_IMAGE_EXTENSIONS = ['webp', 'jpg', 'jpeg', 'png'] as const;

@@ -612,13 +612,15 @@ export interface InjectConfig {
 /**
  * Directories to exclude while scanning for images.
  *
- * One list applies to both scan sources (`public/` and `src/content/blog/`).
- * Each entry may be:
+ * One list applies to both scan sources (`public/` and every configured
+ * content directory). Each entry may be:
  * - a bare directory name (`astro-koharu` → matches at any depth),
  * - a relative path (`img/cover/astro-koharu`),
  * - a simple glob (`img/cover/*`, supports `*`, `?`, `**`).
  *
- * Skipped directories are neither scanned nor pruned from the manifest.
+ * Matching is tried both against the path relative to the content directory and
+ * against the project-relative path. Skipped directories are neither scanned
+ * nor pruned from the manifest.
  */
 export interface ScanSkipConfig {
   skip?: string[];
@@ -639,6 +641,22 @@ export interface ImageManifestConfig {
   retries?: number;
   /** Maximum bytes accepted for a single image @default 10485760 */
   maxBytes?: number;
+  /**
+   * Directories scanned for post image references. Relative paths resolve from
+   * the project root and may point outside it (e.g.
+   * `../astro-blog-content/src/content/blog`). A single string is accepted too.
+   *
+   * @default ['src/content/blog']
+   */
+  contentDirs?: string[];
+  /**
+   * External image hostname allowlist. Only HTTP(S) images whose host matches
+   * are fetched; `*.example.com` matches subdomains only, `*` matches every
+   * host. Empty or missing means "no restriction".
+   *
+   * @default []
+   */
+  allowedDomains?: string[];
   /** Scan scope configuration */
   scan?: ScanSkipConfig;
 }

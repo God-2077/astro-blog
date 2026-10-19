@@ -11,7 +11,7 @@
     "generate:summaries": "npx tsx src/scripts/generateSummaries.ts",
     "generate:summaries:force": "npx tsx src/scripts/generateSummaries.ts --force",
     "generate:all": "npm run generate:images && npm run generate:summaries && npm run generate:similarities",
-    "test:images": "node --import tsx --test src/scripts/lib/image-manifest.test.ts src/lib/markdown/rehype-image-placeholder.test.ts",
+    "test:images": "node --import tsx --test src/scripts/lib/image-manifest.test.ts src/scripts/lib/scan-scope.test.ts src/lib/markdown/rehype-image-placeholder.test.ts",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",

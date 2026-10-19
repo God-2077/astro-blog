@@ -41,7 +41,7 @@ astro-blog-content/
 - **包管理：** pnpm
 - **搜索：** Pagefind（无后端全站搜索）
 - **评论：** Waline / Giscus / Remark42 / Twikoo 可切换
-- **统计：** Umami PV 展示 (无统计跟踪代码，需手动配置)
+- **统计：** Umami PV 展示（无统计跟踪代码，需手动配置）
 - **多语言：** 内置 i18n（zh / en / ja）
 - **Markdown：** Shoka 兼容语法、GFM、Mermaid 图表、KaTeX 数学公式
 - **图片：** LQIP 渐变色占位
@@ -70,6 +70,10 @@ rmdir /s /q src\content\blog
 #   mklink /J 无需管理员；文件软链接需管理员权限或开启开发者模式
 mklink /J src\content\blog ..\astro-blog-content\src\content\blog
 for %f in (..\astro-blog-content\src\pages\*.md) do mklink src\pages\%~nxf %~ff
+
+#    内容不在 src/content/blog 或未建立链接时，生成图片清单可显式指定目录：
+#    pnpm generate:images --content-dirs ../astro-blog-content/src/content/blog
+#    也可以写入 config/site.yaml 的 imageManifest.contentDirs（支持多个目录）
 
 # 4. 安装依赖并启动
 pnpm install
