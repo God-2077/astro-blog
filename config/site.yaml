@@ -41,7 +41,7 @@ site:
   # Enable slug transliteration (converts CJK characters to pinyin/romaji)
   # Note: enabling this will break existing CJK URLs. Run `pnpm save-slugs` first to save old slugs into frontmatter.link
   # enableSlugTransliteration: true
-  assetsCdn: https://blog-v-cdn.ksable.top
+  # assetsCdn: https://blog-v-cdn.ksable.top
 
 # =============================================================================
 # Internationalization (i18n)
@@ -989,7 +989,6 @@ footer:
 # -----------------------------------------------------------------------------
 inject:
   head: |
-    <link rel="preconnect" href="https://blog-v-cdn.ksable.top" crossorigin><link rel="dns-prefetch" href="https://blog-v-cdn.ksable.top">
     <script>
     // 禁用 Umami 分析在本地开发环境
     if (location.hostname === 'localhost' || location.hostname === '127.0.0.1' || (location.hostname.startsWith('192.168.') && location.hostname.split('.').length === 4)) {
@@ -1017,6 +1016,10 @@ inject:
             person_profiles: 'identified_only', // or 'always' to create profiles for anonymous users as well
         })
     </script>
+
+#  <link rel="preconnect" href="https://blog-v-cdn.ksable.top" crossorigin><link rel="dns-prefetch" href="https://blog-v-cdn.ksable.top">
+
+
   body: |
     <script>
       // 注销所有 service worker
