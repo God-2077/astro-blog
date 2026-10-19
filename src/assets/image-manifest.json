@@ -1,7 +1,7 @@
 {
   "version": 1,
   "generatorVersion": 1,
-  "updatedAt": "2026-10-18T15:41:34.653Z",
+  "updatedAt": "2026-10-19T03:22:32.274Z",
   "images": {
     "/img/avatar.webp": {
       "src": "/img/avatar.webp",
@@ -2276,6 +2276,26 @@
       "updatedAt": "2026-10-18T15:39:56.030Z",
       "etag": "\"09a59b55ffe268231966122b555327ad\"",
       "lastModified": "Sun, 06 Sep 2026 10:02:10 GMT"
+    },
+    "https://k-pan.r2.buasis.eu.org/pixiv/%E3%82%82%E3%82%82%E3%82%93%E3%81%9F_%E3%81%8B%E3%81%8D%E6%B0%B7%E3%81%82%E3%82%8A%E3%81%8C%E3%81%A8%E2%80%A6%E3%81%BF%E3%81%A6%E3%82%88%EF%BC%81%E3%83%92%E3%82%AB%E3%83%AA%E3%81%AE%E6%89%80%E3%81%A0%E3%81%91%E5%BD%B1%E3%81%AA%E3%81%A3%E3%81%A6%E3%81%A6%E6%9A%91%E3%81%84%E3%82%88%E3%83%BC%E3%83%BC%EF%BC%81_148915796_p0.jpg": {
+      "src": "https://k-pan.r2.buasis.eu.org/pixiv/%E3%82%82%E3%82%82%E3%82%93%E3%81%9F_%E3%81%8B%E3%81%8D%E6%B0%B7%E3%81%82%E3%82%8A%E3%81%8C%E3%81%A8%E2%80%A6%E3%81%BF%E3%81%A6%E3%82%88%EF%BC%81%E3%83%92%E3%82%AB%E3%83%AA%E3%81%AE%E6%89%80%E3%81%A0%E3%81%91%E5%BD%B1%E3%81%AA%E3%81%A3%E3%81%A6%E3%81%A6%E6%9A%91%E3%81%84%E3%82%88%E3%83%BC%E3%83%BC%EF%BC%81_148915796_p0.jpg",
+      "source": "remote",
+      "width": 1764,
+      "height": 2508,
+      "lqip": "a0acafabbab4baa39b",
+      "updatedAt": "2026-10-19T03:22:31.838Z",
+      "etag": "\"31439ceff04512c3a2abc6b474335ef6\"",
+      "lastModified": "Sun, 30 Aug 2026 15:54:56 GMT"
+    },
+    "https://k-pan.r2.buasis.eu.org/pixiv/%E3%82%AF%E3%83%A9%E3%83%8A_Atlas_%E3%82%A2%E3%83%AA%E3%82%B9%E3%82%B1%E3%82%A4_141853037_p0.png": {
+      "src": "https://k-pan.r2.buasis.eu.org/pixiv/%E3%82%AF%E3%83%A9%E3%83%8A_Atlas_%E3%82%A2%E3%83%AA%E3%82%B9%E3%82%B1%E3%82%A4_141853037_p0.png",
+      "source": "remote",
+      "width": 3469,
+      "height": 2326,
+      "lqip": "9dadbe96a7bbaca7b7",
+      "updatedAt": "2026-10-19T03:22:31.539Z",
+      "etag": "\"8a9a82cfaad7c5c82df6a05f18322a90-2\"",
+      "lastModified": "Sun, 30 Aug 2026 15:54:58 GMT"
     },
     "https://k-pan.r2.buasis.eu.org/pixiv/-AKOvO-_%E3%83%8A%E3%82%AE%E3%82%B5_145711770_p1.jpg": {
       "src": "https://k-pan.r2.buasis.eu.org/pixiv/-AKOvO-_%E3%83%8A%E3%82%AE%E3%82%B5_145711770_p1.jpg",
