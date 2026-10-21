@@ -974,7 +974,7 @@ footer:
     - br: true
     - title: Page View
       img: 
-        src: https://tally.ksable.dpdns.org/hits/blog/pv.svg?mode=read
+        src: https://tally.ksable.dpdns.org/hits/blog/pv.svg?mode=read&theme=booru-lewd
         height: 18
 
 # [![Build and Deploy](https://github.com/God-2077/astro-blog/actions/workflows/deploy.yml/badge.svg?branch=main)](https://github.com/God-2077/astro-blog/actions/workflows/deploy.yml)
