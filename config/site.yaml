@@ -323,6 +323,12 @@ friends:
         image: https://your-blog.com/avatar.jpg # 头像链接
         color: "#ffc0cb" # 主题色（可选）
   data: # 友链列表
+    -   url: https://daybook.ksable.top/
+        adddate: 2026-11-06 22:28:18
+        rss: https://daybook.ksable.top/feed.xml
+        site: Ksable's Daybook
+        image: https://avatars.githubusercontent.com/u/115924285?v=4
+        desc: Ciallo～(∠·ω< )⌒★
     -   contact: mail:ccrice@zohomail.cn,world@reply.ccrice.com
         screenshot: null
         keywords: null
