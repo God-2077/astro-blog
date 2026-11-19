@@ -11,6 +11,7 @@ import { useKeyboardShortcut } from '@hooks/useKeyboardShortcut';
 import { useTranslation } from '@hooks/useTranslation';
 import { useZoomPan } from '@hooks/useZoomPan';
 import { Icon } from '@iconify/react';
+import { computeNativeMaxZoom, LIGHTBOX_MAX_SCALE } from '@lib/lightbox-zoom';
 import { useStore } from '@nanostores/react';
 import { $imageLightboxData, closeModal, type ImageLightboxData, navigateImage, openModal } from '@store/modal';
 import { AnimatePresence, motion } from 'motion/react';
@@ -22,11 +23,27 @@ export default function ImageLightbox() {
   const isOpen = data !== null;
   const [imageLoaded, setImageLoaded] = useState(false);
   const [rotation, setRotation] = useState(0);
+  const [maxScale, setMaxScale] = useState(LIGHTBOX_MAX_SCALE);
+  const imageRef = useRef<HTMLImageElement | null>(null);
+  const scaleRef = useRef(1);
 
-  const { containerRef, state, reset, zoomTo, zoomLevel } = useZoomPan(isOpen);
+  const updateMaxScale = useCallback(() => {
+    const img = imageRef.current;
+    if (!img) return;
+    setMaxScale(
+      computeNativeMaxZoom({
+        naturalWidth: img.naturalWidth,
+        naturalHeight: img.naturalHeight,
+        layoutWidth: img.offsetWidth,
+        layoutHeight: img.offsetHeight,
+        devicePixelRatio: window.devicePixelRatio,
+      }),
+    );
+  }, []);
+
+  const { containerRef, state, reset, zoomTo, zoomLevel } = useZoomPan(isOpen, { maxScale });
 
   // Use a ref so the outsidePress callback always reads the latest scale
-  const scaleRef = useRef(state.scale);
   scaleRef.current = state.scale;
 
   const handleResetAll = useCallback(() => {
@@ -109,6 +126,23 @@ export default function ImageLightbox() {
     return () => document.removeEventListener('astro:before-preparation', close);
   }, []);
 
+  // Recompute the native-resolution zoom cap when the image or viewport changes.
+  useEffect(() => {
+    if (!isOpen) return;
+    updateMaxScale();
+
+    const img = imageRef.current;
+    if (!img) return;
+
+    const observer = new ResizeObserver(updateMaxScale);
+    observer.observe(img);
+    window.addEventListener('resize', updateMaxScale);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', updateMaxScale);
+    };
+  }, [isOpen, updateMaxScale]);
+
   // Reset zoom, rotation, and image state when opening/closing
   useEffect(() => {
     if (isOpen) {
@@ -165,7 +199,7 @@ export default function ImageLightbox() {
                     icon="ri:zoom-in-line"
                     label={t('image.zoomIn')}
                     onClick={handleZoomIn}
-                    disabled={state.scale >= 4.9}
+                    disabled={state.scale >= maxScale - 0.01}
                   />
                   <motion.button
                     type="button"
@@ -203,9 +237,10 @@ export default function ImageLightbox() {
                     transition={{ duration: 0.2 }}
                   >
                     <motion.img
+                      ref={imageRef}
                       src={data.src}
                       alt={data.alt}
-                      className="max-h-[80vh] max-w-[90vw] origin-center rounded-lg object-contain shadow-2xl will-change-transform"
+                      className="max-h-[80vh] max-w-[90vw] origin-center rounded-lg object-contain shadow-2xl"
                       animate={{ scale: state.scale, rotate: rotation, opacity: imageLoaded ? 1 : 0 }}
                       transition={{
                         scale: { type: 'tween', duration: 0.15, ease: 'easeOut' },
@@ -217,7 +252,10 @@ export default function ImageLightbox() {
                         y: state.translateY,
                         cursor: state.scale > 1.05 ? 'grab' : 'zoom-in',
                       }}
-                      onLoad={() => setImageLoaded(true)}
+                      onLoad={() => {
+                        setImageLoaded(true);
+                        updateMaxScale();
+                      }}
                       draggable={false}
                     />
                   </motion.div>

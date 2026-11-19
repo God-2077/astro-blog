@@ -22,6 +22,13 @@ const MIN_SCALE = 0.5;
 const MAX_SCALE = 5;
 const INITIAL_STATE: ZoomPanState = { scale: 1, translateX: 0, translateY: 0 };
 
+export interface ZoomPanOptions {
+  /** Smallest scale allowed. Defaults to 0.5. */
+  minScale?: number;
+  /** Largest scale allowed. Defaults to 5. */
+  maxScale?: number;
+}
+
 export interface UseZoomPanReturn {
   containerRef: (node: HTMLDivElement | null) => void;
   state: ZoomPanState;
@@ -30,8 +37,12 @@ export interface UseZoomPanReturn {
   zoomLevel: string;
 }
 
-export function useZoomPan(enabled = true): UseZoomPanReturn {
+export function useZoomPan(enabled = true, options: ZoomPanOptions = {}): UseZoomPanReturn {
   const [state, setState] = useState<ZoomPanState>(INITIAL_STATE);
+  const minScale = options.minScale ?? MIN_SCALE;
+  const maxScale = options.maxScale ?? MAX_SCALE;
+
+  const clampScale = useCallback((scale: number) => Math.min(Math.max(minScale, scale), maxScale), [minScale, maxScale]);
 
   // Track the viewport DOM element via state so the effect re-runs when it mounts/unmounts.
   // This solves timing issues with portals (FloatingPortal) where useRef.current is still
@@ -82,10 +93,24 @@ export function useZoomPan(enabled = true): UseZoomPanReturn {
     setState(INITIAL_STATE);
   }, []);
 
+  // Keep the viewer inside the new limits when the image or viewport changes.
+  useEffect(() => {
+    const current = transformRef.current;
+    const clamped = clampScale(current.scale);
+    if (clamped === current.scale) return;
+
+    transformRef.current = { ...current, scale: clamped };
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = 0;
+    }
+    setState(transformRef.current);
+  }, [clampScale]);
+
   const zoomTo = useCallback(
     (targetScale: number, centerX?: number, centerY?: number) => {
       if (!viewport) return;
-      const clamped = Math.min(Math.max(MIN_SCALE, targetScale), MAX_SCALE);
+      const clamped = clampScale(targetScale);
       const prev = transformRef.current;
       const rect = viewport.getBoundingClientRect();
       const cx = (centerX ?? rect.left + rect.width / 2) - rect.left - rect.width / 2;
@@ -98,7 +123,7 @@ export function useZoomPan(enabled = true): UseZoomPanReturn {
       };
       flushState();
     },
-    [flushState, viewport],
+    [clampScale, flushState, viewport],
   );
 
   useEffect(() => {
@@ -114,7 +139,7 @@ export function useZoomPan(enabled = true): UseZoomPanReturn {
       e.preventDefault();
       const delta = e.deltaY > 0 ? 0.9 : 1.1;
       const prev = transformRef.current;
-      const newScale = Math.min(Math.max(MIN_SCALE, prev.scale * delta), MAX_SCALE);
+      const newScale = clampScale(prev.scale * delta);
       const rect = viewport.getBoundingClientRect();
       const cursorX = e.clientX - rect.left - rect.width / 2;
       const cursorY = e.clientY - rect.top - rect.height / 2;
@@ -174,7 +199,7 @@ export function useZoomPan(enabled = true): UseZoomPanReturn {
       if (e.touches.length === 2) {
         e.preventDefault();
         const newDist = getDistance(e.touches[0], e.touches[1]);
-        const newScale = Math.min(Math.max(MIN_SCALE, d.initialPinchScale * (newDist / d.initialPinchDistance)), MAX_SCALE);
+        const newScale = clampScale(d.initialPinchScale * (newDist / d.initialPinchDistance));
         transformRef.current = { ...transformRef.current, scale: newScale };
         flushState();
       } else if (e.touches.length === 1 && d.isDragging) {
@@ -208,7 +233,7 @@ export function useZoomPan(enabled = true): UseZoomPanReturn {
       viewport.removeEventListener('touchmove', handleTouchMove);
       viewport.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [flushState, enabled, viewport]);
+  }, [clampScale, flushState, enabled, viewport]);
 
   return {
     containerRef,
