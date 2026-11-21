@@ -514,6 +514,13 @@ announcements:
     publishDate: '2026-10-19'
     startDate: '2026-10-19T00:00:00+08:00'
     endDate: '2026-10-22T23:59:59+08:00'
+  - id: comment-twikoo-maintaining-2026-11-21
+    title: 公告
+    content: 评论系统维护中，暂不开放评论功能。
+    type: warning
+    priority: 5
+    publishDate: '2026-11-21'
+    startDate: '2026-11-21T00:00:00+08:00'
 
 
 # =============================================================================
@@ -759,7 +766,7 @@ imageManifest:
     # region: # 环境地域，默认为 ap-shanghai
     # lang: # 语言 (默认: 'zh-CN')
 comment:
-  provider: twikoo  # 'remark42' | 'giscus' | 'waline' | 'twikoo' | 'none'
+  provider: none  # 'remark42' | 'giscus' | 'waline' | 'twikoo' | 'none'
   # remark42:
   #   host: https://comment.example.com/
   #   siteId: your-site-id
