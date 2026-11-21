@@ -246,8 +246,8 @@ importers:
         specifier: ^0.182.0
         version: 0.182.0
       twikoo:
-        specifier: ^1.6.44
-        version: 1.7.24
+        specifier: 1.6.44
+        version: 1.6.44
       unified:
         specifier: ^11.0.5
         version: 11.0.5
@@ -8663,8 +8663,8 @@ packages:
     engines: {node: '>=18.0.0'}
     hasBin: true
 
-  twikoo@1.7.24:
-    resolution: {integrity: sha512-EkZwAixyhOiu0W1RWDu3I9Yqd4J+B5Z+OcOA3DCehGbw6JJzzhVnJ1MBEAIDorhwg0VOLmJAKGd8v8kmAnNNOQ==}
+  twikoo@1.6.44:
+    resolution: {integrity: sha512-Y3YfGtMelWT+1XxZS8SmGXkHZ6/26ry1ZteKKBNTYV0oA+o5/2ELUMi4ta2zYD/V0wGZGv6EXJ6HJU8GTPVh4g==}
 
   type-fest@0.13.1:
     resolution: {integrity: sha512-34R7HTnG0XIJcBSn5XhDd7nNFPRcXYRZrBB2O2jdKqYODldSzBAqzsWoZYYvduky73toYS/ESqxPvkDf/F0XMg==}
@@ -19082,7 +19082,7 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.3
 
-  twikoo@1.7.24: {}
+  twikoo@1.6.44: {}
 
   type-fest@0.13.1: {}
 
