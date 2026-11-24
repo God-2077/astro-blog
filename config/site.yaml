@@ -1009,8 +1009,8 @@ inject:
       localStorage.setItem('umami.disabled', 1);
     }
     </script>
-    <script defer src="https://u.ksable.top/script.js" data-website-id="538757aa-8ad9-42ae-9ac4-301b4800ffd1"></script>
     <script defer src="https://cloud.umami.is/script.js" data-website-id="3bdae064-f867-4ef5-9270-21eb47f95669" data-performance="true"></script>
+    <script defer src="https://u.ksable.top/script.js" data-website-id="538757aa-8ad9-42ae-9ac4-301b4800ffd1"></script>
     <script>
       document.addEventListener('DOMContentLoaded', function () {
         let uniqueId = localStorage.getItem('visitorId');
